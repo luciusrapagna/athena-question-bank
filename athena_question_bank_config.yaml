@@ -1,0 +1,29 @@
+produto: Athena Question Bank
+versao: sprint_5_produto_final
+
+modulos:
+  - question_selector
+  - exam_analytics
+  - simulado_generator
+
+entradas:
+  provas:
+    - ENADE
+    - ENARE
+    - ENAMED
+  planos_aula:
+    - aula
+    - data
+    - assunto
+    - grande_area
+    - objetivos
+
+saidas:
+  - Word com questões por aula
+  - Relatório estatístico da prova
+  - Simulado personalizado
+
+botoes:
+  1: Selecionar questões por plano de aula
+  2: Gerar estatística da prova/provas
+  3: Produzir simulado personalizado
