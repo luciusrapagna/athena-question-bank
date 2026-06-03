@@ -1,1 +1,3 @@
-id_relacao,id_questao,id_aula,area,assunto,score_aderencia
+﻿id_relacao,id_questao,id_aula,area,assunto,score_aderencia
+REL00002,Q00002,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.633
+REL00001,Q00001,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
