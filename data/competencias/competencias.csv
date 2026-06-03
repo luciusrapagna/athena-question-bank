@@ -1,0 +1,11 @@
+codigo,area,competencia,habilidade
+CM001,Clínica Médica,Raciocínio clínico,Interpretar sinais e sintomas em situações clínicas
+CM002,Clínica Médica,Tomada de decisão,Selecionar condutas diagnósticas e terapêuticas
+CM003,Clínica Médica,Segurança do paciente,Reconhecer sinais de gravidade e risco clínico
+CM004,Clínica Médica,Comunicação médica,Comunicar hipóteses diagnósticas e condutas
+SC001,Saúde Coletiva,Atenção integral,Relacionar determinantes sociais ao processo saúde-doença
+SC002,Saúde Coletiva,Vigilância em saúde,Interpretar indicadores epidemiológicos
+PED001,Pediatria,Atenção à criança,Reconhecer sinais de risco na infância
+GO001,Ginecologia e Obstetrícia,Atenção à saúde da mulher,Interpretar situações clínicas ginecológicas e obstétricas
+CIR001,Cirurgia,Raciocínio cirúrgico,Reconhecer indicações e riscos cirúrgicos
+ET001,Ética e Bioética,Conduta ética,Analisar situações com base em princípios éticos
