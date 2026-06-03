@@ -1,6 +1,6 @@
 from pathlib import Path
 from tkinter import Tk, filedialog
-from pypdf import PdfReader
+import fitz
 
 from src.database.db import criar_tabelas, salvar_documento
 
@@ -11,25 +11,29 @@ def selecionar_pdf():
 
     arquivo = filedialog.askopenfilename(
         title="Selecione uma prova em PDF",
-        filetypes=[
-            ("PDF", "*.pdf"),
-            ("Todos os arquivos", "*.*")
-        ]
+        filetypes=[("PDF", "*.pdf"), ("Todos os arquivos", "*.*")]
     )
 
     root.destroy()
     return arquivo
 
 def extrair_texto_pdf(caminho_pdf):
-    reader = PdfReader(caminho_pdf)
-    textos = []
+    doc = fitz.open(caminho_pdf)
+    paginas = []
 
-    for pagina in reader.pages:
-        texto = pagina.extract_text()
-        if texto:
-            textos.append(texto)
+    for page in doc:
+        blocks = page.get_text("blocks")
+        blocks = sorted(blocks, key=lambda b: (round(b[1] / 10) * 10, b[0]))
 
-    return "\n\n".join(textos)
+        texto_pagina = []
+        for b in blocks:
+            txt = b[4].strip()
+            if txt:
+                texto_pagina.append(txt)
+
+        paginas.append("\n".join(texto_pagina))
+
+    return "\n\n".join(paginas)
 
 def importar_pdf():
     criar_tabelas()
@@ -62,7 +66,7 @@ def importar_pdf():
         texto_bruto=texto
     )
 
-    print("PDF importado e salvo no banco com sucesso.")
+    print("PDF importado com extração aprimorada e salvo no banco.")
 
 if __name__ == "__main__":
     importar_pdf()
