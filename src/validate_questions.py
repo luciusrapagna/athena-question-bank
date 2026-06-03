@@ -1,4 +1,3 @@
-import re
 import sqlite3
 from pathlib import Path
 
@@ -7,26 +6,16 @@ DB_PATH = Path("database/question_bank.db")
 def validar(texto):
     texto = texto or ""
 
-    tem_a = "(A)" in texto
-    tem_b = "(B)" in texto
-    tem_c = "(C)" in texto
-    tem_d = "(D)" in texto
+    tem_abcd = all(alt in texto for alt in ["(A)", "(B)", "(C)", "(D)"])
 
-    alternativas_ok = tem_a and tem_b and tem_c and tem_d
+    duplicada = any(texto.count(alt) > 1 for alt in ["(A)", "(B)", "(C)", "(D)"])
 
-    a_duplicado = texto.count("(A)") > 1
-    b_duplicado = texto.count("(B)") > 1
-    c_duplicado = texto.count("(C)") > 1
-    d_duplicado = texto.count("(D)") > 1
+    cabecalho = "Núcleo Mineiro" in texto or "Teste de Progresso" in texto
 
-    duplicada = a_duplicado or b_duplicado or c_duplicado or d_duplicado
-
-    cabecalho_pdf = "Núcleo Mineiro" in texto or "Teste de Progresso" in texto
-
-    if alternativas_ok and not duplicada and not cabecalho_pdf:
+    if tem_abcd and not duplicada and not cabecalho and len(texto) > 120:
         return "valida"
 
-    return "revisar"
+    return "revisar_manual"
 
 conn = sqlite3.connect(DB_PATH)
 cur = conn.cursor()

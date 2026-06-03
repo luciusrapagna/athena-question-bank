@@ -1,0 +1,134 @@
+import re
+from pathlib import Path
+import fitz
+
+def detectar_perfil(texto, nome_arquivo=""):
+    t = texto.lower()
+    n = nome_arquivo.lower()
+
+    if "enamed" in t or "enamed" in n:`n        return "enamed"`n`n    if "enare" in t or "enare" in n:
+        return "enare"
+
+    if "enade" in t or "enade" in n:
+        return "enade"
+
+    if "núcleo mineiro" in t or "teste de progresso" in t or "simulado" in n:
+        return "teste_progresso"
+
+    if "gabarito definitivo" in t or "gabarito" in n:
+        return "gabarito"
+
+    return "generico"
+
+def extrair_texto_por_blocos(pdf_path):
+    doc = fitz.open(pdf_path)
+    paginas = []
+
+    for page in doc:
+        blocks = page.get_text("blocks")
+        largura = page.rect.width
+
+        esquerda = []
+        direita = []
+        inteira = []
+
+        for b in blocks:
+            x0, y0, x1, y1, texto = b[:5]
+            texto = texto.strip()
+
+            if not texto:
+                continue
+
+            if x1 < largura * 0.52:
+                esquerda.append((y0, x0, texto))
+            elif x0 > largura * 0.45:
+                direita.append((y0, x0, texto))
+            else:
+                inteira.append((y0, x0, texto))
+
+        esquerda = [t for _, _, t in sorted(esquerda)]
+        direita = [t for _, _, t in sorted(direita)]
+        inteira = [t for _, _, t in sorted(inteira)]
+
+        texto_pagina = "\n".join(inteira + esquerda + direita)
+        paginas.append(texto_pagina)
+
+    return "\n\n".join(paginas)
+
+def limpar_ruido(texto):
+    linhas = []
+    for linha in texto.splitlines():
+        l = linha.strip()
+
+        if not l:
+            continue
+
+        if re.search(r"p[áa]ginas?\s+\d+/\d+", l, flags=re.I):
+            continue
+
+        if "Medway - ENARE" in l:
+            continue
+
+        if "Núcleo Mineiro" in l:
+            continue
+
+        if "Teste de Progresso" in l:
+            continue
+
+        if re.match(r"^\d+\s*$", l):
+            continue
+
+        linhas.append(l)
+
+    texto = "\n".join(linhas)
+    texto = texto.replace("￾", "-")
+    texto = re.sub(r"[ \t]+", " ", texto)
+    texto = re.sub(r"\n{3,}", "\n\n", texto)
+
+    return texto.strip()
+
+def extrair_questoes_por_perfil(texto, perfil):
+    if perfil == "enamed":`n        padrao = r"(?=QUESTÃO\s+\d{1,3})"`n`n    elif perfil == "enare":
+        padrao = r"(?=QUESTÃO\s+\d{1,3}\.)"
+
+    elif perfil == "enade":
+        padrao = r"(?=QUESTÃO\s+\d{1,3})"
+
+    elif perfil == "teste_progresso":
+        padrao = r"(?m)(?=^\d{1,3}\.\s+)"
+
+    else:
+        padrao = r"(?im)(?=(?:QUESTÃO\s*)?\d{1,3}[\.\)]\s+)"
+
+    partes = re.split(padrao, texto)
+    questoes = []
+
+    for parte in partes:
+        parte = parte.strip()
+
+        if len(parte) < 120:
+            continue
+
+        m = re.search(r"(?:QUESTÃO\s*)?(\d{1,3})[\.\)]?", parte, flags=re.I)
+
+        if not m:
+            continue
+
+        numero = int(m.group(1))
+
+        if 1 <= numero <= 200:
+            questoes.append((numero, parte))
+
+    return questoes
+
+def ler_pdf_inteligente(pdf_path):
+    texto = extrair_texto_por_blocos(pdf_path)
+    perfil = detectar_perfil(texto, Path(pdf_path).name)
+    texto = limpar_ruido(texto)
+    questoes = extrair_questoes_por_perfil(texto, perfil)
+
+    return {
+        "perfil": perfil,
+        "texto": texto,
+        "questoes": questoes
+    }

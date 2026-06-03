@@ -29,7 +29,7 @@ def buscar_questoes(termo, quantidade):
         d.ano
     FROM questoes_extraidas qe
     LEFT JOIN documentos d ON qe.documento_id = d.id
-    WHERE qe.qualidade = 'valida' AND
+    WHERE qe.qualidade IN ('valida', 'corrigida') AND
         qe.area LIKE ?
         OR qe.subarea LIKE ?
         OR qe.tema LIKE ?

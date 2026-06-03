@@ -1,8 +1,8 @@
 from pathlib import Path
 from tkinter import Tk, filedialog
-import fitz
 
 from src.database.db import criar_tabelas, salvar_documento
+from src.reader.smart_pdf_reader import ler_pdf_inteligente
 
 def selecionar_pdf():
     root = Tk()
@@ -16,24 +16,6 @@ def selecionar_pdf():
 
     root.destroy()
     return arquivo
-
-def extrair_texto_pdf(caminho_pdf):
-    doc = fitz.open(caminho_pdf)
-    paginas = []
-
-    for page in doc:
-        blocks = page.get_text("blocks")
-        blocks = sorted(blocks, key=lambda b: (round(b[1] / 10) * 10, b[0]))
-
-        texto_pagina = []
-        for b in blocks:
-            txt = b[4].strip()
-            if txt:
-                texto_pagina.append(txt)
-
-        paginas.append("\n".join(texto_pagina))
-
-    return "\n\n".join(paginas)
 
 def importar_pdf():
     criar_tabelas()
@@ -55,10 +37,17 @@ def importar_pdf():
     except ValueError:
         ano = None
 
-    texto = extrair_texto_pdf(caminho_pdf)
+    resultado = ler_pdf_inteligente(caminho_pdf)
+
+    perfil = resultado["perfil"]
+    texto = resultado["texto"]
+    questoes = resultado["questoes"]
+
+    print(f"Perfil detectado: {perfil}")
+    print(f"Questões detectadas no leitor inteligente: {len(questoes)}")
 
     salvar_documento(
-        tipo="prova_pdf",
+        tipo=f"prova_pdf_{perfil}",
         prova=prova,
         instituicao=instituicao,
         ano=ano,
@@ -66,7 +55,7 @@ def importar_pdf():
         texto_bruto=texto
     )
 
-    print("PDF importado com extração aprimorada e salvo no banco.")
+    print("PDF importado com leitor inteligente e salvo no banco.")
 
 if __name__ == "__main__":
     importar_pdf()
