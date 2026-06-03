@@ -6,24 +6,23 @@ DB_PATH = Path("database/question_bank.db")
 def validar(texto):
     texto = texto or ""
 
-    tem_abcd = all(alt in texto for alt in ["(A)", "(B)", "(C)", "(D)"])
+    tem_a = "(A)" in texto
+    tem_b = "(B)" in texto
+    tem_c = "(C)" in texto
+    tem_d = "(D)" in texto
 
     duplicada = any(texto.count(alt) > 1 for alt in ["(A)", "(B)", "(C)", "(D)"])
 
-    cabecalho = "Núcleo Mineiro" in texto or "Teste de Progresso" in texto
-
-    if tem_abcd and not duplicada and not cabecalho and len(texto) > 120:
+    if tem_a and tem_b and tem_c and tem_d and not duplicada and len(texto) > 120:
         return "valida"
+
+    if tem_a and tem_b and tem_c and not duplicada and len(texto) > 120:
+        return "valida_parcial"
 
     return "revisar_manual"
 
 conn = sqlite3.connect(DB_PATH)
 cur = conn.cursor()
-
-try:
-    cur.execute("ALTER TABLE questoes_extraidas ADD COLUMN qualidade TEXT")
-except Exception:
-    pass
 
 cur.execute("SELECT id, texto_questao FROM questoes_extraidas")
 questoes = cur.fetchall()

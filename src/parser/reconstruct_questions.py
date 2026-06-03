@@ -5,7 +5,6 @@ from pathlib import Path
 import fitz
 
 ROOT = Path(__file__).resolve().parents[2]
-
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -14,177 +13,159 @@ DB_PATH = ROOT / "database" / "question_bank.db"
 def conectar():
     return sqlite3.connect(DB_PATH)
 
-def listar_documentos():
-    conn = conectar()
-    cur = conn.cursor()
+def limpar_texto(txt):
+    txt = txt.replace("￾", "-").replace("\r", "")
+    txt = re.sub(r"[ \t]+", " ", txt)
+    return txt.strip()
 
-    cur.execute("""
-    SELECT id, prova, instituicao, ano, tipo, arquivo_origem
-    FROM documentos
-    ORDER BY id DESC
-    """)
+def bloco_util(page, x0, y0, x1, y1, txt):
+    largura = page.rect.width
+    altura = page.rect.height
+    t = txt.strip()
 
-    docs = cur.fetchall()
-    conn.close()
-    return docs
+    if not t:
+        return False
 
-def buscar_documento(documento_id):
-    conn = conectar()
-    cur = conn.cursor()
+    # remove cabeçalho e rodapé
+    if y0 < altura * 0.06:
+        return False
+    if y1 > altura * 0.94:
+        return False
 
-    cur.execute("""
-    SELECT arquivo_origem
-    FROM documentos
-    WHERE id = ?
-    """, (documento_id,))
+    # remove margens extremas
+    if x1 < largura * 0.04 or x0 > largura * 0.96:
+        return False
 
-    row = cur.fetchone()
-    conn.close()
+    lixo = [
+        "ÁREA LIVRE",
+        "RASCUNHO",
+        "LEIA COM ATENÇÃO",
+        "INSTRUÇÕES",
+        "CADERNO",
+        "CARTÃO-RESPOSTA",
+        "Núcleo Mineiro",
+        "Teste de Progresso",
+        "Medway - ENARE",
+        "Páginas",
+        "ENADE -",
+        "MEDICINA"
+    ]
 
-    return row[0] if row else None
+    if any(p.upper() in t.upper() for p in lixo):
+        return False
 
-def limpar_linha(texto):
-    texto = texto.replace("￾", "-")
-    texto = texto.replace("\r", "")
-    texto = re.sub(r"[ \t]+", " ", texto)
-    return texto.strip()
+    # remove numeração isolada de página
+    if re.match(r"^\d{1,3}$", t):
+        return False
 
-def extrair_blocos_posicionais(pdf_path):
+    return True
+
+def extrair_blocos_pdf(pdf_path):
     doc = fitz.open(pdf_path)
-    todos = []
+    blocos = []
 
-    for page_index, page in enumerate(doc, start=1):
+    for pagina, page in enumerate(doc, start=1):
         largura = page.rect.width
-        blocks = page.get_text("blocks")
 
-        for b in blocks:
+        for b in page.get_text("blocks"):
             x0, y0, x1, y1, txt = b[:5]
-            txt = limpar_linha(txt)
+            txt = limpar_texto(txt)
 
-            if not txt:
-                continue
-
-            if "Núcleo Mineiro" in txt:
-                continue
-
-            if "Teste de Progresso" in txt:
-                continue
-
-            if "ÁREA LIVRE" in txt.upper():
+            if not bloco_util(page, x0, y0, x1, y1, txt):
                 continue
 
             coluna = 1 if x0 < largura / 2 else 2
 
-            todos.append({
-                "pagina": page_index,
+            blocos.append({
+                "pagina": pagina,
                 "coluna": coluna,
                 "x0": x0,
                 "y0": y0,
                 "texto": txt
             })
 
-    todos = sorted(todos, key=lambda b: (b["pagina"], b["coluna"], b["y0"], b["x0"]))
+    return sorted(blocos, key=lambda b: (b["pagina"], b["coluna"], b["y0"], b["x0"]))
 
-    return todos
+def eh_inicio_questao(txt):
+    return re.match(r"^\s*(QUESTÃO\s*)?\d{1,3}[\.\)]?\s+", txt, re.I)
 
-def eh_inicio_questao(texto):
-    return re.match(r"^\s*(?:QUESTÃO\s*)?\d{1,3}[\.\)]\s+", texto, flags=re.I) is not None
+def numero_questao(txt):
+    m = re.match(r"^\s*(QUESTÃO\s*)?(\d{1,3})[\.\)]?\s+", txt, re.I)
+    if not m:
+        return None
+    n = int(m.group(2))
+    return n if 1 <= n <= 200 else None
 
-def numero_questao(texto):
-    m = re.match(r"^\s*(?:QUESTÃO\s*)?(\d{1,3})[\.\)]\s+", texto, flags=re.I)
-    if m:
-        n = int(m.group(1))
-        if 1 <= n <= 200:
-            return n
-    return None
+def normalizar_alternativas(txt):
+    txt = re.sub(r"(?m)^([A-E])\.\s+", r"(\1) ", txt)
+    txt = re.sub(r"(?m)^([A-E])\)\s+", r"(\1) ", txt)
+    txt = re.sub(r"(?m)^\(([A-E])\)\s*", r"(\1) ", txt)
+    return txt
 
-def reconstruir_questoes(blocos):
+def qualidade(txt):
+    txt = normalizar_alternativas(txt)
+    tem = [(f"({l})" in txt) for l in "ABCD"]
+    duplicada = any(txt.count(f"({l})") > 1 for l in "ABCD")
+
+    if all(tem) and not duplicada and len(txt) > 120:
+        return "valida"
+
+    if tem[0] and tem[1] and tem[2] and not duplicada and len(txt) > 120:
+        return "valida_parcial"
+
+    return "revisar_manual"
+
+def reconstruir(blocos):
     questoes = {}
     atual = None
 
     for b in blocos:
-        texto = b["texto"]
+        txt = b["texto"]
 
-        if eh_inicio_questao(texto):
-            n = numero_questao(texto)
-
+        if eh_inicio_questao(txt):
+            n = numero_questao(txt)
             if n:
                 atual = n
-
-                if n not in questoes:
-                    questoes[n] = []
-
-                questoes[n].append(texto)
+                questoes.setdefault(n, [])
+                questoes[n].append(txt)
                 continue
 
-        if atual is not None:
-            questoes[atual].append(texto)
+        if atual:
+            questoes[atual].append(txt)
 
     saida = []
-
     for n in sorted(questoes):
-        bloco = "\n".join(questoes[n])
-        bloco = normalizar_alternativas(bloco)
-        bloco = aparar_questao(bloco)
-        saida.append((n, bloco))
+        txt = "\n".join(questoes[n])
+        txt = normalizar_alternativas(txt)
+        txt = re.sub(r"\n{3,}", "\n\n", txt).strip()
+        saida.append((n, txt, qualidade(txt)))
 
     return saida
 
-def normalizar_alternativas(texto):
-    texto = re.sub(r"(?m)^([A-E])\.\s+", r"(\1) ", texto)
-    texto = re.sub(r"(?m)^([A-E])\)\s+", r"(\1) ", texto)
-    texto = re.sub(r"(?m)^\(([A-E])\)\s*", r"(\1) ", texto)
-    return texto
+def listar_documentos():
+    conn = conectar()
+    cur = conn.cursor()
+    cur.execute("""
+    SELECT id, prova, instituicao, ano, tipo, arquivo_origem
+    FROM documentos
+    ORDER BY id DESC
+    """)
+    rows = cur.fetchall()
+    conn.close()
+    return rows
 
-def aparar_questao(texto):
-    linhas = []
-
-    for linha in texto.splitlines():
-        l = linha.strip()
-
-        if not l:
-            continue
-
-        if "Núcleo Mineiro" in l:
-            continue
-
-        if "Teste de Progresso" in l:
-            continue
-
-        if re.match(r"^\d+\s*$", l):
-            continue
-
-        linhas.append(l)
-
-    texto = "\n".join(linhas)
-    texto = re.sub(r"\n{3,}", "\n\n", texto)
-    return texto.strip()
-
-def qualidade(texto):
-    tem_a = "(A)" in texto
-    tem_b = "(B)" in texto
-    tem_c = "(C)" in texto
-    tem_d = "(D)" in texto
-
-    duplicada = any(texto.count(alt) > 1 for alt in ["(A)", "(B)", "(C)", "(D)"])
-
-    if tem_a and tem_b and tem_c and tem_d and not duplicada and len(texto) > 120:
-        return "valida"
-
-    return "revisar_manual"
-
-def salvar_questoes(documento_id, questoes):
+def salvar(documento_id, questoes):
     conn = conectar()
     cur = conn.cursor()
 
-    cur.execute("DELETE FROM questoes_extraidas WHERE documento_id = ?", (documento_id,))
+    cur.execute("DELETE FROM questoes_extraidas WHERE documento_id=?", (documento_id,))
 
-    for n, texto in questoes:
+    for n, txt, q in questoes:
         cur.execute("""
         INSERT INTO questoes_extraidas
         (documento_id, numero_questao, texto_questao, qualidade)
         VALUES (?, ?, ?, ?)
-        """, (documento_id, n, texto, qualidade(texto)))
+        """, (documento_id, n, txt, q))
 
     conn.commit()
     conn.close()
@@ -192,42 +173,26 @@ def salvar_questoes(documento_id, questoes):
 def main():
     docs = listar_documentos()
 
-    print("\nDOCUMENTOS IMPORTADOS")
-    print("-" * 90)
-
     for d in docs:
         print(f"ID {d[0]} | {d[1]} | {d[2]} | {d[3]} | {d[4]} | {d[5]}")
 
-    documento_id = int(input("\nDigite o ID do documento para reconstrução posicional: "))
+    documento_id = int(input("\nDigite o ID do documento: "))
 
-    pdf_path = buscar_documento(documento_id)
-
-    if not pdf_path:
-        print("PDF original não encontrado no banco.")
-        return
+    doc = [d for d in docs if d[0] == documento_id][0]
+    pdf_path = doc[5]
 
     if not Path(pdf_path).exists():
-        print(f"Arquivo original não existe mais neste caminho: {pdf_path}")
+        print(f"PDF não encontrado: {pdf_path}")
         return
 
-    blocos = extrair_blocos_posicionais(pdf_path)
-    questoes = reconstruir_questoes(blocos)
+    blocos = extrair_blocos_pdf(pdf_path)
+    questoes = reconstruir(blocos)
+    salvar(documento_id, questoes)
 
-    salvar_questoes(documento_id, questoes)
-
-    print(f"\nReconstrução concluída.")
-    print(f"Questões reconstruídas: {len(questoes)}")
-
-    validas = sum(1 for _, t in questoes if qualidade(t) == "valida")
-    revisar = len(questoes) - validas
-
-    print(f"Válidas: {validas}")
-    print(f"Revisar manual: {revisar}")
-
-    for n, texto in questoes[:10]:
-        print("\n" + "=" * 60)
-        print(f"QUESTÃO {n} | {qualidade(texto)}")
-        print(texto[:700])
+    print(f"\nQuestões reconstruídas: {len(questoes)}")
+    print(f"Válidas: {sum(1 for _,_,q in questoes if q == 'valida')}")
+    print(f"Válidas parciais: {sum(1 for _,_,q in questoes if q == 'valida_parcial')}")
+    print(f"Revisar manual: {sum(1 for _,_,q in questoes if q == 'revisar_manual')}")
 
 if __name__ == "__main__":
     main()
