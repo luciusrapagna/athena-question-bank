@@ -1,1 +1,3 @@
-id_questao,fonte,ano,prova,area,assunto,enunciado,alternativa_a,alternativa_b,alternativa_c,alternativa_d,alternativa_e,gabarito
+﻿id_questao,fonte,ano,prova,area,assunto,enunciado,alternativa_a,alternativa_b,alternativa_c,alternativa_d,alternativa_e,gabarito
+Q00001,ENAMED,2025,enamed_teste_2025,Saúde Coletiva,,"QUESTÃO 1 Paciente com febre, hipotensão, lactato elevado e suspeita de sepse é atendido na emergência.",Alta hospitalar imediata.,Antibioticoterapia e reposição volêmica precoce.,Apenas observação clínica.,Suspensão de exames laboratoriais.,Encaminhamento sem estabilização.,
+Q00002,ENAMED,2025,enamed_teste_2025,Saúde Coletiva,,"QUESTÃO 2 Em um território com aumento dos casos de dengue, a equipe de saúde da família analisa incidência, prevalência e vigilância epidemiológica.",Ignorar dados territoriais.,Relacionar indicadores epidemiológicos às ações de vigilância.,Suspender notificação.,Evitar busca ativa.,Reduzir ações de prevenção.,
