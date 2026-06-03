@@ -39,3 +39,7 @@ def identificar_prova(caminho):
 def identificar_nome(caminho):
     dados = identificar_prova(caminho)
     return dados["prova"], dados["ano"]
+
+# Compatibilidade Sprint 5
+identificar_prova = identificar_nome
+

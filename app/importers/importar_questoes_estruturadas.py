@@ -3,7 +3,7 @@ import pandas as pd
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 
-from app.services.identificador_prova import identificar_prova, gerar_hash
+from app.services.identificador_prova import identificar_nome, gerar_hash
 from app.repositories.provas_repository import buscar_prova_por_hash, criar_prova
 
 DB_PATH = "app/db/planos_aula.db"
@@ -34,7 +34,7 @@ def importar():
         print("Nenhum arquivo selecionado.")
         return
 
-    dados_prova = identificar_prova(arquivo)
+    dados_prova = identificar_nome(arquivo)
     hash_arquivo = gerar_hash(arquivo)
 
     existente = buscar_prova_por_hash(hash_arquivo)
