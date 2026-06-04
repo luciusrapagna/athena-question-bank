@@ -1,0 +1,306 @@
+import streamlit as st
+import pandas as pd
+import sqlite3
+from datetime import datetime
+from pathlib import Path
+from io import BytesIO
+from docx import Document
+
+BASE = Path(__file__).resolve().parent
+DATA = BASE / "data"
+PROVAS = DATA / "entrada" / "provas"
+PLANOS = DATA / "entrada" / "planos_aula"
+BANCO_QUESTOES = DATA / "banco_questoes"
+BANCO_PLANOS = DATA / "banco_planos"
+BANCO_REL = DATA / "banco_relacionamentos"
+
+for pasta in [PROVAS, PLANOS, BANCO_QUESTOES, BANCO_PLANOS, BANCO_REL]:
+    pasta.mkdir(parents=True, exist_ok=True)
+
+DB_PATH = DATA / "athena_question_bank.db"
+
+def inicializar_banco():
+    DATA.mkdir(parents=True, exist_ok=True)
+    con = sqlite3.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS provas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome_arquivo TEXT,
+            caminho TEXT,
+            extensao TEXT,
+            tamanho_bytes INTEGER,
+            data_upload TEXT
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS planos_aula (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome_arquivo TEXT,
+            caminho TEXT,
+            extensao TEXT,
+            tamanho_bytes INTEGER,
+            data_upload TEXT
+        )
+    """)
+    con.commit()
+    con.close()
+
+def registrar_arquivo(tabela, caminho):
+    con = sqlite3.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute(
+        f"""
+        INSERT INTO {tabela}
+        (nome_arquivo, caminho, extensao, tamanho_bytes, data_upload)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            caminho.name,
+            str(caminho),
+            caminho.suffix.lower(),
+            caminho.stat().st_size,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
+    )
+    con.commit()
+    con.close()
+
+def carregar_registros(tabela):
+    con = sqlite3.connect(DB_PATH)
+    df = pd.read_sql_query(f"SELECT * FROM {tabela} ORDER BY id DESC", con)
+    con.close()
+    return df
+
+inicializar_banco()
+
+
+def salvar_upload(arquivo, destino):
+    caminho = destino / arquivo.name
+    caminho.write_bytes(arquivo.getbuffer())
+    return caminho
+
+def listar_arquivos(pasta):
+    return sorted([p for p in pasta.glob("*") if p.is_file()])
+
+def carregar_csv_ou_excel(caminho):
+    if caminho.suffix.lower() == ".csv":
+        return pd.read_csv(caminho)
+    if caminho.suffix.lower() in [".xlsx", ".xls"]:
+        return pd.read_excel(caminho)
+    return pd.DataFrame()
+
+def localizar_banco_questoes():
+    candidatos = [
+        BANCO_QUESTOES / "banco_questoes.csv",
+        DATA / "banco_questoes.csv",
+        BASE / "outputs" / "questoes_extraidas_para_curadoria.xlsx",
+        BASE / "outputs" / "questoes_extraidas_para_revisao.xlsx",
+    ]
+    for c in candidatos:
+        if c.exists():
+            return c
+    return None
+
+def gerar_word(df, titulo):
+    doc = Document()
+    doc.add_heading(titulo, level=1)
+    for i, (_, row) in enumerate(df.iterrows(), start=1):
+        doc.add_heading(f"Questão {i}", level=2)
+        for col in df.columns:
+            val = str(row[col])
+            if val and val.lower() != "nan":
+                doc.add_paragraph(f"{col}: {val}")
+    bio = BytesIO()
+    doc.save(bio)
+    bio.seek(0)
+    return bio
+
+def achar_coluna(df, termos):
+    for termo in termos:
+        for col in df.columns:
+            if termo.lower() in col.lower():
+                return col
+    return None
+
+st.set_page_config(
+    page_title="ATHENA Question Bank",
+    page_icon="🧠",
+    layout="wide"
+)
+
+st.title("🧠 ATHENA Question Bank")
+st.caption("Question Selector • Exam Analytics • Simulado Generator")
+
+st.markdown("### 1. Entrada obrigatória de dados")
+
+c1, c2 = st.columns(2)
+
+with c1:
+    st.subheader("📄 Inserir provas")
+    provas_upload = st.file_uploader(
+        "Envie provas ENADE, ENARE, ENAMED ou outras",
+        type=["pdf", "docx", "txt", "md", "csv", "xlsx"],
+        accept_multiple_files=True,
+        key="upload_provas"
+    )
+    if provas_upload:
+        for arq in provas_upload:
+            caminho = salvar_upload(arq, PROVAS)
+            registrar_arquivo("provas", caminho)
+            st.success(f"Prova salva e registrada no banco: {caminho.name}")
+
+with c2:
+    st.subheader("📚 Inserir planos de aula")
+    planos_upload = st.file_uploader(
+        "Envie planos de aula",
+        type=["pdf", "docx", "txt", "md", "csv", "xlsx"],
+        accept_multiple_files=True,
+        key="upload_planos"
+    )
+    if planos_upload:
+        for arq in planos_upload:
+            caminho = salvar_upload(arq, PLANOS)
+            registrar_arquivo("planos_aula", caminho)
+            st.success(f"Plano salvo e registrado no banco: {caminho.name}")
+
+st.divider()
+
+provas = listar_arquivos(PROVAS)
+planos = listar_arquivos(PLANOS)
+
+m1, m2, m3 = st.columns(3)
+m1.metric("Provas inseridas", len(provas))
+m2.metric("Planos de aula inseridos", len(planos))
+
+banco_path = localizar_banco_questoes()
+if banco_path:
+    df = carregar_csv_ou_excel(banco_path)
+else:
+    df = pd.DataFrame()
+
+m3.metric("Questões no banco", len(df) if not df.empty else 0)
+
+with st.expander("📦 Banco de provas e planos armazenados"):
+    st.subheader("Provas registradas")
+    st.dataframe(carregar_registros("provas"), use_container_width=True)
+
+    st.subheader("Planos de aula registrados")
+    st.dataframe(carregar_registros("planos_aula"), use_container_width=True)
+
+    st.caption(f"Banco SQLite: {DB_PATH}")
+
+if st.button("🔄 Atualizar arquivos e bancos", use_container_width=True):
+    st.rerun()
+
+if df.empty:
+    st.warning("Nenhum banco de questões estruturado encontrado ainda. Envie provas/planos e depois rode o processamento do banco na próxima etapa.")
+    st.info("Caminho esperado: data/banco_questoes/banco_questoes.csv")
+    st.stop()
+
+st.divider()
+st.markdown("### 2. Escolha o módulo")
+
+if "modulo" not in st.session_state:
+    st.session_state.modulo = "Question Selector"
+
+b1, b2, b3 = st.columns(3)
+
+with b1:
+    if st.button("🎯 Question Selector", use_container_width=True):
+        st.session_state.modulo = "Question Selector"
+
+with b2:
+    if st.button("📊 Exam Analytics", use_container_width=True):
+        st.session_state.modulo = "Exam Analytics"
+
+with b3:
+    if st.button("📝 Simulado Generator", use_container_width=True):
+        st.session_state.modulo = "Simulado Generator"
+
+st.divider()
+
+col_area = achar_coluna(df, ["grande_area", "grande área", "area", "área"])
+col_assunto = achar_coluna(df, ["assunto", "tema"])
+col_comp = achar_coluna(df, ["competencia", "competência"])
+col_aula = achar_coluna(df, ["aula"])
+
+if st.session_state.modulo == "Question Selector":
+    st.header("🎯 Question Selector")
+
+    filtrado = df.copy()
+
+    if col_area:
+        areas = st.multiselect("Grande área", sorted(df[col_area].dropna().astype(str).unique()))
+        if areas:
+            filtrado = filtrado[filtrado[col_area].astype(str).isin(areas)]
+
+    if col_assunto:
+        assuntos = st.multiselect("Assunto", sorted(filtrado[col_assunto].dropna().astype(str).unique()))
+        if assuntos:
+            filtrado = filtrado[filtrado[col_assunto].astype(str).isin(assuntos)]
+
+    if col_comp:
+        competencias = st.multiselect("Competência", sorted(filtrado[col_comp].dropna().astype(str).unique()))
+        if competencias:
+            filtrado = filtrado[filtrado[col_comp].astype(str).isin(competencias)]
+
+    if col_aula:
+        aulas = st.multiselect("Aula", sorted(filtrado[col_aula].dropna().astype(str).unique()))
+        if aulas:
+            filtrado = filtrado[filtrado[col_aula].astype(str).isin(aulas)]
+
+    qtd = st.number_input("Quantidade de questões", min_value=1, max_value=max(1, len(filtrado)), value=min(5, max(1, len(filtrado))))
+    resultado = filtrado.head(int(qtd))
+
+    st.dataframe(resultado, use_container_width=True)
+
+    st.download_button("Baixar CSV", resultado.to_csv(index=False).encode("utf-8-sig"), "question_selector.csv", "text/csv")
+    st.download_button("Baixar Word", gerar_word(resultado, "ATHENA Question Selector"), "question_selector.docx")
+
+elif st.session_state.modulo == "Exam Analytics":
+    st.header("📊 Exam Analytics")
+
+    if col_area:
+        st.subheader("Percentual das 5 grandes áreas")
+        area_pct = df[col_area].astype(str).value_counts(normalize=True).mul(100).round(2).reset_index()
+        area_pct.columns = ["Grande área", "Percentual"]
+        st.dataframe(area_pct, use_container_width=True)
+        st.bar_chart(area_pct.set_index("Grande área"))
+
+    if col_area and col_assunto:
+        st.subheader("Percentual dos assuntos dentro de cada área")
+        assunto_pct = (
+            df.groupby(col_area)[col_assunto]
+            .value_counts(normalize=True)
+            .mul(100)
+            .round(2)
+            .reset_index(name="Percentual")
+        )
+        st.dataframe(assunto_pct, use_container_width=True)
+
+elif st.session_state.modulo == "Simulado Generator":
+    st.header("📝 Simulado Generator")
+
+    simulado = df.copy()
+
+    if col_area:
+        areas_sim = st.multiselect("Grandes áreas", sorted(df[col_area].dropna().astype(str).unique()), key="sim_area")
+        if areas_sim:
+            simulado = simulado[simulado[col_area].astype(str).isin(areas_sim)]
+
+    if col_assunto:
+        assuntos_sim = st.multiselect("Assuntos", sorted(simulado[col_assunto].dropna().astype(str).unique()), key="sim_assunto")
+        if assuntos_sim:
+            simulado = simulado[simulado[col_assunto].astype(str).isin(assuntos_sim)]
+
+    qtd_sim = st.number_input("Número de questões", min_value=1, max_value=max(1, len(simulado)), value=min(10, max(1, len(simulado))))
+    simulado_final = simulado.sample(n=int(qtd_sim), random_state=42) if len(simulado) >= int(qtd_sim) else simulado
+
+    st.dataframe(simulado_final, use_container_width=True)
+
+    st.download_button("Exportar CSV", simulado_final.to_csv(index=False).encode("utf-8-sig"), "simulado_personalizado.csv", "text/csv")
+    st.download_button("Exportar Word", gerar_word(simulado_final, "ATHENA Simulado Generator"), "simulado_personalizado.docx")
+
+st.divider()
+st.caption("ATHENA Question Bank integrado ao Ecossistema ATHENA Scientific")

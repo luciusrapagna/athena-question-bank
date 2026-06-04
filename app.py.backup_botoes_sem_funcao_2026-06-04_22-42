@@ -1,0 +1,44 @@
+import streamlit as st
+
+st.set_page_config(
+    page_title="ATHENA Question Bank",
+    page_icon="🧠",
+    layout="wide"
+)
+
+st.title("🧠 ATHENA Question Bank")
+st.subheader("Banco inteligente de questões médicas")
+
+st.markdown("""
+Módulo integrado ao Ecossistema ATHENA para:
+
+- Seleção de questões por área
+- Seleção por assunto
+- Seleção por competência
+- Seleção por aula
+- Geração de simulados
+- Blueprint de provas
+- Exportação Word
+""")
+
+st.divider()
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("### Question Selector")
+    st.write("Seleção inteligente de questões.")
+    st.button("Abrir Question Selector", use_container_width=True)
+
+with col2:
+    st.markdown("### Exam Analytics")
+    st.write("Análise de provas e blueprint.")
+    st.button("Abrir Exam Analytics", use_container_width=True)
+
+with col3:
+    st.markdown("### Simulado Generator")
+    st.write("Geração de simulados personalizados.")
+    st.button("Abrir Simulado Generator", use_container_width=True)
+
+st.divider()
+st.success("ATHENA Question Bank integrado ao ecossistema e rodando na VPS.")

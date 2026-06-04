@@ -1,0 +1,189 @@
+import streamlit as st
+import pandas as pd
+from pathlib import Path
+from io import BytesIO
+from docx import Document
+
+BASE = Path(__file__).resolve().parent
+OUTPUTS = BASE / "outputs"
+
+st.set_page_config(
+    page_title="ATHENA Question Bank",
+    page_icon="🧠",
+    layout="wide"
+)
+
+st.title("🧠 ATHENA Question Bank")
+st.caption("Módulo integrado ao Ecossistema ATHENA Scientific")
+
+def listar_arquivos():
+    arquivos = []
+    for ext in ["*.csv", "*.xlsx", "*.docx"]:
+        arquivos.extend(OUTPUTS.glob(ext))
+    return sorted(arquivos)
+
+def carregar_tabela(path):
+    if path.suffix.lower() == ".csv":
+        return pd.read_csv(path)
+    if path.suffix.lower() == ".xlsx":
+        return pd.read_excel(path)
+    return pd.DataFrame()
+
+def gerar_word(df, titulo):
+    doc = Document()
+    doc.add_heading(titulo, level=1)
+    for i, (_, row) in enumerate(df.iterrows(), start=1):
+        doc.add_heading(f"Questão {i}", level=2)
+        for col in df.columns:
+            valor = str(row[col])
+            if valor and valor.lower() != "nan":
+                doc.add_paragraph(f"{col}: {valor}")
+    bio = BytesIO()
+    doc.save(bio)
+    bio.seek(0)
+    return bio
+
+arquivos = listar_arquivos()
+
+if not arquivos:
+    st.error("Nenhum arquivo encontrado em outputs/.")
+    st.stop()
+
+aba1, aba2, aba3, aba4 = st.tabs([
+    "Question Selector",
+    "Exam Analytics",
+    "Simulado Generator",
+    "Arquivos do módulo"
+])
+
+with aba1:
+    st.header("Question Selector")
+    tabelas = [a for a in arquivos if a.suffix.lower() in [".csv", ".xlsx"]]
+
+    if not tabelas:
+        st.warning("Nenhuma tabela CSV/XLSX encontrada para seleção.")
+    else:
+        escolhido = st.selectbox("Escolha uma base de questões", tabelas, format_func=lambda x: x.name)
+        df = carregar_tabela(escolhido)
+
+        st.write(f"Arquivo carregado: `{escolhido.name}`")
+        st.write(f"Total de linhas: {len(df)}")
+
+        colunas = list(df.columns)
+        filtro_coluna = st.selectbox("Filtrar por coluna", ["Nenhum"] + colunas)
+
+        filtrado = df.copy()
+
+        if filtro_coluna != "Nenhum":
+            valores = sorted(filtrado[filtro_coluna].dropna().astype(str).unique())
+            selecionados = st.multiselect("Selecionar valores", valores)
+            if selecionados:
+                filtrado = filtrado[filtrado[filtro_coluna].astype(str).isin(selecionados)]
+
+        qtd = st.number_input(
+            "Quantidade de questões",
+            min_value=1,
+            max_value=max(1, len(filtrado)),
+            value=min(5, max(1, len(filtrado)))
+        )
+
+        resultado = filtrado.head(int(qtd))
+        st.dataframe(resultado, use_container_width=True)
+
+        st.download_button(
+            "Baixar seleção em CSV",
+            resultado.to_csv(index=False).encode("utf-8-sig"),
+            "question_selector.csv",
+            "text/csv",
+            use_container_width=True
+        )
+
+        st.download_button(
+            "Baixar seleção em Word",
+            gerar_word(resultado, "ATHENA Question Selector"),
+            "question_selector.docx",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            use_container_width=True
+        )
+
+with aba2:
+    st.header("Exam Analytics")
+    tabelas = [a for a in arquivos if a.suffix.lower() in [".csv", ".xlsx"]]
+
+    if not tabelas:
+        st.warning("Nenhuma tabela disponível para análise.")
+    else:
+        escolhido = st.selectbox("Escolha a tabela para análise", tabelas, format_func=lambda x: x.name, key="analytics")
+        df = carregar_tabela(escolhido)
+        st.dataframe(df.head(20), use_container_width=True)
+
+        colunas = list(df.columns)
+        coluna = st.selectbox("Coluna para calcular percentuais", colunas)
+
+        resumo = (
+            df[coluna]
+            .dropna()
+            .astype(str)
+            .value_counts(normalize=True)
+            .mul(100)
+            .round(2)
+            .reset_index()
+        )
+        resumo.columns = [coluna, "Percentual"]
+
+        st.subheader("Percentuais")
+        st.dataframe(resumo, use_container_width=True)
+        st.bar_chart(resumo.set_index(coluna))
+
+        st.download_button(
+            "Baixar relatório CSV",
+            resumo.to_csv(index=False).encode("utf-8-sig"),
+            "exam_analytics.csv",
+            "text/csv",
+            use_container_width=True
+        )
+
+with aba3:
+    st.header("Simulado Generator")
+    tabelas = [a for a in arquivos if a.suffix.lower() in [".csv", ".xlsx"]]
+
+    if not tabelas:
+        st.warning("Nenhuma base disponível para gerar simulado.")
+    else:
+        escolhido = st.selectbox("Escolha a base", tabelas, format_func=lambda x: x.name, key="simulado")
+        df = carregar_tabela(escolhido)
+
+        qtd = st.number_input(
+            "Número de questões do simulado",
+            min_value=1,
+            max_value=max(1, len(df)),
+            value=min(10, max(1, len(df))),
+            key="qtd_simulado"
+        )
+
+        simulado = df.sample(n=int(qtd), random_state=42) if len(df) >= int(qtd) else df
+        st.dataframe(simulado, use_container_width=True)
+
+        st.download_button(
+            "Exportar simulado CSV",
+            simulado.to_csv(index=False).encode("utf-8-sig"),
+            "simulado_personalizado.csv",
+            "text/csv",
+            use_container_width=True
+        )
+
+        st.download_button(
+            "Exportar simulado Word",
+            gerar_word(simulado, "ATHENA Simulado Generator"),
+            "simulado_personalizado.docx",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            use_container_width=True
+        )
+
+with aba4:
+    st.header("Arquivos disponíveis no módulo")
+    for arq in arquivos:
+        st.write(f"- `{arq.relative_to(BASE)}`")
+
+st.divider()
+st.caption("ATHENA Question Bank • VPS • Streamlit • Módulo integrado")
