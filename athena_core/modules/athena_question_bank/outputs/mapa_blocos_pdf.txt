@@ -1,0 +1,291 @@
+PDF selecionado: C:/Users/LUCIANO/Documents/Gestão Medicina/2026.1/Enamed - projetpo/Resultado ENAMED/1 Simulado  2026-1 - Prova.pdf
+
+================================================================================
+PAGINA 1
+================================================================================
+
+================================================================================
+PAGINA 2
+================================================================================
+X=   22.7 Y=   47.1 X2=  291.6 Y2=  139.7 -> CLÍNICA MÉDICA      1. Paciente do sexo feminino, 53 anos, dá entrada no pronto  atendimento com quadro de intensa dor torácica. Refere quadro  inicia
+X=   22.7 Y=   47.1 X2=  579.6 Y2=  277.4 -> 4. Paciente jovem, masculino, de 17 anos, trabalhador de área  rural, com obesidade mórbida, dá entrada no pronto-socorro,  levado por unidade de ambu
+X=   22.7 Y=  279.4 X2=  325.7 Y2=  313.8 -> (A)  (B)  De acordo com o quadro acima, qual o diagnóstico da paciente?  (C)
+X=   22.7 Y=  279.4 X2=  464.0 Y2=  490.6 -> Coma hiperosmolar  Cetoacidose diabética  Carbonarcose  (D)  Intoxicação por organofosforado  (A)  Urgência hipertensiva  (B)  Emergência hipertensiva
+X=  310.6 Y=  338.6 X2=  579.6 Y2=  488.3 -> 5. Um homem de 55 anos, diabético tipo II, hipertenso em  estágio III, em tratamento regular com insulina, metformina,  ramipril, anlodipino, indapami
+X=   22.7 Y=  490.7 X2=  289.0 Y2=  548.3 -> (B)  Programar pesquisa de microalbuminúria a partir dos 65  anos.  (C)  Encaminhar ao neurologista para realização de Doppler de  carótidas e vertebr
+X=   22.7 Y=  491.6 X2=  510.6 Y2=  798.1 -> (A)  Losartana, AAS e metoprolol.  (B)  Furosemida, digoxina e losartana.  (C)  Metoprolol, espironolactona e dapaglifozina.  (D)  Dapaglifozina, furo
+X=   22.7 Y=  802.6 X2=  574.5 Y2=  812.6 -> Núcleo Mineiro II - Teste de Progresso - outubro/2024  3
+
+================================================================================
+PAGINA 3
+================================================================================
+X=  310.6 Y=   47.0 X2=  579.5 Y2=  246.0 -> 9. Paciente do sexo feminino, 50 anos, procura atendimento na  atenção primária com quadro de astenia, prostração, tonteira e  relato de fraqueza de m
+X=   22.7 Y=   47.1 X2=  291.6 Y2=  369.3 -> 6. Um homem de 56 anos, hipertenso, em uso de losartana  50mg/dia, com carga tabágica de 80 maços-ano, procura  atendimento médico em Posto de Saúde, 
+X=  310.6 Y=  250.6 X2=  579.5 Y2=  490.9 -> 10. Paciente do sexo masculino, com diagnóstico de demência  há 5 anos e sem tratamento farmacológico no momento, chega  para consulta na Unidade Bási
+X=   22.7 Y=  373.8 X2=  291.5 Y2=  562.4 -> 7. Um paciente de 45 anos, portador de HIV, procura  atendimento médico por febre e perda ponderal há cerca de 1  mês.  Ao  exame,  apresenta  monilía
+X=  310.6 Y=  495.5 X2=  579.6 Y2=  630.4 -> 11. Paciente do sexo feminino, 27 anos, portadora de valva  aórtica bicúspide, procura o atendimento médico queixando-se de  cansaço, tonteira aos esf
+X=   22.7 Y=  567.1 X2=  291.5 Y2=  701.8 -> 8. Paciente do sexo masculino, 25 anos, procura atendimento na  atenção primária, devido a quadro de diarreia de início há 24  horas. Refere fezes aqu
+X=   22.7 Y=  702.5 X2=  574.0 Y2=  811.9 -> (A)  Shigella spp  (B)  Vibrio cholerae  (C)  Salmonella spp  (D)  Campylobacter jejuni        4  Núcleo Mineiro II - Teste de Progresso - outubro/202
+
+================================================================================
+PAGINA 4
+================================================================================
+X=   22.7 Y=   47.0 X2=  291.5 Y2=  422.8 -> 12. Paciente do sexo feminino de 29 anos é admitida na  Unidade de Pronto Atendimento (UPA), devido a traumatismo  cranioencefálico grave. À admissão,
+X=  310.6 Y=   47.0 X2=  579.5 Y2=  297.6 -> 14. Homem de 70 anos, portador de osteoartrose no joelho  direito, sem outras comorbidades, comparece à Estratégia de  Saúde da Família trazendo exame
+X=   22.7 Y=  302.3 X2=  579.5 Y2=  470.9 -> 15. Paciente de 70 anos chega à Unidade Básica de Saúde  (UBS) acompanhado de sua esposa. Relata ao médico que na  semana passada estava resfriado e q
+X=   22.7 Y=  473.0 X2=  578.6 Y2=  542.6 -> (A)  Cefalosporina de segunda geração.  (B)  Amoxicilina  +  ácido  clavulânico  associados  a  fluoroquinolona.  (C)  Amoxicilina + ácido clavulânico
+X=   22.7 Y=  547.3 X2=  579.5 Y2=  647.3 -> 16. Um paciente homem, de 25 anos, procura uma Unidade  Básica de Saúde para realização de testagens para infecções  sexualmente transmissíveis. O méd
+X=  310.6 Y=  646.5 X2=  577.4 Y2=  698.8 -> (A)  Positivo; contudo a realização do segundo teste rápido não  se fazia necessária para confirmação.  (B)  Positivo, visto a positividade em dois te
+X=   22.7 Y=  647.5 X2=  289.1 Y2=  691.5 -> (Fonte: gentilmente cedido por Dorneles, L. A.: MD)    Com base nas informações fornecidas, qual a conduta a ser  instituída de forma imediata?
+X=  310.6 Y=  701.2 X2=  577.1 Y2=  744.2 -> (C)  Indeterminado, visto que a confirmação deve ser realizada  por um teste Western Blot ou ELISA.  (D)  Indeterminado, visto que a confirmação do di
+X=   22.7 Y=  706.0 X2=  288.9 Y2=  784.2 -> (A)  Alteplase 10% da dose em ataque e 90% da dose em 1  hora, ambos via intravenosa.  (B)  Encaminhamento para serviço com disponibilidade de  neuroc
+X=   22.7 Y=  784.8 X2=  574.5 Y2=  813.3 -> Núcleo Mineiro II - Teste de Progresso - outubro/2024  5
+
+================================================================================
+PAGINA 5
+================================================================================
+X=   22.7 Y=   47.0 X2=  291.5 Y2=  365.8 -> 17. Um paciente homem, de 55 anos, etilista crônico não  abstêmio, com diagnóstico de cirrose hepática há 6 meses, sem  adesão às medidas terapêuticas
+X=  310.6 Y=   47.0 X2=  579.5 Y2=  245.9 -> 19. Paciente, 32 anos, comparece para consulta de rotina sem  queixas, com os seguintes resultados de exames: TSH 8,2µUI/mL  (valor de referência: 0,2
+X=  310.6 Y=  250.6 X2=  579.5 Y2=  354.4 -> 20. Paciente de 83 anos chega à Unidade Básica de Saúde  trazido pela filha, que está preocupada porque ele tem se  desequilibrado com frequência, est
+X=   22.7 Y=  366.2 X2=  291.4 Y2=  466.1 -> 18. Paciente de 39 anos, do sexo feminino, com obesidade Grau  III (IMC 42) está em avaliação para ser submetida a cirurgia  bariátrica (especificamen
+X=  310.6 Y=  369.4 X2=  579.2 Y2=  468.0 -> (A)  Permite identificar síndromes geriátricas e traçar um plano  terapêutico, porém não há estudos que comprovem que  houve melhora na sobrevida dos 
+X=  335.6 Y=  468.3 X2=  555.8 Y2=  478.4 -> Geriátrica Ampla, como por exemplo os idosos frágeis.
+X=   22.7 Y=  478.5 X2=  291.4 Y2=  620.8 -> (A)  O momento de consultar um cirurgião plástico para  possíveis procedimentos reparadores  é logo que  a  estabilização do peso for atingida.  (B)  
+X=  310.6 Y=  479.2 X2=  579.6 Y2=  609.8 -> 21. Homem de 45 anos, trabalhador rural, procura a Estratégia  de Saúde da Família devido a quadro típico de lombociatalgia à  direita, com cerca de 2
+X=   22.7 Y=  624.4 X2=  579.5 Y2=  812.8 -> (A)  Orientação sobre a realização correta da atividade física  laboral, aplicação de calor local e prescrição de anti- inflamatórios não esteroides p
+
+================================================================================
+PAGINA 6
+================================================================================
+X=  310.6 Y=   47.1 X2=  579.6 Y2=  175.7 -> PEDIATRIA    25. Menino, 2 meses de vida, sem antecedentes patológicos, é  levado pela mãe à Unidade de Pronto Atendimento com queixa de  evacuações l
+X=   22.7 Y=   47.1 X2=  291.5 Y2=  177.6 -> 22. Durante um surto de dengue, com mais de 50 atendimentos  por dia de pacientes com a doença, chega um senhor de 55 anos,  do sexo masculino, com si
+X=   22.7 Y=  177.8 X2=  288.8 Y2=  212.6 -> (C)  Suspender o AAS e solicitar a transfusão de concentrado de  plaquetas.  (D)  Manter o AAS e realizar contagem diária de plaquetas.
+X=  310.6 Y=  178.7 X2=  577.2 Y2=  223.1 -> (A)  Soro fisiológico 0,9% por via venosa, 30mL/kg em 1 hora.  (B)  Soro de reidratação por via oral em doses pequenas e  frequentes.
+X=   22.7 Y=  223.4 X2=  291.3 Y2=  521.2 -> 23. Homem de 47 anos chega para consulta na UBS referindo  desmaio há cerca de 1 hora. Disse que já aconteceu 3 vezes e,  em duas ocasiões, durante se
+X=  310.6 Y=  225.2 X2=  577.2 Y2=  280.5 -> (C)  Soro glicosado a 5% + soro fisiológico a 0,9% por via  venosa na proporção de 4:1.  (D)  Soro de reidratação oral por sonda nasogástrica em  gran
+X=  310.6 Y=  285.2 X2=  579.5 Y2=  637.4 -> 26. Recém-nascido, masculino, 7 dias de vida, foi trazido para  avaliação na Unidade Básica de Saúde devido a queixa de  tumefação em região escrotal 
+X=   22.7 Y=  525.9 X2=  291.6 Y2=  630.2 -> 24. Um homem de 43 anos de idade compareceu ao pronto  atendimento referindo anorexia, febre, mal-estar, cefaleias, dor  retro-orbital e mialgia de 4 
+X=   22.7 Y=  637.6 X2=  289.1 Y2=  732.5 -> (A)  Realizar a notificação em até sete dias à Secretaria  Municipal de Saúde, mesmo sem confirmação diagnóstica.  (B)  Realizar a notificação à Secre
+X=  310.6 Y=  639.7 X2=  579.2 Y2=  715.8 -> (B)  Constipação  intestinal funcional; não requer exames  complementares imediatos; recomendar desimpactação  fecal.  (C)  Intolerância à lactose; nã
+X=   22.7 Y=  733.2 X2=  574.5 Y2=  812.0 -> Núcleo Mineiro II - Teste de Progresso - outubro/2024  7
+
+================================================================================
+PAGINA 7
+================================================================================
+X=   22.7 Y=   50.3 X2=  579.6 Y2=  574.3 -> 28. Menino de 10 anos e 6 meses, em consulta de rotina pediátrica, está acompanhado pelo pai, que está preocupado com a estatura  da criança. Relata q
+X=   22.7 Y=  577.0 X2=  579.6 Y2=  766.7 -> 30. Menino, 5 anos, previamente hígido, com história de  amigdalite bacteriana há três semanas, iniciou há 1 semana com  edema bipalpebral matutino, q
+X=   22.7 Y=  580.2 X2=  291.5 Y2=  663.7 -> 29. Menino, 2 anos, é levado pela mãe à Unidade de Pronto  Atendimento porque iniciou há 5 dias com febre, dor no corpo e  inapetência. Hoje está afeb
+X=  310.6 Y=  677.3 X2=  577.3 Y2=  753.3 -> (A)  Iniciar restrição hídrica e antibioticoterapia de amplo  espectro.  (B)  Manter o paciente em repouso e diminuir o sal da dieta.  (C)  Solicitar 
+X=   22.7 Y=  767.3 X2=  574.0 Y2=  813.5 -> 8  Núcleo Mineiro II - Teste de Progresso - outubro/2024
+
+================================================================================
+PAGINA 8
+================================================================================
+X=  310.6 Y=   47.0 X2=  579.6 Y2=  329.8 -> 34. Menina de seis meses de vida chega ao pronto atendimento  com histórico de tosse, coriza, obstrução nasal de início há cerca  de três dias. Devido
+X=   22.7 Y=   47.1 X2=  291.5 Y2=  235.5 -> 31. Criança de 2 anos e 10 meses é atendida em Pronto  Atendimento com quadro de febre há três dias, acompanhada de  urgência miccional, polaciúria e 
+X=   22.7 Y=  240.0 X2=  291.6 Y2=  323.5 -> 32. Recém-nascido, 39 semanas de idade gestacional, peso  3400g, assintomático, filho de mãe primigesta que teve  diagnóstico de sífilis (VDRL 1:64) 1
+X=   22.7 Y=  329.8 X2=  291.5 Y2=  540.8 -> (A)  Como o VDRL materno apresentou queda após início do  tratamento para sífilis recebido na gestação, ela é  considerada adequadamente tratada e não
+X=   22.7 Y=  332.0 X2=  579.5 Y2=  813.1 -> (C)  Shunt da direita para a esquerda pelo canal arterial.  (D)  Shunt da direita para a esquerda pelo forame oval.    36. Lactente de 1 ano, saudável
+
+================================================================================
+PAGINA 9
+================================================================================
+X=   22.7 Y=   47.1 X2=  291.5 Y2=  217.1 -> 37. Menina, 4 anos, é atendida na unidade de saúde onde faz  acompanhamento médico por apresentar crises de chiado de  repetição e dermatite atópica, 
+X=  310.6 Y=   47.1 X2=  579.6 Y2=  212.7 -> 40. Criança do sexo masculino, 2 anos de idade é levada a  consulta em UBS devido a queixa de comportamento agitado e  irritabilidade. Mãe de 43 anos,
+X=   22.7 Y=  217.1 X2=  291.5 Y2=  336.7 -> (B)  Aumento do trabalho respiratório, devido ao aumento da  resistência ao fluxo de ar pela inflamação e edema da  mucosa brônquica, constrição do mú
+X=   22.7 Y=  218.2 X2=  579.5 Y2=  349.4 -> (A)  Avaliar o desenvolvimento neuropsicomotor e realizar  triagem do transtorno do espectro autista, por meio de  instrumentos padronizados.  (B)  En
+X=   22.7 Y=  353.4 X2=  291.6 Y2=  552.2 -> 38. Nutriz, mãe de uma lactente de dois meses de vida,  comparece a consulta de puericultura na UBSF para receber  orientações, pois apresenta mama di
+X=  310.6 Y=  353.4 X2=  579.5 Y2=  582.8 -> 41. Menino, 4 anos, é atendido na unidade de saúde com  quadro de edema e dor em joelhos há uma semana,  acompanhado por febre diária. Evoluiu com sur
+X=   22.7 Y=  556.9 X2=  291.6 Y2=  753.9 -> 39. Menina, 7 anos, é atendida na Unidade Básica de Saúde por  apresentar crises de cefaleia em região temporal, unilateral,  acompanhadas por fotofob
+X=   22.7 Y=  587.6 X2=  579.6 Y2=  798.0 -> 42. Você é médico(a) em uma unidade de saúde e recebe uma  adolescente de 14 anos, trazida pelos pais para avaliação da  saúde mental. Os pais informa
+X=   22.7 Y=  801.9 X2=  574.0 Y2=  811.9 -> 10  Núcleo Mineiro II - Teste de Progresso - outubro/2024
+
+================================================================================
+PAGINA 10
+================================================================================
+X=   22.7 Y=   47.1 X2=  291.5 Y2=  179.7 -> 43. Adolescente, sexo feminino, 12 anos, comparece à Unidade  Básica de Saúde para consulta com enfoque na promoção à  saúde. Ao verificar a caderneta
+X=  310.6 Y=   47.1 X2=  579.5 Y2=  171.6 -> 46. Menino, 3 anos, é atendido na emergência do hospital.  Médico observa criança torporosa, hipotônica. A via aérea está  pérvia, expansibilidade tor
+X=   22.7 Y=  179.9 X2=  289.1 Y2=  202.4 -> (D)  Vacina Meningite ACWY, HPV, contra Dengue, contra  COVID-19.
+X=  310.6 Y=  181.7 X2=  429.1 Y2=  208.8 -> (A)  Trombocitopenia imune  (B)  Dengue
+X=   22.7 Y=  209.0 X2=  291.6 Y2=  438.4 -> 44. Menino, 2 anos, é atendido na unidade de saúde com  história de febre repetitiva nos últimos 3 dias, variando de 39 a  39,5ºC, tendo feito uso iso
+X=  310.6 Y=  211.1 X2=  579.5 Y2=  521.3 -> (C)  Meningococemia  (D)  Leucemia    47. Lactente do sexo masculino, 1 ano de idade e previamente  hígido, é atendido na unidade de saúde com febre (
+X=   22.7 Y=  443.1 X2=  291.4 Y2=  629.8 -> 45. Menino, 5 anos, atendido na emergência pediátrica de um  hospital terciário, apresenta palidez, saturação 92%, pressão  arterial  de  75x55mmHg.  
+X=   22.7 Y=  526.0 X2=  579.6 Y2=  797.0 -> 48. Um lactente de 9 meses, do sexo masculino, foi trazido à  Unidade Básica de Saúde após cair do sofá. A mãe relatou que  ele chorou muito e não con
+X=   22.7 Y=  802.8 X2=  574.6 Y2=  812.8 -> Núcleo Mineiro II - Teste de Progresso - outubro/2024  11
+
+================================================================================
+PAGINA 11
+================================================================================
+X=   22.7 Y=   47.0 X2=  579.5 Y2=  268.5 -> 53. Mulher, 64 anos, procura o ambulatório com quadro de dor  abdominal, distensão e parada de eliminação de flatos e fezes há  2 dias, associada a ná
+X=   22.7 Y=   47.1 X2=  291.5 Y2=  206.6 -> CLÍNICA CIRÚRGICA    49. Paciente do sexo masculino, 50 anos, encaminhado do  Pronto Atendimento Municipal para o Hospital de referência para  avaliaç
+X=   22.7 Y=  219.1 X2=  579.2 Y2=  327.4 -> 54. Paciente do sexo feminino, 52 anos, procura o ambulatório  com um nódulo tireoidiano volumoso, doloroso e com resultado de  uma biopsia obtida por
+X=  310.6 Y=  284.9 X2=  577.2 Y2=  329.5 -> (A)  É recomendado realizar o tratamento medicamentoso com  resolução da lesão.  (B)  A ausência de malignidade descarta a necessidade de  cirurgia.
+X=   22.7 Y=  329.8 X2=  289.4 Y2=  374.8 -> (A)  Justifica-se o uso de antibiótico profilático pelo uso de tela.  (B)  Não se justifica o uso de antibióticos, por se tratar de  cirurgia limpa.
+X=  310.6 Y=  331.6 X2=  577.2 Y2=  364.5 -> (C)  É recomendado o tratamento cirúrgico.  (D)  É recomendado realizar o acompanhamento anual com  tomografia computadorizada de pescoço.
+X=   22.7 Y=  375.0 X2=  289.4 Y2=  421.9 -> (C)  Justifica-se o uso de antibiótico terapêutico pelo diabetes.  (D)  Justifica-se o uso de antibiótico profilático, pela cirurgia ser  em local de 
+X=  310.6 Y=  376.5 X2=  579.6 Y2=  475.1 -> 55. Paciente de 18 anos, sexo masculino, vítima de acidente  automobilístico.  Após  avaliação  primária,     o  paciente  se  encontrava         inst
+X=   22.7 Y=  426.7 X2=  291.6 Y2=  550.7 -> 51. Uma paciente do sexo feminino de 47 anos é atendida na  Unidade Básica de Saúde, com queixa de sensação de plenitude  e queimação retroesternal pó
+X=   22.7 Y=  551.3 X2=  291.5 Y2=  712.9 -> (A)  Manometria esofágica.  (B)  pHmetria esofágica.  (C)  Cirurgia antirrefluxo com fundoplicatura gástrica.  (D)  Iniciar medicação inibidora da bom
+X=   22.7 Y=  674.2 X2=  577.6 Y2=  774.5 -> (Fonte: arquivo do autor)    Assinale a alternativa com o local correto para compressão  externa do quadril por lençol:    (A)  Tomografia computadori
+X=   22.7 Y=  726.8 X2=  574.0 Y2=  811.9 -> (A)  A  (B)  B  (C)  C  (D)  D      12  Núcleo Mineiro II - Teste de Progresso - outubro/2024
+
+================================================================================
+PAGINA 12
+================================================================================
+X=  310.6 Y=   47.0 X2=  579.3 Y2=  177.9 -> 59. Uma mulher de 40 anos é admitida no pronto-socorro após  um acidente automobilístico. Ela apresenta dor intensa no  abdome superior esquerdo e sin
+X=   22.7 Y=   47.1 X2=  291.6 Y2=  171.6 -> 56. Você é o médico de uma Unidade Básica de Saúde e recebe  um paciente do sexo masculino, de 45 anos, com relato de  fraqueza e astenia progressivas
+X=   22.7 Y=  178.1 X2=  149.3 Y2=  209.0 -> (A)  Endoscopia digestiva alta  (B)  Colonoscopia
+X=  310.6 Y=  180.3 X2=  435.7 Y2=  202.7 -> (C)  Artéria gástrica esquerda  (D)  Tronco celíaco
+X=   22.7 Y=  209.2 X2=  211.2 Y2=  246.0 -> (C)  Ultrassonografia de vias biliares  (D)  Tomografia computadorizada de abdome
+X=   22.7 Y=  210.3 X2=  579.6 Y2=  406.3 -> 60. Uma paciente do sexo feminino de 70 anos é internada no  hospital após passar pela emergência com quadro de dor  abdominal há 1 dia, a qual piorou
+X=   22.7 Y=  250.6 X2=  291.5 Y2=  344.5 -> 57. Mulher, 45 anos, com diagnóstico prévio de colelitíase.  Admitida no Pronto Atendimento de um Hospital Terciário, com  queixa de dor em hipocôndri
+X=   22.7 Y=  359.2 X2=  448.0 Y2=  419.0 -> (A)  Artéria mesentérica superior  (B)  Artéria ileocólica  (C)  Veia mesentérica superior  (D)  Veia porta
+X=   22.7 Y=  423.1 X2=  291.4 Y2=  527.0 -> 58. Homem, 33 anos, vítima de acidente motociclístico, colisão  frontal em alta velocidade com anteparo fixo. Estava usando  capacete, sem sinais clín
+X=  310.6 Y=  423.1 X2=  579.5 Y2=  531.3 -> 61. Paciente do sexo masculino, 49 anos, procurou atendimento  especializado devido a quadro de icterícia, associada a prurido  cutâneo, colúria, acol
+X=   22.7 Y=  531.5 X2=  291.5 Y2=  572.7 -> (A)  Diante do quadro clínico apresentado pelo paciente, está  indicada a radiografia simples de abdome para definir a  indicação cirúrgica.
+X=  310.6 Y=  533.6 X2=  477.7 Y2=  568.4 -> (B)  Colecistectomia videolaparoscópica  (C)  Antibioticoterapia  (D)  Colangiorressonância
+X=   22.7 Y=  572.9 X2=  291.3 Y2=  638.7 -> (B)  Diante do quadro clínico apresentado pelo paciente está  indicada a tomografia computadorizada de abdome com  contraste para definir a propedêuti
+X=  310.6 Y=  573.8 X2=  579.5 Y2=  637.6 -> 62. Mulher  de  32  anos,  em  acidente  doméstico,  teve  queimadura de segundo grau acometendo área correspondente a  aproximadamente 30% da superfí
+X=   22.7 Y=  638.9 X2=  291.5 Y2=  671.7 -> (D)  Diante do quadro clínico apresentado pelo paciente, está  indicada a realização de um hematócrito que, quando  normal, descarta a necessidade de 
+X=   22.7 Y=  639.7 X2=  574.6 Y2=  813.2 -> (A)  Restringir a ingestão e a reposição de líquidos.  (B)  Lavar a área afetada com água corrente.  (C)  Aplicar compressas de gelo sobre a área quei
+
+================================================================================
+PAGINA 13
+================================================================================
+X=   22.7 Y=   47.0 X2=  291.8 Y2=  235.7 -> 63. Paciente do sexo masculino, 35 anos, no 2º dia de pós- operatório de cirurgia de hernioplastia inguinal direita, recebe  visita hospitalar do ciru
+X=  310.6 Y=   47.1 X2=  579.5 Y2=  193.9 -> 67. Paciente do sexo masculino, 28 anos, previamente hígido,  foi vítima de acidente motocicleta versus caminhonete – o  paciente era o motociclista. 
+X=  310.6 Y=  198.6 X2=  579.5 Y2=  292.6 -> 68. Paciente do sexo masculino, 45 anos, procura unidade de  urgência e emergência com quadro de dispneia aguda e dor  torácica em pontada. Não há his
+X=   22.7 Y=  240.3 X2=  291.6 Y2=  302.9 -> 64. Mulher de 65 anos, portadora de fibrilação atrial, motivo pelo  qual faz uso do anticoagulante oral warfarina, será submetida a  intervenção cirúr
+X=   22.7 Y=  303.2 X2=  289.0 Y2=  362.7 -> (A)  Tempo de protrombina, ajustado para o International  Normalized Ratio (RNI).  (B)  Tempo de tromboplastina parcial ativado.  (C)  Contagem de pla
+X=  310.6 Y=  307.3 X2=  552.2 Y2=  354.1 -> (A)  Toracocentese de alívio (punção).  (B)  Drenagem pleural em selo d’água com dreno de tórax.  (C)  Observação e repouso.  (D)  Oxigenoterapia e an
+X=   22.7 Y=  362.7 X2=  145.6 Y2=  387.2 -> (D)  Tempo de sangramento.
+X=  310.6 Y=  364.0 X2=  579.5 Y2=  559.6 -> 69. Paciente do sexo masculino, 44 anos, procura pronto  atendimento  com  queixa  de  olho  vermelho  unilateral,  acompanhado de fotofobia, há 2 dia
+X=   22.7 Y=  391.7 X2=  291.6 Y2=  647.5 -> 65. Homem de 38 anos, antes de ser submetido a cirurgia  cutânea de pequeno porte em um centro cirúrgico ambulatorial,  recebeu anestesia local com o 
+X=  310.6 Y=  564.2 X2=  579.5 Y2=  637.0 -> 70. Paciente do sexo feminino, 22 anos, vítima de acidente  automobilístico com traumatismo cranioencefálico grave, foi  atendida pela unidade do SAMU
+X=   22.7 Y=  652.1 X2=  516.1 Y2=  797.3 -> (A)  Bradicardia, hipotensão arterial e bradpneia.  (B)  Bradicardia, hipertensão arterial e bradpneia.  (C)  Taquicardia, hipertensão arterial e brad
+X=   22.7 Y=  802.9 X2=  574.0 Y2=  813.0 -> 14  Núcleo Mineiro II - Teste de Progresso - outubro/2024
+
+================================================================================
+PAGINA 14
+================================================================================
+X=   22.7 Y=   47.0 X2=  291.6 Y2=  449.0 -> 71. Paciente do sexo masculino, 22 anos, procura atendimento  médico em Unidade Básica de Saúde do bairro onde mora. Relata  história de fratura do úm
+X=  310.6 Y=   47.0 X2=  579.5 Y2=  440.9 -> 74. Mariana, uma mulher trans de 52 anos de idade, procura  UBSF desejando informações sobre rastreamento de câncer de  mama.  Refere  ter  iniciado  
+X=  310.6 Y=  445.6 X2=  579.5 Y2=  584.8 -> 76. Mulher de 56 anos de idade está em acompanhamento em  ambulatório secundário de ginecologia, com queixa de perda  urinária aos esforços de naturez
+X=   22.7 Y=  453.8 X2=  291.5 Y2=  582.4 -> GINECOLOGIA / OBSTETRÍCIA    73. Mulher de 42 anos de idade procura UBSF com queixa de  sangramento menstrual aumentado há aproximadamente 1 ano,  com
+X=   22.7 Y=  585.0 X2=  240.8 Y2=  644.5 -> (A)  Câncer de endométrio; histeroscopia  (B)  Adenomiose; ressonância nuclear magnética  (C)  Pólipo endometrial; tomografia computadorizada  (D)  Mi
+X=  310.6 Y=  587.2 X2=  523.6 Y2=  621.8 -> (B)     Cirurgia combinada de Sling com tela sintética.  (C)     Fisioterapia pélvica e estrogênio tópico vaginal.  (D)  Agonistas beta-3 adrenérgicos
+X=   22.7 Y=  645.2 X2=  574.6 Y2=  813.1 -> Núcleo Mineiro II - Teste de Progresso - outubro/2024  15
+
+================================================================================
+PAGINA 15
+================================================================================
+X=   22.7 Y=   47.1 X2=  291.6 Y2=  202.4 -> 77. Paciente de 26 anos, apresentou menarca aos 11 anos, e  desde então tem ciclos menstruais irregulares, com intervalos  variando de 30 até 90 dias.
+X=  310.6 Y=   47.1 X2=  579.6 Y2=  212.7 -> 80. Mulher, 62 anos, comparece em consulta ginecológica  queixando-se de dois episódios de sangramento vaginal em  pequena quantidade e indolores, nos
+X=   22.7 Y=  217.5 X2=  289.0 Y2=  287.1 -> (A)  Tratamento inicial com dieta e atividade física.  (B)  Prescrição de contraceptivo oral combinado.  (C)  Indicação de DIU (dispositivo intrauteri
+X=  310.6 Y=  229.6 X2=  579.6 Y2=  607.3 -> 81. Paciente de 24 anos, sexo feminino, em consulta no centro  de  saúde  relata  surgimento  no  último  ano  de  lesões  esbranquiçadas na vulva, se
+X=   22.7 Y=  291.8 X2=  291.6 Y2=  500.9 -> 78. Paciente do sexo feminino, 45 anos, com queixa de  episódios de sinusorragia há 3 meses, associada a dispareunia  de profundidade e aumento do vol
+X=   22.7 Y=  505.6 X2=  291.4 Y2=  599.2 -> 79. Paciente de 43 anos, sexo feminino, procura o ginecologista  com queixa de ondas de calor intensas seguidas de sudorese,  principalmente no períod
+X=   22.7 Y=  607.3 X2=  291.5 Y2=  712.8 -> (A)  Testes de função tireoidiana devem ser realizados para  diagnóstico diferencial.  (B)  A confirmação diagnóstica se dará após dosagem de FSH e  e
+X=  310.6 Y=  609.5 X2=  577.1 Y2=  630.0 -> (D)  Complementação propedêutica com ultrassonografia de  mamas e axilas.
+X=   22.7 Y=  802.7 X2=  574.0 Y2=  812.7 -> 16  Núcleo Mineiro II - Teste de Progresso - outubro/2024
+
+================================================================================
+PAGINA 16
+================================================================================
+X=   22.7 Y=   47.0 X2=  291.6 Y2=  202.7 -> 83. Paciente de 17 anos, sexo feminino, procura Unidade Básica  de Saúde, pois, diferentemente de suas colegas na escola, ainda  não menstruou. Refere
+X=  310.6 Y=   47.0 X2=  579.6 Y2=  192.7 -> 86. Gestante de 25 anos de idade comparece ao Pronto-Socorro  de Ginecologia e Obstetrícia com quadro de forte dor em baixo  ventre. Refere amenorreia
+X=   22.7 Y=  207.4 X2=  512.2 Y2=  358.8 -> (A)  Prenhez ectópica íntegra – Methotrexate EV  84. Mulher de 26 anos de idade procura a UBSF solicitando  orientação em Planejamento Familiar, pois 
+X=  310.6 Y=  218.5 X2=  544.9 Y2=  266.6 -> (B)  Prenhez ectópica rota – Laparotomia exploradora  (C)  Prenhez ectópica rota – Methotrexate EV  (D)  Prenhez ectópica íntegra – Laparotomia explor
+X=  310.6 Y=  271.1 X2=  579.5 Y2=  354.7 -> 87. Gestante de 30 anos de idade, primigesta, drogadita, com  idade gestacional de 34 semanas, procura o pronto-atendimento  com  contrações  persiste
+X=   22.7 Y=  359.0 X2=  289.1 Y2=  416.4 -> (B)  A utilização de contraceptivos combinados orais está bem  indicada.  (C)  A progesterona pode dificultar o controle glicêmico.  (D)  O  anticoagu
+X=   22.7 Y=  360.1 X2=  506.1 Y2=  429.1 -> (A)  Realização de Doppler de artéria umbilical.  (B)  Avaliação da inserção placentária.  (C)  Realização de cardiotocografia.  (D)  Avaliação do tôn
+X=   22.7 Y=  433.3 X2=  291.6 Y2=  640.5 -> 85. Mulher de 24 anos de idade, grávida de 35 semanas (idade  gestacional confirmada por ultrassonografia) chega ao Pronto- Socorro de Ginecologia e O
+X=  310.6 Y=  433.3 X2=  579.3 Y2=  601.1 -> 88. Gestante de 40 anos, em sua primeira gravidez, está em  seguimento inicial de pré-natal em uma cidade de alto nível  socioeconômico.  Está  atualm
+X=   22.7 Y=  605.6 X2=  579.5 Y2=  701.9 -> 89. Gestante de 32 anos, hoje com 34 semanas, iniciou quadro  de febre alta, cefaleia, dor retrorbitária, prostração e mialgia difusa  há 4 dias. Até 
+X=   22.7 Y=  703.8 X2=  577.4 Y2=  813.0 -> (A)  Administração de sintomáticos e observação na unidade.  (B)  Tratamento ambulatorial com reidratação oral e novo  hemograma.  (C)  Internação, hi
+
+================================================================================
+PAGINA 17
+================================================================================
+X=  310.6 Y=   47.0 X2=  579.5 Y2=  344.4 -> 94. Gestante de 32 anos de idade está em trabalho de parto em  sua segunda gestação. Ultrassonografia realizada há 2 dias  revela feto feminino sem al
+X=   22.7 Y=   47.1 X2=  291.5 Y2=  245.7 -> 90. Gestante de 23 anos procura maternidade em trabalho de  parto, com idade gestacional de 39 semanas. Na internação, está  com contrações ritmadas e
+X=   22.7 Y=  250.4 X2=  291.5 Y2=  350.1 -> 91. Gestante afrodescendente, 24 anos de idade, está em  seguimento em ambulatório de pré-natal e retorna na segunda  consulta com 9 semanas e 4 dias 
+X=   22.7 Y=  350.2 X2=  119.7 Y2=  374.8 -> (C)  Talassemia  (D)  Anemia falciforme
+X=  310.6 Y=  351.5 X2=  490.9 Y2=  381.1 -> (A)  Alto risco de infecção e baixo de lesão.  (B)  Baixo risco de infecção e alto de lesão.
+X=   22.7 Y=  381.3 X2=  291.6 Y2=  512.3 -> 92. Mulher de 25 anos, está grávida de 26 semanas e vem à  consulta preocupada com o risco de parto prematuro, pois sua  irmã teve dois partos prematu
+X=  310.6 Y=  383.5 X2=  579.6 Y2=  506.2 -> (C)  Alto risco de infecção e alto de lesão.  (D)  Baixo risco de infecção e baixo de lesão.    96. Gestante de 32 anos de idade, hígida previamente, 
+X=   22.7 Y=  512.4 X2=  278.4 Y2=  536.8 -> (C)  Ultrassonografia transvaginal com medida do colo uterino.  (D)  Amniocentese para avaliar maturidade pulmonar fetal.
+X=  310.6 Y=  513.6 X2=  404.9 Y2=  543.2 -> (A)  Reinfecção  (B)  Falha terapêutica
+X=   22.7 Y=  543.3 X2=  288.9 Y2=  587.5 -> 93. Primigesta, 36 anos, com gestação gemelar, apresentou ao  ultrassom obstétrico, com 27 semanas de idade gestacional:  - feto 1, com peso estimado 
+X=  310.6 Y=  545.5 X2=  453.1 Y2=  567.9 -> (C)  Oscilação normal de titulação  (D)  Cicatriz sorológica
+X=   27.7 Y=  587.8 X2=  180.0 Y2=  597.8 -> (13,1cm), bexiga repleta e distendida.
+X=   22.7 Y=  600.1 X2=  288.6 Y2=  610.2 -> - feto 2, com peso estimado de 776g, ausência de líquido
+X=   22.7 Y=  610.4 X2=  291.4 Y2=  799.8 -> amniótico e bexiga não identificada.  A dopplervelocimetria de artérias umbilicais de ambos os fetos era  normal. Ao ultrassom, foi identificado o sin
+X=   22.7 Y=  802.7 X2=  574.0 Y2=  812.7 -> 18  Núcleo Mineiro II - Teste de Progresso - outubro/2024
+
+================================================================================
+PAGINA 18
+================================================================================
+X=  310.6 Y=   47.0 X2=  579.2 Y2=  109.9 -> 99. Uma Equipe Saúde da Família acompanha há anos uma  senhora de 53 anos, portadora de Diabetes Mellitus Tipo 2 que,  apesar de realizar o devido aco
+X=   22.7 Y=   47.1 X2=  291.5 Y2=  216.9 -> SAÚDE COLETIVA    97. Criança, 7 anos, compareceu à Unidade Básica de Saúde  para atendimento médico acompanhado pela mãe, que notou  mudança em seu c
+X=  312.2 Y=  112.2 X2=  578.3 Y2=  122.3 -> Considerando esta situação hipotética, decida pela alternativa que
+X=  310.6 Y=  122.6 X2=  579.6 Y2=  221.4 -> descreve a aplicação adequada do apoio matricial neste contexto:    (A)  Mobilização do Núcleo de Apoio à Saúde da Família (NASF)  para avaliação conj
+X=   22.7 Y=  221.4 X2=  291.4 Y2=  424.0 -> (A)  O médico, após realizar as condutas clínicas sobre as  queixas apresentadas pela criança, a encaminha ao serviço  de psicologia, pois situações d
+X=  310.6 Y=  223.6 X2=  579.3 Y2=  309.9 -> (C)  Pactuar intervenções específicas dos profissionais do  NASF, com discussão e repactuação permanentes sem,  contudo, ser preciso incluir a equipe 
+X=  310.6 Y=  314.6 X2=  579.5 Y2=  418.5 -> 100. Paciente, 42 anos, sexo feminino, é atendida em Unidade  Básica de Saúde para consulta de rotina. Ela está assintomática,  nega uso de medicações
+X=   22.7 Y=  424.5 X2=  291.5 Y2=  493.4 -> 98. Homem, 28 anos, estava trabalhando no açougue e teve um  corte nas mãos. Chegou à Unidade Básica de Saúde com um  pano estancando o sangramento. F
+X=  310.6 Y=  433.5 X2=  579.5 Y2=  497.2 -> (A)  O uso de adesivos transdérmicos de nicotina pode ser  iniciado enquanto o paciente ainda estiver fumando, como  forma de motivação para o abandon
+X=   22.7 Y=  497.4 X2=  291.5 Y2=  658.3 -> (A)  O médico deverá fazer a prescrição, afastamento e solicitar  que o  empregador  emita a  CAT e a  Notificação  Compulsória.  (B)  É obrigatório a
+X=  310.6 Y=  499.5 X2=  579.1 Y2=  565.2 -> (C)  Entre os medicamentos de primeira linha que devem ser  prescritos para esta paciente, está a bupropiona.  (D)  O acompanhamento médico deve ser s
+X=  310.6 Y=  569.7 X2=  579.3 Y2=  653.3 -> 101. Adolescente, 14 anos, sexo feminino, procura a Unidade  Básica de Saúde para orientações sobre vacinação. No cartão de  vacinas, há o registro de
+X=   22.7 Y=  667.9 X2=  579.2 Y2=  813.0 -> (A)  Uma dose da vacina HPV, uma dose da vacina  meningocócica ACWY e uma dose da vacina tríplice viral.  (B)  Uma dose da vacina HPV e uma dose da va
+
+================================================================================
+PAGINA 19
+================================================================================
+X=   22.7 Y=   47.0 X2=  291.6 Y2=  151.3 -> 102. Na última reunião do Conselho Municipal de Saúde (CMS),  foi discutido o novo modelo de cofinanciamento federal de custeio  da Atenção Primária à
+X=  310.6 Y=   47.0 X2=  579.5 Y2=  141.0 -> 104. Homem, 40 anos, tabagista, morador de município com  cerca de 39.000 habitantes, é acompanhado há anos pelo médico  de família da Unidade Básica 
+X=   22.7 Y=  151.5 X2=  291.4 Y2=  205.1 -> Considerando a referida Portaria e a reorganização da APS no  componente vínculo e acompanhamento territorial para as  equipes, será considerada a pop
+X=   22.7 Y=  153.1 X2=  411.8 Y2=  370.2 -> (A)  Hierarquização  (B)  Integralidade  (C)  Descentralização  (D)  Participação Social    (A)  Ajustada por faixa etária com maiores necessidades e 
+X=  310.6 Y=  219.6 X2=  579.6 Y2=  379.5 -> 105. Foi observado um aumento significativo na mortalidade de  crianças menores de um ano em um determinado município,  principalmente dentre aquelas 
+X=  310.6 Y=  381.8 X2=  579.3 Y2=  521.7 -> (B)  A equipe de saúde realiza entrevistas com os pais das  crianças falecidas para entender os possíveis motivos dos  óbitos, sem análise de dados qu
+X=   22.7 Y=  387.0 X2=  291.6 Y2=  684.8 -> 103. Um médico de família e comunidade atuante em uma  Estratégia Saúde da Família é solicitado pela enfermeira da  unidade para atender um paciente d
+X=  310.6 Y=  526.4 X2=  579.6 Y2=  681.8 -> 106. Mulher, 76 anos, tabagista, obesa, hipertensa, diagnóstico  recente de aterosclerose coronariana, apresentou quadro de dor  precordial iniciada h
+X=   22.7 Y=  685.0 X2=  291.4 Y2=  738.7 -> (D)  A gestão municipal deve articular e criar condições para que  a referência aos serviços especializados sejam realizados  preferencialmente pela A
+X=   22.7 Y=  686.0 X2=  577.2 Y2=  797.4 -> (A)  Causa básica: infarto agudo do miocárdio; causa terminal:  aterosclerose coronariana.  (B)  Causa básica: aterosclerose coronariana; causa termin
+X=   22.7 Y=  802.5 X2=  574.0 Y2=  812.5 -> 20  Núcleo Mineiro II - Teste de Progresso - outubro/2024
+
+================================================================================
+PAGINA 20
+================================================================================
+X=   22.7 Y=   47.0 X2=  291.6 Y2=  141.0 -> 107. Primigesta, 22 anos, com 20 semanas de gestação,  compareceu ao pré-natal para seguimento das consultas. Nega  comorbidades, alergias e cirurgias
+X=  310.6 Y=   47.0 X2=  579.2 Y2=  144.9 -> 110. Uma paciente de 61 anos de idade, do sexo feminino, é  diagnosticada com diabetes mellitus tipo 2 durante uma consulta  na Atenção Primária à Saú
+X=   22.7 Y=  145.1 X2=  291.3 Y2=  295.5 -> (A)  A pressão arterial mais baixa se deve à redução da  resistência vascular periférica observada na gestante e é  um achado natural.  (B)  A frequên
+X=  310.6 Y=  147.2 X2=  579.5 Y2=  245.8 -> (B)  Prescrever glibenclamida, um sulfonilureia, como primeira  linha, por ser eficaz na redução dos níveis de glicose ao  estimular a secreção de ins
+X=   22.7 Y=  250.5 X2=  579.5 Y2=  480.8 -> 111. O Pacto pela Saúde de 2006 impactou a transferência de  recursos federais para os Estados e Municípios em blocos de  financiamento: Atenção Básic
+X=  310.6 Y=  311.8 X2=  579.3 Y2=  486.5 -> (A)  O Pacto pela Saúde é um conjunto de reformas feitas entre  Estados e Municípios com o objetivo de cobrar da União  inovações nos processos e inst
+X=   22.7 Y=  486.7 X2=  145.7 Y2=  542.2 -> (A)  Taenia solium  (B)  Enterobius vermicularis  (C)  Strongyloides stercoralis  (D)  Giardia lamblia
+X=   22.7 Y=  488.8 X2=  579.5 Y2=  554.8 -> (D)  O Pacto pela Saúde é uma legislação feita pela União que  impacta no financiamento dos Estados e Municípios.  Participaram da elaboração a socied
+X=  310.6 Y=  557.1 X2=  579.3 Y2=  654.8 -> 112. Um paciente do sexo masculino, 54 anos, apresenta  quadro de chikungunya em fase subaguda. Ele relata dor articular  persistente, fadiga e rigide
+X=   22.7 Y=  559.0 X2=  291.6 Y2=  642.3 -> 109. Durante uma consulta na Atenção Primária, uma paciente  de 35 anos de idade, do sexo feminino, relata sentir-se  sobrecarregada  com  as  respons
+X=   22.7 Y=  654.8 X2=  291.5 Y2=  786.7 -> (A)  Elaborar o ecomapa com foco exclusivo nas interações  familiares, visto que a sobrecarga familiar é o principal  problema relatado pela paciente.
+X=  310.6 Y=  657.0 X2=  578.3 Y2=  722.8 -> (B)  Iniciar o uso de anti-inflamatórios não esteroides (AINEs) e  considerar corticoterapia em casos mais graves.  (C)  Suspender todos os medicament
+X=   22.7 Y=  802.3 X2=  574.6 Y2=  812.4 -> Núcleo Mineiro II - Teste de Progresso - outubro/2024  21
+
+================================================================================
+PAGINA 21
+================================================================================
+X=   22.7 Y=   47.1 X2=  291.4 Y2=  224.9 -> 113. Uma paciente do sexo feminino, 24 anos, residente em  uma área endêmica, procura atendimento médico com queixas de  dormência em alguns dedos da 
+X=  310.6 Y=   47.1 X2=  579.2 Y2=  276.5 -> 116. Uma paciente de 15 anos de idade, que se identifica como  lésbica, procura atendimento em uma unidade de saúde após ser  diagnosticada com clamíd
+X=   22.7 Y=  229.6 X2=  291.6 Y2=  459.3 -> 114. Paciente do sexo masculino, 36 anos, acaba de entrar no  sistema prisional e queixa-se de febre e tosse frequente. Ele foi  avaliado pelo médico 
+X=  310.6 Y=  281.2 X2=  579.2 Y2=  459.3 -> 117. Uma paciente do sexo feminino, com 3 meses de idade,  está em acompanhamento regular de puericultura. Durante as  consultas, a mãe relata que seg
+X=  310.6 Y=  463.7 X2=  579.6 Y2=  650.3 -> 118. Paciente de 55 anos, hipertenso, em uso de anlodipino  10mg uma vez ao dia, chega à Unidade Básica de Saúde com o  monitoramento da pressão arter
+X=   22.7 Y=  464.0 X2=  291.4 Y2=  666.7 -> 115. Paciente do sexo feminino, 14 anos, foi levada pela mãe à  UBS após tomar 4 comprimidos de dipirona como tentativa de  suicidar-se. A adolescente
+X=   22.7 Y=  669.0 X2=  291.3 Y2=  796.3 -> (C)  Notificação compulsória por qualquer profissional de saúde,  sendo preferencialmente feito por quem a atendeu e de  notificação imediata pelo mun
+X=   22.7 Y=  802.2 X2=  574.0 Y2=  812.2 -> 22  Núcleo Mineiro II - Teste de Progresso - outubro/2024
+
+================================================================================
+PAGINA 22
+================================================================================
+X=   22.7 Y=   47.1 X2=  291.5 Y2=  358.4 -> 119. Diego, 45 anos, chega à UBS muito ansioso, querendo  saber o que fazer. Relata que teve relação na noite anterior com  uma mulher, mas que a cami
+X=   22.7 Y=  363.0 X2=  577.1 Y2=  813.1 -> 120. Joana, uma mulher de 55 anos, nunca realizou exames  preventivos de câncer de colo de útero. Durante uma consulta de  rotina na Unidade Básica de

@@ -1,0 +1,16 @@
+ATHENA QUESTION BANK
+Versao: v1.0.0 MVP funcional
+
+Modulos:
+- Question Selector
+- Exam Analytics
+- Simulado Generator
+
+Status:
+- 101 questoes importadas
+- 99% classificadas por assunto
+- 5 grandes areas funcionando
+
+Integracao:
+Modulo integrado ao ATHENA CORE como:
+athena_core/modules/athena_question_bank

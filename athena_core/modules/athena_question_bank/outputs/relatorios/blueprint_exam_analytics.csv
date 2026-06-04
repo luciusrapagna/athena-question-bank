@@ -1,0 +1,48 @@
+﻿grande_area,assunto,n_questoes,percentual_dentro_area,total_questoes_area,percentual_total_prova
+Clínica Médica,Cardiologia,4,11.76,34,33.66
+Clínica Médica,Hipertensão Arterial,4,11.76,34,33.66
+Clínica Médica,Sepse,3,8.82,34,33.66
+Clínica Médica,Reumatologia,3,8.82,34,33.66
+Clínica Médica,Endocrinologia,2,5.88,34,33.66
+Clínica Médica,Atenção Primária à Saúde,2,5.88,34,33.66
+Clínica Médica,Oncologia,2,5.88,34,33.66
+Clínica Médica,Diabetes Mellitus,2,5.88,34,33.66
+Clínica Médica,Hepatologia,2,5.88,34,33.66
+Clínica Médica,Doenças Infecciosas,1,2.94,34,33.66
+Clínica Médica,Saúde Mental,1,2.94,34,33.66
+Clínica Médica,Nefrologia,1,2.94,34,33.66
+Clínica Médica,Neurologia,1,2.94,34,33.66
+Clínica Médica,Violência e Vulnerabilidade,1,2.94,34,33.66
+Clínica Médica,Neurologia Vascular,1,2.94,34,33.66
+Clínica Médica,Imunizações,1,2.94,34,33.66
+Clínica Médica,Gastroenterologia,1,2.94,34,33.66
+Clínica Médica,Toxicologia,1,2.94,34,33.66
+Clínica Médica,Pediatria,1,2.94,34,33.66
+Cirurgia,Trauma e Atendimento Pré-Hospitalar,3,42.86,7,6.93
+Cirurgia,Hepatologia,1,14.29,7,6.93
+Cirurgia,Hipertensão Arterial,1,14.29,7,6.93
+Cirurgia,Cirurgia de Cabeça e Pescoço,1,14.29,7,6.93
+Cirurgia,Atenção Primária à Saúde,1,14.29,7,6.93
+Pediatria,Pediatria,5,83.33,6,5.94
+Pediatria,Cardiologia,1,16.67,6,5.94
+Ginecologia e Obstetrícia,Obstetrícia,7,41.18,17,16.83
+Ginecologia e Obstetrícia,Ginecologia,4,23.53,17,16.83
+Ginecologia e Obstetrícia,Oncologia,2,11.76,17,16.83
+Ginecologia e Obstetrícia,Endometriose,1,5.88,17,16.83
+Ginecologia e Obstetrícia,Assunto não identificado,1,5.88,17,16.83
+Ginecologia e Obstetrícia,Hipertensão Arterial,1,5.88,17,16.83
+Ginecologia e Obstetrícia,Cardiologia,1,5.88,17,16.83
+Saúde Coletiva,Atenção Primária à Saúde,14,37.84,37,36.63
+Saúde Coletiva,Doenças Infecciosas,4,10.81,37,36.63
+Saúde Coletiva,Saúde Mental,4,10.81,37,36.63
+Saúde Coletiva,Pediatria,3,8.11,37,36.63
+Saúde Coletiva,Dengue e Vigilância Epidemiológica,2,5.41,37,36.63
+Saúde Coletiva,Hepatologia,2,5.41,37,36.63
+Saúde Coletiva,Obstetrícia,1,2.7,37,36.63
+Saúde Coletiva,Trauma e Atendimento Pré-Hospitalar,1,2.7,37,36.63
+Saúde Coletiva,Imunizações,1,2.7,37,36.63
+Saúde Coletiva,Arboviroses,1,2.7,37,36.63
+Saúde Coletiva,Endocrinologia,1,2.7,37,36.63
+Saúde Coletiva,Coloproctologia,1,2.7,37,36.63
+Saúde Coletiva,Saúde Prisional,1,2.7,37,36.63
+Saúde Coletiva,Cardiologia,1,2.7,37,36.63
