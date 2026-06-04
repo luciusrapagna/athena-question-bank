@@ -10,7 +10,7 @@ def carregar_csv(caminho):
         return list(csv.DictReader(f))
 
 
-def selecionar_questoes(aula, area, quantidade, assunto="", competencia=""):
+def selecionar_questoes(aula, area, quantidade):
     questoes = {q["id_questao"]: q for q in carregar_csv(BANCO_QUESTOES)}
     planos = {p["id_aula"]: p for p in carregar_csv(BANCO_PLANOS)}
     relacoes = carregar_csv(BANCO_RELACIONAMENTOS)
@@ -33,13 +33,7 @@ def selecionar_questoes(aula, area, quantidade, assunto="", competencia=""):
         if not q:
             continue
 
-        if area and q["area"].lower() != area:
-            continue
-
-        if assunto and assunto not in q.get("assunto", "").lower():
-            continue
-
-        if competencia and competencia not in q.get("competencia", "").lower():
+        if q["area"].lower() != area:
             continue
 
         q["_score_aderencia"] = r["score_aderencia"]
@@ -51,7 +45,7 @@ def selecionar_questoes(aula, area, quantidade, assunto="", competencia=""):
     return selecionadas
 
 
-def exportar_word(questoes, aula, area, quantidade, assunto="", competencia=""):
+def exportar_word(questoes, aula, area, quantidade):
     DIR_WORD.mkdir(parents=True, exist_ok=True)
 
     doc = Document()
@@ -60,8 +54,6 @@ def exportar_word(questoes, aula, area, quantidade, assunto="", competencia=""):
 
     doc.add_paragraph(f"Aula solicitada: {aula}")
     doc.add_paragraph(f"Grande área: {area}")
-    doc.add_paragraph(f"Assunto: {assunto or ''}")
-    doc.add_paragraph(f"Competência: {competencia or ''}")
     doc.add_paragraph(f"Quantidade solicitada: {quantidade}")
     doc.add_paragraph(f"Questões encontradas: {len(questoes)}")
 
@@ -85,7 +77,7 @@ def exportar_word(questoes, aula, area, quantidade, assunto="", competencia=""):
         if q.get("gabarito"):
             doc.add_paragraph(f"Gabarito: {q.get('gabarito')}")
 
-    nome = f"questoes_{aula}_{area}_{assunto}_{competencia}_{quantidade}.docx"
+    nome = f"questoes_{aula}_{area}_{quantidade}.docx"
     nome = nome.lower().replace(" ", "_").replace("ç", "c").replace("ú", "u").replace("ã", "a")
     caminho = DIR_WORD / nome
     doc.save(caminho)
@@ -95,16 +87,14 @@ def exportar_word(questoes, aula, area, quantidade, assunto="", competencia=""):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--aula", default="")
-    parser.add_argument("--area", default="")
-    parser.add_argument("--assunto", default="")
-    parser.add_argument("--competencia", default="")
+    parser.add_argument("--aula", required=True)
+    parser.add_argument("--area", required=True)
     parser.add_argument("--n", type=int, default=3)
 
     args = parser.parse_args()
 
-    questoes = selecionar_questoes(args.aula, args.area, args.n, args.assunto.lower().strip(), args.competencia.lower().strip())
-    caminho = exportar_word(questoes, args.aula, args.area, args.n, args.assunto, args.competencia)
+    questoes = selecionar_questoes(args.aula, args.area, args.n)
+    caminho = exportar_word(questoes, args.aula, args.area, args.n)
 
     print(f"Questões selecionadas: {len(questoes)}")
     print(f"Word gerado em: {caminho}")
@@ -112,7 +102,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
