@@ -34,14 +34,14 @@ def inferir_area(texto):
             "sus", "sistema único de saúde", "epidemiologia", "incidência", "prevalência",
             "vigilância", "território", "atenção primária", "atenção básica", "esf",
             "saúde da família", "notificação", "dengue", "vacinação", "campanha",
-            "promoção da saúde", "prevenção", "política pública", "determinantes sociais",
+            "promoção da saúde", "prevenção", "política pública", "determinantes sociais", "internação involuntária", "caps", "centro de atenção psicossocial", "ubS", "unidade básica de saúde", "dependência", "substâncias psicoativas", "DSM-5", "penitenciária", "médico de família",
             "mortalidade", "morbidade", "risco relativo", "odds ratio"
         ],
         "Clínica Médica": [
             "sepse", "diabetes", "hipertensão", "pneumonia", "choque", "infarto",
             "insuficiência cardíaca", "asma", "dpoc", "doença renal", "anemia",
             "febre", "dispneia", "dor torácica", "lactato", "antibioticoterapia",
-            "eletrocardiograma", "creatinina", "glicemia", "trombose", "avc"
+            "eletrocardiograma", "creatinina", "glicemia", "trombose", "avc", "trauma cranioencefálico", "inconsciente", "tomografia de crânio", "esporotricose", "itraconazol", "distonia", "haloperidol", "biperideno", "artrite reumatoide", "fator reumatoide", "metotrexato", "parkinson", "levodopa", "carbidopa", "intoxicação", "benzodiazepínico", "clonazepam", "flumazenil", "diarreia", "rifaximina", "tuberculose", "mycobacterium tuberculosis"
         ],
         "Pediatria": [
             "criança", "recém-nascido", "adolescente", "pediatria", "vacinação infantil",
@@ -52,12 +52,12 @@ def inferir_area(texto):
             "gestante", "pré-natal", "parto", "ginecologia", "obstetrícia",
             "puerpério", "contracepção", "colo do útero", "papanicolau",
             "sangramento uterino", "menstruação", "gravidez", "eclâmpsia",
-            "pré-eclâmpsia", "mama", "câncer de mama"
+            "pré-eclâmpsia", "mama", "câncer de mama", "insensibilidade androgênica", "amenorreia", "ausência do útero", "cariótipo 46 xy", "candidíase", "prurido genital", "corrimento esbranquiçado", "miconazol", "lesão intraepitelial", "citologia oncótica", "colposcopia", "sangramento vaginal", "endométrio", "leiomioma", "colo uterino"
         ],
         "Cirurgia": [
             "cirurgia", "pré-operatório", "pós-operatório", "abdome agudo",
             "apendicite", "trauma", "hemorragia", "anestesia", "ferida",
-            "sutura", "colecistite", "hérnia", "laparotomia", "queimadura"
+            "sutura", "colecistite", "hérnia", "laparotomia", "queimadura", "colisão", "samu", "pneumotórax", "desvio da traqueia", "murmúrio vesicular", "turgência de veias jugulares", "toracocentese", "cricotireoidostomia", "pericardiocentese", "atendimento pré-hospitalar"
         ],
     }
 
@@ -120,6 +120,24 @@ def importar_questoes():
             if len(bloco.strip()) < 80:
                 continue
 
+            bloco_upper = bloco.upper()
+
+            termos_excluir = [
+                "QUAL O GRAU DE DIFICULDADE",
+                "TEMPO GASTO POR VOCÊ",
+                "VOCÊ SE DEPAROU COM ALGUMA DIFICULDADE",
+                "COMO VOCÊ AVALIA A SEQUÊNCIA",
+                "QUESTÕES DA PROVA",
+                "PERCEPÇÃO DA PROVA",
+                "TEMPO TOTAL DE APLICAÇÃO",
+                "ENUNCIADOS DAS QUESTÕES",
+                "INFORMAÇÕES/INSTRUÇÕES",
+                "ATIVIDADES PRÁTICAS DESENVOLVIDAS"
+            ]
+
+            if any(t in bloco_upper for t in termos_excluir):
+                continue
+
             enunciado = re.split(r"\s+[A-E]\)", bloco, maxsplit=1)[0]
             enunciado = limpar_texto(enunciado)
 
@@ -158,5 +176,9 @@ def importar_questoes():
 
 if __name__ == "__main__":
     importar_questoes()
+
+
+
+
 
 
