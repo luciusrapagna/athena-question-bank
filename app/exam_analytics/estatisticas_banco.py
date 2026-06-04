@@ -1,41 +1,43 @@
-import csv
-from collections import Counter
-from app.config_paths import BANCO_QUESTOES, DIR_RELATORIOS
+from pathlib import Path
+import pandas as pd
 
+BASE_DIR = Path(__file__).resolve().parents[2]
 
-def carregar_questoes():
-    with open(BANCO_QUESTOES, "r", encoding="utf-8-sig", newline="") as f:
-        return list(csv.DictReader(f))
+BANCO_QUESTOES = BASE_DIR / "data" / "banco_questoes" / "banco_questoes.csv"
+SAIDA = BASE_DIR / "data" / "banco_questoes" / "estatisticas_banco.csv"
 
 
 def gerar_estatisticas():
-    questoes = carregar_questoes()
-    DIR_RELATORIOS.mkdir(parents=True, exist_ok=True)
 
-    total = len(questoes)
+    if not BANCO_QUESTOES.exists():
+        print("Banco de questões ainda não encontrado.")
+        return None
 
-    por_area = Counter(q.get("area", "Não classificada") for q in questoes)
-    por_fonte = Counter(q.get("fonte", "Não identificada") for q in questoes)
-    por_prova = Counter(q.get("prova", "Não identificada") for q in questoes)
+    df = pd.read_csv(
+        BANCO_QUESTOES,
+        sep=";",
+        encoding="utf-8"
+    )
 
-    caminho = DIR_RELATORIOS / "estatisticas_banco_questoes.csv"
+    estatisticas = {
+        "total_questoes": [len(df)]
+    }
 
-    with open(caminho, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["categoria", "item", "n_questoes", "percentual"])
+    if "grande_area" in df.columns:
+        estatisticas["areas_identificadas"] = [
+            df["grande_area"].nunique()
+        ]
 
-        for area, n in por_area.items():
-            writer.writerow(["area", area, n, round((n / total) * 100, 2) if total else 0])
+    if "assunto" in df.columns:
+        estatisticas["assuntos_identificados"] = [
+            df["assunto"].nunique()
+        ]
 
-        for fonte, n in por_fonte.items():
-            writer.writerow(["fonte", fonte, n, round((n / total) * 100, 2) if total else 0])
+    pd.DataFrame(estatisticas).to_csv(
+        SAIDA,
+        sep=";",
+        index=False,
+        encoding="utf-8"
+    )
 
-        for prova, n in por_prova.items():
-            writer.writerow(["prova", prova, n, round((n / total) * 100, 2) if total else 0])
-
-    print(f"Total de questões: {total}")
-    print(f"Relatório salvo em: {caminho}")
-
-
-if __name__ == "__main__":
-    gerar_estatisticas()
+    print("Estatísticas geradas com sucesso.")
