@@ -1,0 +1,11 @@
+{
+  "id": "athena_question_bank",
+  "name": "ATHENA Question Bank",
+  "category": "Education Intelligence",
+  "status": "active",
+  "version": "v1.0.0",
+  "description": "Banco inteligente de questões médicas com seleção por área, assunto, competência, aula, blueprint e geração de simulados.",
+  "button_label": "Acessar módulo",
+  "route": "/ecossistema/athena-question-bank",
+  "module_path": "athena_core/modules/athena_question_bank"
+}
