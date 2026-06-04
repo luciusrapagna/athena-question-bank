@@ -15,7 +15,7 @@ def gerar_estatisticas():
 
     df = pd.read_csv(
         BANCO_QUESTOES,
-        sep=";",
+        sep=",",
         encoding="utf-8"
     )
 
@@ -35,7 +35,7 @@ def gerar_estatisticas():
 
     pd.DataFrame(estatisticas).to_csv(
         SAIDA,
-        sep=";",
+        sep=",",
         index=False,
         encoding="utf-8"
     )

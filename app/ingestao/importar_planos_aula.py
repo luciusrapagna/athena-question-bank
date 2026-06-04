@@ -2,6 +2,7 @@ import csv
 import re
 from pathlib import Path
 from app.config_paths import DIR_PLANOS_ENTRADA, BANCO_PLANOS
+from app.ingestao.leitor_arquivos import ler_arquivo
 
 
 def limpar_texto(texto):
@@ -45,12 +46,17 @@ def inferir_aula(nome_arquivo, texto):
 
 
 def importar_planos():
-    arquivos = list(DIR_PLANOS_ENTRADA.glob("*.txt")) + list(DIR_PLANOS_ENTRADA.glob("*.md"))
+    arquivos = (
+        list(DIR_PLANOS_ENTRADA.glob("*.txt")) +
+        list(DIR_PLANOS_ENTRADA.glob("*.md")) +
+        list(DIR_PLANOS_ENTRADA.glob("*.docx")) +
+        list(DIR_PLANOS_ENTRADA.glob("*.pdf"))
+    )
 
     registros = []
 
     for i, arquivo in enumerate(arquivos, start=1):
-        texto = arquivo.read_text(encoding="utf-8", errors="ignore")
+        texto = ler_arquivo(arquivo)
         texto_limpo = limpar_texto(texto)
 
         registro = {

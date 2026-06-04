@@ -2,6 +2,7 @@ import csv
 import re
 from pathlib import Path
 from app.config_paths import DIR_PROVAS_ENTRADA, BANCO_QUESTOES
+from app.ingestao.leitor_arquivos import ler_arquivo
 
 
 def limpar_texto(texto):
@@ -62,12 +63,17 @@ def extrair_alternativa(bloco, letra):
 
 
 def importar_questoes():
-    arquivos = list(DIR_PROVAS_ENTRADA.glob("*.txt")) + list(DIR_PROVAS_ENTRADA.glob("*.md"))
+    arquivos = (
+        list(DIR_PROVAS_ENTRADA.glob("*.txt")) +
+        list(DIR_PROVAS_ENTRADA.glob("*.md")) +
+        list(DIR_PROVAS_ENTRADA.glob("*.docx")) +
+        list(DIR_PROVAS_ENTRADA.glob("*.pdf"))
+    )
     registros = []
     contador = 1
 
     for arquivo in arquivos:
-        texto = arquivo.read_text(encoding="utf-8", errors="ignore")
+        texto = ler_arquivo(arquivo)
         blocos = dividir_questoes(texto)
 
         for bloco in blocos:
