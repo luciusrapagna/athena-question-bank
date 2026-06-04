@@ -1,0 +1,28 @@
+ATHENA CORE
+
+Versao de integracao: v1.1.0-integration-start
+
+Objetivo:
+Organizar o ecossistema ATHENA em modulos independentes, simples e integraveis.
+
+Modulos previstos:
+- ATHENA QUESTION BANK
+- ATHENA WRITING
+- ATHENA EXAM ANALYTICS
+- ATHENA INTELLIGENCE
+- ATHENA SCIENCES
+
+Modulo integrado nesta etapa:
+- ATHENA QUESTION BANK
+
+Caminho:
+athena_core/modules/athena_question_bank
+
+Regras de desenvolvimento:
+- PowerShell primeiro
+- VPS/Linux quando necessario
+- Git obrigatorio
+- Evitar edicoes manuais
+- Preferir scripts automatizados
+- Nao criar funcionalidades fora dos modulos definidos
+- Manter arquitetura simples e modular
