@@ -1,62 +1,63 @@
 ﻿id_relacao,id_questao,id_aula,area,assunto,score_aderencia
 REL00001,Q00002,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.633
-REL00035,Q00058,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.586
-REL00041,Q00066,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
-REL00005,Q00008,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00007,Q00015,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00008,Q00016,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00014,Q00028,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00016,Q00030,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00020,Q00035,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00021,Q00036,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00022,Q00037,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00036,Q00059,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00042,Q00067,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00044,Q00072,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00045,Q00073,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00051,Q00086,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
-REL00010,Q00022,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00018,Q00032,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00023,Q00040,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00025,Q00042,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00027,Q00046,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00028,Q00047,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00030,Q00050,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00034,Q00057,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00037,Q00060,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00038,Q00061,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00039,Q00062,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00043,Q00071,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00047,Q00078,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00048,Q00079,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00049,Q00080,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00050,Q00083,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00053,Q00089,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00056,Q00095,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00057,Q00097,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00058,Q00098,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00060,Q00100,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
-REL00011,Q00023,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.095
-REL00024,Q00041,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.095
-REL00040,Q00065,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.095
-REL00055,Q00093,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.095
-REL00059,Q00099,AULA0001,Pediatria,aula_2_saude_coletiva,0.095
+REL00036,Q00058,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.586
+REL00008,Q00015,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.538
+REL00015,Q00028,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.538
+REL00022,Q00036,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.538
+REL00052,Q00086,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.538
+REL00005,Q00008,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00026,Q00042,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00037,Q00059,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00042,Q00066,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00043,Q00067,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00050,Q00080,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00051,Q00083,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00054,Q00089,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00057,Q00095,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00058,Q00097,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00059,Q00098,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.49
+REL00009,Q00016,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
+REL00017,Q00030,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
+REL00021,Q00035,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
+REL00023,Q00037,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
+REL00045,Q00072,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
+REL00046,Q00073,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.443
+REL00011,Q00022,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00019,Q00032,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00024,Q00040,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00028,Q00046,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00029,Q00047,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00031,Q00050,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00035,Q00057,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00038,Q00060,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00039,Q00061,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00040,Q00062,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00044,Q00071,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00048,Q00078,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00049,Q00079,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00061,Q00100,AULA0001,Saúde Coletiva,aula_2_saude_coletiva,0.395
+REL00007,Q00014,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.143
+REL00032,Q00052,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.143
+REL00055,Q00092,AULA0001,Cirurgia,aula_2_saude_coletiva,0.143
+REL00012,Q00023,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.095
+REL00025,Q00041,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.095
+REL00041,Q00065,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.095
+REL00056,Q00093,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.095
+REL00060,Q00099,AULA0001,Pediatria,aula_2_saude_coletiva,0.095
 REL00002,Q00003,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
 REL00003,Q00005,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
 REL00004,Q00007,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00006,Q00014,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00009,Q00021,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00012,Q00025,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00013,Q00026,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00015,Q00029,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00017,Q00031,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00019,Q00034,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048
-REL00026,Q00044,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048
-REL00029,Q00049,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00031,Q00052,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00032,Q00053,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00033,Q00056,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048
-REL00046,Q00077,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048
-REL00052,Q00088,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
-REL00054,Q00092,AULA0001,Cirurgia,aula_2_saude_coletiva,0.048
-REL00061,Q00101,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048
+REL00006,Q00009,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
+REL00010,Q00021,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
+REL00013,Q00025,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
+REL00014,Q00026,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
+REL00016,Q00029,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
+REL00018,Q00031,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
+REL00020,Q00034,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048
+REL00027,Q00044,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048
+REL00030,Q00049,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
+REL00033,Q00053,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
+REL00034,Q00056,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048
+REL00047,Q00077,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048
+REL00053,Q00088,AULA0001,Clínica Médica,aula_2_saude_coletiva,0.048
+REL00062,Q00101,AULA0001,Ginecologia e Obstetrícia,aula_2_saude_coletiva,0.048

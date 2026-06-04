@@ -77,77 +77,6 @@ def inferir_area(texto):
 
     return melhor_area
 
-
-def inferir_assunto(texto):
-    texto_lower = texto.lower()
-
-    mapa = {
-        "Cardiologia": ["hipertensão arterial", "has", "insuficiência cardíaca", "bnp", "fração de ejeção", "angina", "troponina", "cateterismo", "síndrome coronariana", "fibrilação atrial"],
-        "Nefrologia": ["síndrome nefrótica", "proteinúria", "albumina sérica", "hematúria"],
-        "Endometriose": ["dismenorreia", "dispareunia", "endometriose"],
-        "Hipertensão Arterial": ["pressão arterial", "losartana"],
-        "Neurologia Vascular": ["acidente vascular", "avc", "artéria cerebral média", "trombólise"],
-        "Diabetes Mellitus": ["cetoacidose", "hálito cetótico", "cetonúria", "insulina", "gasometria arterial"],
-        "Hepatologia": ["colangiorressonância", "colestática", "vias biliares", "icterícia", "colúria", "acolia", "gama-gt", "fosfatase alcalina"],
-        "Arboviroses": ["chikungunya", "aedes", "dengue"],
-        "Imunizações": ["vacinas", "imunização", "influenza", "covid-19", "hepatite b"],
-        "Violência e Vulnerabilidade": ["conselho tutelar", "violência contra adolescentes", "medidas socioeducativas", "equimoses"],
-        "Endocrinologia": ["tireoide", "tsh", "t4 livre", "tireoidite", "metimazol", "diabetes mellitus"],
-        "Coloproctologia": ["diverticulite", "fossa ilíaca esquerda", "hematoquezia", "colonoscopia"],
-        "Saúde Prisional": ["penitenciária", "unidade prisional", "pessoas privadas de liberdade", "cela"],
-        "Cirurgia de Cabeça e Pescoço": ["tireoidectomia", "nervo laríngeo", "laríngeo recorrente", "rouquidão"],
-        "Oncologia": ["câncer", "ca 19.9", "perda de peso", "lesão tumoral"],
-        "Sepse": ["sepse", "lactato", "antibioticoterapia", "choque séptico", "antibiótico de amplo espectro"],
-        "Dengue e Vigilância Epidemiológica": ["vigilância epidemiológica", "incidência", "prevalência"],
-        "Trauma e Atendimento Pré-Hospitalar": ["trauma", "colisão", "samu", "atendimento pré-hospitalar", "toracocentese", "cricotireoidostomia"],
-        "Doenças Infecciosas": ["tuberculose", "mycobacterium", "esporotricose", "itraconazol", "hiv", "sífilis"],
-        "Saúde Mental": ["caps", "esquizofrenia", "haloperidol", "distonia", "substâncias psicoativas", "internação involuntária", "dsm-5"],
-        "Reumatologia": ["artrite reumatoide", "fator reumatoide", "metotrexato", "lúpus", "fan", "arterite temporal", "velocidade de hemossedimentação"],
-        "Neurologia": ["parkinson", "levodopa", "carbidopa", "convulsão"],
-        "Ginecologia": ["citologia oncótica", "lesão intraepitelial", "colo uterino", "papanicolau", "colposcopia", "candidíase", "prurido genital", "corrimento esbranquiçado"],
-        "Obstetrícia": ["gestante", "pré-natal", "parto", "puerpério", "pré-eclâmpsia"],
-        "Pediatria": ["criança", "recém-nascido", "lactente", "puericultura", "aleitamento", "menino", "menina"],
-        "Cirurgia Geral": ["abdome agudo", "apendicite", "colecistite", "hérnia", "laparotomia"],
-        "Toxicologia": ["intoxicação", "clonazepam", "flumazenil", "benzodiazepínico"],
-        "Gastroenterologia": ["diarreia", "rifaximina", "lactulose", "intestino", "endoscopia"],
-        "Atenção Primária à Saúde": ["unidade básica de saúde", "ubs", "médico de família", "saúde da família", "atenção primária"],
-    }
-
-    pontuacao = {}
-
-    for assunto, termos in mapa.items():
-        pontos = 0
-        for termo in termos:
-            if termo in texto_lower:
-                pontos += 1
-        pontuacao[assunto] = pontos
-
-    melhor_assunto = max(pontuacao, key=pontuacao.get)
-
-    if pontuacao[melhor_assunto] == 0:
-        return "Assunto não identificado"
-
-    return melhor_assunto
-def inferir_competencia(texto):
-    texto_lower = texto.lower()
-
-    if any(t in texto_lower for t in ["conduta", "tratamento", "manejo", "prescrever", "medicação", "terapêutico"]):
-        return "Definir conduta e manejo terapêutico"
-
-    if any(t in texto_lower for t in ["hipótese diagnóstica", "diagnóstico", "principal hipótese", "achado laboratorial"]):
-        return "Estabelecer hipótese diagnóstica"
-
-    if any(t in texto_lower for t in ["incidência", "prevalência", "indicadores", "risco relativo", "odds ratio"]):
-        return "Interpretar indicadores e dados epidemiológicos"
-
-    if any(t in texto_lower for t in ["prevenção", "promoção", "vigilância", "notificação", "busca ativa"]):
-        return "Planejar ações de prevenção e vigilância em saúde"
-
-    if any(t in texto_lower for t in ["lei", "legislação", "direito", "ética", "consentimento"]):
-        return "Aplicar princípios éticos e legais na prática médica"
-
-    return "Competência clínica geral"
-
 def dividir_questoes(texto):
     padrao = r"(?=(?:QUESTÃO|Questão)\s+\d{1,3}\b)"
     partes = re.split(padrao, texto)
@@ -218,8 +147,7 @@ def importar_questoes():
                 "ano": inferir_ano(arquivo.name, texto),
                 "prova": arquivo.stem,
                 "area": inferir_area(bloco),
-                "assunto": inferir_assunto(bloco),
-                "competencia": inferir_competencia(bloco),
+                "assunto": "",
                 "enunciado": enunciado,
                 "alternativa_a": extrair_alternativa(bloco, "A"),
                 "alternativa_b": extrair_alternativa(bloco, "B"),
@@ -234,7 +162,7 @@ def importar_questoes():
 
     with open(BANCO_QUESTOES, "w", encoding="utf-8-sig", newline="") as f:
         campos = [
-            "id_questao", "fonte", "ano", "prova", "area", "assunto", "competencia", "enunciado",
+            "id_questao", "fonte", "ano", "prova", "area", "assunto", "enunciado",
             "alternativa_a", "alternativa_b", "alternativa_c", "alternativa_d",
             "alternativa_e", "gabarito"
         ]
@@ -248,8 +176,6 @@ def importar_questoes():
 
 if __name__ == "__main__":
     importar_questoes()
-
-
 
 
 
