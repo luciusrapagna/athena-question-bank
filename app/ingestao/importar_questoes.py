@@ -30,23 +30,55 @@ def inferir_area(texto):
     texto_lower = texto.lower()
 
     mapa = {
-        "Saúde Coletiva": ["sus", "epidemiologia", "incidência", "prevalência", "vigilância", "território", "atenção primária"],
-        "Clínica Médica": ["sepse", "diabetes", "hipertensão", "pneumonia", "choque", "infarto"],
-        "Pediatria": ["criança", "recém-nascido", "adolescente", "pediatria", "vacinação infantil"],
-        "Ginecologia e Obstetrícia": ["gestante", "pré-natal", "parto", "ginecologia", "obstetrícia"],
-        "Cirurgia": ["cirurgia", "pré-operatório", "pós-operatório", "abdome agudo", "apendicite"],
+        "Saúde Coletiva": [
+            "sus", "sistema único de saúde", "epidemiologia", "incidência", "prevalência",
+            "vigilância", "território", "atenção primária", "atenção básica", "esf",
+            "saúde da família", "notificação", "dengue", "vacinação", "campanha",
+            "promoção da saúde", "prevenção", "política pública", "determinantes sociais",
+            "mortalidade", "morbidade", "risco relativo", "odds ratio"
+        ],
+        "Clínica Médica": [
+            "sepse", "diabetes", "hipertensão", "pneumonia", "choque", "infarto",
+            "insuficiência cardíaca", "asma", "dpoc", "doença renal", "anemia",
+            "febre", "dispneia", "dor torácica", "lactato", "antibioticoterapia",
+            "eletrocardiograma", "creatinina", "glicemia", "trombose", "avc"
+        ],
+        "Pediatria": [
+            "criança", "recém-nascido", "adolescente", "pediatria", "vacinação infantil",
+            "aleitamento", "crescimento", "desenvolvimento", "baixo peso", "prematuro",
+            "lactente", "neonato", "puericultura", "desidratação infantil"
+        ],
+        "Ginecologia e Obstetrícia": [
+            "gestante", "pré-natal", "parto", "ginecologia", "obstetrícia",
+            "puerpério", "contracepção", "colo do útero", "papanicolau",
+            "sangramento uterino", "menstruação", "gravidez", "eclâmpsia",
+            "pré-eclâmpsia", "mama", "câncer de mama"
+        ],
+        "Cirurgia": [
+            "cirurgia", "pré-operatório", "pós-operatório", "abdome agudo",
+            "apendicite", "trauma", "hemorragia", "anestesia", "ferida",
+            "sutura", "colecistite", "hérnia", "laparotomia", "queimadura"
+        ],
     }
 
+    pontuacao = {}
+
     for area, termos in mapa.items():
+        pontos = 0
         for termo in termos:
             if termo in texto_lower:
-                return area
+                pontos += 1
+        pontuacao[area] = pontos
 
-    return "Não classificada"
+    melhor_area = max(pontuacao, key=pontuacao.get)
 
+    if pontuacao[melhor_area] == 0:
+        return "Não classificada"
+
+    return melhor_area
 
 def dividir_questoes(texto):
-    padrao = r"(?=(?:Questão|QUESTÃO|Q\.?|Q)\s*\d+)"
+    padrao = r"(?=(?:QUESTÃO|Questão)\s+\d{1,3}\b)"
     partes = re.split(padrao, texto)
     partes = [p.strip() for p in partes if len(p.strip()) > 30]
 
@@ -77,6 +109,17 @@ def importar_questoes():
         blocos = dividir_questoes(texto)
 
         for bloco in blocos:
+            bloco_upper = bloco.upper()
+
+            if "LEIA COM ATENÇÃO AS INSTRUÇÕES" in bloco_upper:
+                continue
+
+            if "CARTÃO-RESPOSTA" in bloco_upper:
+                continue
+
+            if len(bloco.strip()) < 80:
+                continue
+
             enunciado = re.split(r"\s+[A-E]\)", bloco, maxsplit=1)[0]
             enunciado = limpar_texto(enunciado)
 
@@ -115,3 +158,5 @@ def importar_questoes():
 
 if __name__ == "__main__":
     importar_questoes()
+
+
