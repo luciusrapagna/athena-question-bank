@@ -1,7 +1,9 @@
+venv/
 __pycache__/
 *.pyc
 *.pyo
-.venv/
-.env
-.DS_Store
-Thumbs.db
+*.db
+*.sqlite
+*.sqlite3
+backups_sprint_processar_banco/
+outputs/
