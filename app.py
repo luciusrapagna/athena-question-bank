@@ -127,7 +127,7 @@ with st.expander("📦 Ver banco persistente de arquivos"):
 
 st.divider()
 
-aba0, aba1, aba2, aba3 = st.tabs(["🔄 Processar Banco", "🎯 Question Selector", "📊 Exam Analytics", "📝 Simulado Generator"])
+aba0, aba_curadoria, aba1, aba2, aba3 = st.tabs(["🔄 Processar Banco", "🧹 Curadoria do Banco", "🎯 Question Selector", "📊 Exam Analytics", "📝 Simulado Generator"])
 
 
 with aba0:
@@ -144,6 +144,62 @@ with aba0:
         except Exception as e:
             st.error("Erro ao processar banco.")
             st.exception(e)
+
+
+
+with aba_curadoria:
+    st.header("🧹 Curadoria do Banco")
+    st.info("Diagnóstico automático da qualidade do banco de questões.")
+
+    col_diag, col_corr = st.columns(2)
+
+    with col_diag:
+        executar_diag = st.button("Executar Diagnóstico de Curadoria", type="primary", use_container_width=True)
+
+    with col_corr:
+        executar_corr = st.button("Executar Correção Automática", type="secondary", use_container_width=True)
+
+    if executar_corr:
+        try:
+            from app.curadoria.diagnostico import corrigir_automaticamente
+            resultado_correcao = corrigir_automaticamente()
+            st.success("Correção automática executada.")
+            st.json(resultado_correcao)
+            st.cache_data.clear()
+        except Exception as e:
+            st.error("Erro ao executar correção automática.")
+            st.exception(e)
+
+    if executar_diag or executar_corr:
+        try:
+            from app.curadoria.diagnostico import diagnosticar_banco
+            resumo_curadoria, problemas_curadoria, caminho_relatorio = diagnosticar_banco()
+
+            st.subheader("Resumo da Curadoria")
+            st.dataframe(resumo_curadoria, use_container_width=True)
+
+            st.subheader("Questões que precisam de revisão")
+            if problemas_curadoria.empty:
+                st.success("Nenhum problema encontrado no banco.")
+            else:
+                st.dataframe(problemas_curadoria, use_container_width=True)
+
+                csv = problemas_curadoria.to_csv(index=False).encode("utf-8-sig")
+                st.download_button(
+                    "Baixar relatório de curadoria CSV",
+                    csv,
+                    "curadoria_banco_questoes.csv",
+                    "text/csv"
+                )
+
+            st.caption(f"Relatório salvo em: {caminho_relatorio}")
+
+        except Exception as e:
+            st.error("Erro ao executar curadoria.")
+            st.exception(e)
+
+    st.divider()
+    st.caption("A correção automática altera apenas campos seguros: área, assunto e competência. Enunciado e alternativas não são modificados.")
 
 with aba1:
     st.header("🎯 Question Selector")
