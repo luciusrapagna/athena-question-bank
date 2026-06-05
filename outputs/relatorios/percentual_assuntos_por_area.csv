@@ -1,48 +1,101 @@
 ﻿grande_area,assunto,n_questoes,percentual_dentro_area,total_questoes_area
-Clínica Médica,Cardiologia,4,11.76,34
-Clínica Médica,Hipertensão Arterial,4,11.76,34
-Clínica Médica,Sepse,3,8.82,34
-Clínica Médica,Reumatologia,3,8.82,34
-Clínica Médica,Endocrinologia,2,5.88,34
-Clínica Médica,Atenção Primária à Saúde,2,5.88,34
-Clínica Médica,Oncologia,2,5.88,34
-Clínica Médica,Diabetes Mellitus,2,5.88,34
-Clínica Médica,Hepatologia,2,5.88,34
-Clínica Médica,Doenças Infecciosas,1,2.94,34
-Clínica Médica,Saúde Mental,1,2.94,34
-Clínica Médica,Nefrologia,1,2.94,34
-Clínica Médica,Neurologia,1,2.94,34
-Clínica Médica,Violência e Vulnerabilidade,1,2.94,34
-Clínica Médica,Neurologia Vascular,1,2.94,34
-Clínica Médica,Imunizações,1,2.94,34
-Clínica Médica,Gastroenterologia,1,2.94,34
-Clínica Médica,Toxicologia,1,2.94,34
-Clínica Médica,Pediatria,1,2.94,34
-Cirurgia,Trauma e Atendimento Pré-Hospitalar,3,42.86,7
-Cirurgia,Hepatologia,1,14.29,7
-Cirurgia,Hipertensão Arterial,1,14.29,7
-Cirurgia,Cirurgia de Cabeça e Pescoço,1,14.29,7
-Cirurgia,Atenção Primária à Saúde,1,14.29,7
-Pediatria,Pediatria,5,83.33,6
-Pediatria,Cardiologia,1,16.67,6
-Ginecologia e Obstetrícia,Obstetrícia,7,41.18,17
-Ginecologia e Obstetrícia,Ginecologia,4,23.53,17
-Ginecologia e Obstetrícia,Oncologia,2,11.76,17
-Ginecologia e Obstetrícia,Endometriose,1,5.88,17
-Ginecologia e Obstetrícia,Assunto não identificado,1,5.88,17
-Ginecologia e Obstetrícia,Hipertensão Arterial,1,5.88,17
-Ginecologia e Obstetrícia,Cardiologia,1,5.88,17
-Saúde Coletiva,Atenção Primária à Saúde,14,37.84,37
-Saúde Coletiva,Doenças Infecciosas,4,10.81,37
-Saúde Coletiva,Saúde Mental,4,10.81,37
-Saúde Coletiva,Pediatria,3,8.11,37
-Saúde Coletiva,Dengue e Vigilância Epidemiológica,2,5.41,37
-Saúde Coletiva,Hepatologia,2,5.41,37
-Saúde Coletiva,Obstetrícia,1,2.7,37
-Saúde Coletiva,Trauma e Atendimento Pré-Hospitalar,1,2.7,37
-Saúde Coletiva,Imunizações,1,2.7,37
-Saúde Coletiva,Arboviroses,1,2.7,37
-Saúde Coletiva,Endocrinologia,1,2.7,37
-Saúde Coletiva,Coloproctologia,1,2.7,37
-Saúde Coletiva,Saúde Prisional,1,2.7,37
-Saúde Coletiva,Cardiologia,1,2.7,37
+Clínica Médica,Assunto não identificado,57,17.65,323
+Clínica Médica,Cardiologia,40,12.38,323
+Clínica Médica,Sepse,31,9.6,323
+Clínica Médica,Hipertensão Arterial,27,8.36,323
+Clínica Médica,Pediatria,17,5.26,323
+Clínica Médica,Endocrinologia,15,4.64,323
+Clínica Médica,Gastroenterologia,14,4.33,323
+Clínica Médica,Reumatologia,13,4.02,323
+Clínica Médica,Doenças Infecciosas,13,4.02,323
+Clínica Médica,Diabetes Mellitus,11,3.41,323
+Clínica Médica,Imunizações,10,3.1,323
+Clínica Médica,Hepatologia,8,2.48,323
+Clínica Médica,Atenção Primária à Saúde,8,2.48,323
+Clínica Médica,Oncologia,7,2.17,323
+Clínica Médica,Neurologia,7,2.17,323
+Clínica Médica,Coloproctologia,7,2.17,323
+Clínica Médica,Nefrologia,7,2.17,323
+Clínica Médica,Neurologia Vascular,5,1.55,323
+Clínica Médica,Obstetrícia,5,1.55,323
+Clínica Médica,Saúde Mental,4,1.24,323
+Clínica Médica,Trauma e Atendimento Pré-Hospitalar,4,1.24,323
+Clínica Médica,Toxicologia,4,1.24,323
+Clínica Médica,Cirurgia Geral,3,0.93,323
+Clínica Médica,Violência e Vulnerabilidade,2,0.62,323
+Clínica Médica,Cirurgia de Cabeça e Pescoço,1,0.31,323
+Clínica Médica,Endometriose,1,0.31,323
+Clínica Médica,Ginecologia,1,0.31,323
+Clínica Médica,Saúde Prisional,1,0.31,323
+Cirurgia,Assunto não identificado,29,29.0,100
+Cirurgia,Cirurgia Geral,19,19.0,100
+Cirurgia,Trauma e Atendimento Pré-Hospitalar,17,17.0,100
+Cirurgia,Oncologia,7,7.0,100
+Cirurgia,Hepatologia,5,5.0,100
+Cirurgia,Sepse,4,4.0,100
+Cirurgia,Endocrinologia,3,3.0,100
+Cirurgia,Hipertensão Arterial,3,3.0,100
+Cirurgia,Coloproctologia,2,2.0,100
+Cirurgia,Pediatria,2,2.0,100
+Cirurgia,Cardiologia,2,2.0,100
+Cirurgia,Cirurgia de Cabeça e Pescoço,2,2.0,100
+Cirurgia,Atenção Primária à Saúde,2,2.0,100
+Cirurgia,Endometriose,1,1.0,100
+Cirurgia,Gastroenterologia,1,1.0,100
+Cirurgia,Ginecologia,1,1.0,100
+Pediatria,Pediatria,66,52.8,125
+Pediatria,Assunto não identificado,28,22.4,125
+Pediatria,Obstetrícia,6,4.8,125
+Pediatria,Cardiologia,6,4.8,125
+Pediatria,Imunizações,3,2.4,125
+Pediatria,Oncologia,2,1.6,125
+Pediatria,Nefrologia,2,1.6,125
+Pediatria,Dengue e Vigilância Epidemiológica,2,1.6,125
+Pediatria,Hepatologia,2,1.6,125
+Pediatria,Neurologia Vascular,1,0.8,125
+Pediatria,Saúde Prisional,1,0.8,125
+Pediatria,Trauma e Atendimento Pré-Hospitalar,1,0.8,125
+Pediatria,Reumatologia,1,0.8,125
+Pediatria,Ginecologia,1,0.8,125
+Pediatria,Hipertensão Arterial,1,0.8,125
+Pediatria,Doenças Infecciosas,1,0.8,125
+Pediatria,Diabetes Mellitus,1,0.8,125
+Ginecologia e Obstetrícia,Obstetrícia,79,52.67,150
+Ginecologia e Obstetrícia,Ginecologia,18,12.0,150
+Ginecologia e Obstetrícia,Assunto não identificado,16,10.67,150
+Ginecologia e Obstetrícia,Oncologia,12,8.0,150
+Ginecologia e Obstetrícia,Endometriose,7,4.67,150
+Ginecologia e Obstetrícia,Hipertensão Arterial,4,2.67,150
+Ginecologia e Obstetrícia,Endocrinologia,3,2.0,150
+Ginecologia e Obstetrícia,Cirurgia Geral,3,2.0,150
+Ginecologia e Obstetrícia,Coloproctologia,2,1.33,150
+Ginecologia e Obstetrícia,Cardiologia,2,1.33,150
+Ginecologia e Obstetrícia,Trauma e Atendimento Pré-Hospitalar,1,0.67,150
+Ginecologia e Obstetrícia,Gastroenterologia,1,0.67,150
+Ginecologia e Obstetrícia,Imunizações,1,0.67,150
+Ginecologia e Obstetrícia,Neurologia Vascular,1,0.67,150
+Saúde Coletiva,Assunto não identificado,68,27.64,246
+Saúde Coletiva,Atenção Primária à Saúde,37,15.04,246
+Saúde Coletiva,Pediatria,20,8.13,246
+Saúde Coletiva,Cardiologia,19,7.72,246
+Saúde Coletiva,Dengue e Vigilância Epidemiológica,15,6.1,246
+Saúde Coletiva,Oncologia,10,4.07,246
+Saúde Coletiva,Endocrinologia,9,3.66,246
+Saúde Coletiva,Imunizações,8,3.25,246
+Saúde Coletiva,Obstetrícia,7,2.85,246
+Saúde Coletiva,Hipertensão Arterial,6,2.44,246
+Saúde Coletiva,Saúde Mental,6,2.44,246
+Saúde Coletiva,Doenças Infecciosas,5,2.03,246
+Saúde Coletiva,Gastroenterologia,5,2.03,246
+Saúde Coletiva,Hepatologia,5,2.03,246
+Saúde Coletiva,Arboviroses,5,2.03,246
+Saúde Coletiva,Reumatologia,4,1.63,246
+Saúde Coletiva,Cirurgia Geral,3,1.22,246
+Saúde Coletiva,Ginecologia,3,1.22,246
+Saúde Coletiva,Trauma e Atendimento Pré-Hospitalar,3,1.22,246
+Saúde Coletiva,Neurologia Vascular,2,0.81,246
+Saúde Coletiva,Coloproctologia,2,0.81,246
+Saúde Coletiva,Saúde Prisional,1,0.41,246
+Saúde Coletiva,Sepse,1,0.41,246
+Saúde Coletiva,Endometriose,1,0.41,246
+Saúde Coletiva,Violência e Vulnerabilidade,1,0.41,246
