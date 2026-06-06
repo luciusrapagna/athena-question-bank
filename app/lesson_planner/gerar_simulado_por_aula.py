@@ -1,203 +1,211 @@
-import argparse
 import sqlite3
 import re
-import csv
 from pathlib import Path
-from difflib import SequenceMatcher
+from datetime import datetime
 from docx import Document
 
-DB_PATH = "app/db/planos_aula.db"
-OUTPUT_DIR = Path("outputs/simulados_por_aula")
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+DB = "app/db/planos_aula.db"
+OUTDIR = Path("outputs/word")
+OUTDIR.mkdir(parents=True, exist_ok=True)
 
-AREAS = [
-    "Clínica Médica",
-    "Cirurgia",
-    "Pediatria",
-    "Ginecologia e Obstetrícia",
-    "Saúde Coletiva",
-]
+FALLBACK = "Tema médico não classificado"
 
-def normalizar(texto):
-    texto = (texto or "").lower()
-    texto = re.sub(r"[^a-zà-ÿ0-9\s]", " ", texto)
-    return re.sub(r"\s+", " ", texto).strip()
+def normalizar(txt):
+    if not txt:
+        return ""
+    txt = str(txt).lower().strip()
+    txt = re.sub(r"\s+", " ", txt)
+    return txt
 
-def score_texto(a, b):
-    a = normalizar(a)
-    b = normalizar(b)
+def limpar(txt):
+    if not txt:
+        return FALLBACK
+    txt = str(txt).strip()
+    if txt == "" or txt == "Assunto não identificado":
+        return FALLBACK
+    return txt
+
+def similaridade(a, b):
+    a = set(normalizar(a).split())
+    b = set(normalizar(b).split())
     if not a or not b:
         return 0
-    termos_a = set(a.split())
-    termos_b = set(b.split())
-    jaccard = len(termos_a & termos_b) / max(len(termos_a | termos_b), 1)
-    seq = SequenceMatcher(None, a, b).ratio()
-    return round((0.75 * jaccard) + (0.25 * seq), 4)
+    return len(a & b) / len(a | b)
 
-def buscar_aula(cur, data=None, termo=None):
-    sql = """
-        SELECT id, plano_id, aula_numero, data_aula, tema, objetivos
-        FROM aulas_cronograma
-        WHERE 1=1
-    """
+def calcular_score(aula, questao):
+    tema_aula = aula.get("tema") or aula.get("assunto") or ""
+    periodo_aula = aula.get("periodo") or aula.get("semana") or ""
+
+    tema_q = questao.get("tema_indexado") or questao.get("assunto") or ""
+    subtema_q = questao.get("subtema_indexado") or ""
+    esp_q = questao.get("especialidade") or ""
+    comp_q = questao.get("competencia_enamed") or ""
+    periodo_q = questao.get("periodo") or ""
+
+    score_tema = max(
+        similaridade(tema_aula, tema_q),
+        similaridade(tema_aula, subtema_q),
+        similaridade(tema_aula, comp_q),
+    )
+
+    score_especialidade = similaridade(tema_aula, esp_q)
+
+    score_periodo = 0
+    if periodo_aula and periodo_q:
+        score_periodo = 1 if normalizar(periodo_aula) == normalizar(periodo_q) else 0.3
+    else:
+        score_periodo = 0.5
+
+    return round((score_tema * 0.70) + (score_especialidade * 0.20) + (score_periodo * 0.10), 4)
+
+def carregar_aulas(cur, aula_numero=None, semana=None):
+    cur.execute("PRAGMA table_info(planos_aula)")
+    cols = [c[1] for c in cur.fetchall()]
+
+    where = []
     params = []
 
-    if data:
-        sql += " AND data_aula = ?"
-        params.append(data)
+    if aula_numero is not None and "aula" in cols:
+        where.append("aula = ?")
+        params.append(aula_numero)
 
-    if termo:
-        sql += " AND (LOWER(tema) LIKE ? OR LOWER(objetivos) LIKE ?)"
-        busca = f"%{termo.lower()}%"
-        params.extend([busca, busca])
+    if semana is not None and "semana" in cols:
+        where.append("semana = ?")
+        params.append(semana)
 
-    sql += " ORDER BY data_aula, plano_id, CAST(aula_numero AS INTEGER) LIMIT 1"
-    return cur.execute(sql, params).fetchone()
+    sql = "SELECT * FROM planos_aula"
+    if where:
+        sql += " WHERE " + " AND ".join(where)
 
-def buscar_questoes_por_area(cur, area):
-    return cur.execute("""
-        SELECT id, grande_area, tema, enunciado,
-               alternativa_a, alternativa_b, alternativa_c, alternativa_d, alternativa_e,
-               gabarito, fonte, ano, prova, instituicao
-        FROM questoes
-        WHERE grande_area = ?
-          AND enunciado IS NOT NULL
-          AND TRIM(enunciado) <> ''
-    """, (area,)).fetchall()
+    cur.execute(sql, params)
+    return [dict(r) for r in cur.fetchall()]
 
-def ranquear(aula, questoes):
-    _, _, _, _, tema_aula, objetivos = aula
-    texto_aula = f"{tema_aula or ''} {objetivos or ''}"
+def carregar_questoes(cur):
+    cur.execute("SELECT * FROM questoes")
+    return [dict(r) for r in cur.fetchall()]
 
-    resultado = []
-    for q in questoes:
-        texto_q = " ".join(str(x or "") for x in q[1:9])
-        score = score_texto(texto_aula, texto_q)
-        if score > 0:
-            resultado.append((score, q))
+def selecionar_questoes(aulas, questoes, n_por_area=2):
+    selecionadas = []
 
-    resultado.sort(key=lambda x: x[0], reverse=True)
-    return resultado
+    for aula in aulas:
+        area_aula = aula.get("area") or aula.get("grande_area") or ""
 
-def exportar_word(aula, selecionadas, nome):
-    aula_id, plano_id, aula_numero, data_aula, tema, objetivos = aula
+        candidatas = []
+        for q in questoes:
+            area_q = q.get("area") or q.get("grande_area") or q.get("categoria") or ""
 
+            if area_aula and area_q and normalizar(area_aula) != normalizar(area_q):
+                continue
+
+            score = calcular_score(aula, q)
+
+            if score <= 0:
+                continue
+
+            item = dict(q)
+            item["_score_compatibilidade"] = score
+            item["_aula_tema"] = aula.get("tema") or aula.get("assunto") or ""
+            item["_aula"] = aula.get("aula") or aula.get("numero") or ""
+            item["_semana"] = aula.get("semana") or ""
+
+            candidatas.append(item)
+
+        candidatas = sorted(
+            candidatas,
+            key=lambda x: (
+                x.get("_score_compatibilidade", 0),
+                x.get("confianca_indexacao") or 0
+            ),
+            reverse=True
+        )
+
+        selecionadas.extend(candidatas[:n_por_area])
+
+    return selecionadas
+
+def texto_enunciado(q):
+    for campo in ["enunciado", "texto", "questao"]:
+        if q.get(campo):
+            return str(q.get(campo)).strip()
+    return ""
+
+def alternativas(q):
+    itens = []
+    for letra in ["a", "b", "c", "d", "e"]:
+        for campo in [f"alternativa_{letra}", letra.upper(), letra]:
+            if q.get(campo):
+                valor = str(q.get(campo)).strip()
+                if valor:
+                    itens.append((letra.upper(), valor))
+                break
+    return itens
+
+def gerar_word(questoes, nome_saida=None):
     doc = Document()
-    doc.add_heading("ATHENA QUESTION BANK", level=1)
-    doc.add_heading("Simulado por Aula", level=2)
 
-    doc.add_paragraph(f"Aula: {aula_numero}")
-    doc.add_paragraph(f"Data: {data_aula}")
-    doc.add_paragraph(f"Tema: {tema}")
-    doc.add_paragraph(f"Objetivos: {objetivos}")
+    doc.add_heading("ATHENA Question Bank", level=0)
+    doc.add_heading("Simulado por Aula — Sprint 8", level=1)
 
-    total = sum(len(v) for v in selecionadas.values())
-    doc.add_paragraph(f"Total de questões: {total}")
+    doc.add_paragraph(
+        "Questões selecionadas por compatibilidade entre plano de aula, tema médico, subtema, especialidade e competência."
+    )
 
-    n = 1
-    for area, itens in selecionadas.items():
-        doc.add_heading(area, level=2)
+    for i, q in enumerate(questoes, start=1):
+        area = limpar(q.get("area") or q.get("grande_area") or q.get("categoria") or "")
+        especialidade = limpar(q.get("especialidade"))
+        tema = limpar(q.get("tema_indexado") or q.get("assunto"))
+        subtema = limpar(q.get("subtema_indexado"))
 
-        for score, q in itens:
-            qid, grande_area, tema_q, enunciado, a, b, c, d, e, gabarito, fonte, ano, prova, instituicao = q
+        doc.add_heading(f"Questão {i}", level=2)
 
-            doc.add_heading(f"Questão {n} — ID {qid}", level=3)
-            doc.add_paragraph(f"Compatibilidade: {score}")
-            doc.add_paragraph(f"Área: {grande_area or ''} | Tema: {tema_q or ''}")
-            doc.add_paragraph(f"Fonte: {fonte or ''} | Prova: {prova or ''} | Ano: {ano or ''} | Instituição: {instituicao or ''}")
-            doc.add_paragraph(enunciado or "")
+        p = doc.add_paragraph()
+        p.add_run("Área: ").bold = True
+        p.add_run(area)
 
-            for letra, alt in [("A", a), ("B", b), ("C", c), ("D", d), ("E", e)]:
-                if alt:
-                    doc.add_paragraph(f"{letra}) {alt}")
+        p = doc.add_paragraph()
+        p.add_run("Especialidade: ").bold = True
+        p.add_run(especialidade)
 
-            n += 1
+        p = doc.add_paragraph()
+        p.add_run("Tema: ").bold = True
+        p.add_run(tema)
 
-    caminho = OUTPUT_DIR / nome
+        p = doc.add_paragraph()
+        p.add_run("Subtema: ").bold = True
+        p.add_run(subtema)
+
+        enun = texto_enunciado(q)
+        doc.add_paragraph(enun)
+
+        for letra, alt in alternativas(q):
+            doc.add_paragraph(f"{letra}) {alt}")
+
+    if nome_saida is None:
+        nome_saida = f"simulado_por_aula_sprint8_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
+
+    caminho = OUTDIR / nome_saida
     doc.save(caminho)
     return caminho
 
-def exportar_csv(aula, selecionadas, nome):
-    caminho = OUTPUT_DIR / nome
-
-    with open(caminho, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.writer(f, delimiter=";")
-        writer.writerow([
-            "numero", "aula_numero", "data_aula", "tema_aula",
-            "questao_id", "score", "grande_area", "tema_questao",
-            "fonte", "prova", "ano", "instituicao", "gabarito"
-        ])
-
-        n = 1
-        for area, itens in selecionadas.items():
-            for score, q in itens:
-                qid, grande_area, tema_q, enunciado, a, b, c, d, e, gabarito, fonte, ano, prova, instituicao = q
-                writer.writerow([
-                    n, aula[2], aula[3], aula[4],
-                    qid, score, grande_area, tema_q,
-                    fonte, prova, ano, instituicao, gabarito
-                ])
-                n += 1
-
-    return caminho
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data", default=None)
-    parser.add_argument("--termo", default=None)
-    parser.add_argument("--clinica", type=int, default=0)
-    parser.add_argument("--cirurgia", type=int, default=0)
-    parser.add_argument("--pediatria", type=int, default=0)
-    parser.add_argument("--go", type=int, default=0)
-    parser.add_argument("--saude-coletiva", type=int, default=0)
-    args = parser.parse_args()
-
-    quotas = {
-        "Clínica Médica": args.clinica,
-        "Cirurgia": args.cirurgia,
-        "Pediatria": args.pediatria,
-        "Ginecologia e Obstetrícia": args.go,
-        "Saúde Coletiva": args.saude_coletiva,
-    }
-
-    quotas = {area: qtd for area, qtd in quotas.items() if qtd > 0}
-
-    if not quotas:
-        print("Informe pelo menos uma quantidade por área.")
-        return
-
-    con = sqlite3.connect(DB_PATH)
+def gerar(aula_numero=None, semana=None, n_por_area=2):
+    con = sqlite3.connect(DB)
+    con.row_factory = sqlite3.Row
     cur = con.cursor()
 
-    aula = buscar_aula(cur, data=args.data, termo=args.termo)
+    aulas = carregar_aulas(cur, aula_numero=aula_numero, semana=semana)
+    questoes = carregar_questoes(cur)
 
-    if not aula:
-        print("Nenhuma aula encontrada.")
-        con.close()
-        return
+    selecionadas = selecionar_questoes(aulas, questoes, n_por_area=n_por_area)
 
-    selecionadas = {}
-
-    print(f"\nAula encontrada: {aula[2]} | {aula[3]} | {aula[4]}")
-    print("Objetivos:", aula[5])
-
-    for area, qtd in quotas.items():
-        questoes = buscar_questoes_por_area(cur, area)
-        ranqueadas = ranquear(aula, questoes)
-        selecionadas[area] = ranqueadas[:qtd]
-
-        print(f"\n{area}: solicitadas {qtd}, selecionadas {len(selecionadas[area])}")
-        for score, q in selecionadas[area]:
-            print(f"  Q{q[0]} | score {score} | {q[2]} | Fonte: {q[10]} | Ano: {q[11]}")
-
-    sufixo = args.data or normalizar(args.termo or "aula").replace(" ", "_")
-    word = exportar_word(aula, selecionadas, f"simulado_aula_{sufixo}.docx")
-    csv_path = exportar_csv(aula, selecionadas, f"simulado_aula_{sufixo}.csv")
-
-    print(f"\nWord: {word}")
-    print(f"CSV: {csv_path}")
+    caminho = gerar_word(selecionadas)
 
     con.close()
 
+    print(f"Aulas encontradas: {len(aulas)}")
+    print(f"Questões selecionadas: {len(selecionadas)}")
+    print(f"Arquivo Word gerado: {caminho}")
+
+    return caminho
+
 if __name__ == "__main__":
-    main()
+    gerar()

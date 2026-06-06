@@ -1,4 +1,6 @@
 import sqlite3
+import re
+from difflib import SequenceMatcher
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
@@ -6,6 +8,18 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 from docx import Document
+
+import re
+
+def limpar_xml_word(valor):
+    """Remove caracteres incompatíveis com XML/Word."""
+    if valor is None:
+        return ""
+    valor = str(valor)
+    valor = valor.replace("\x00", "")
+    valor = re.sub(r"[\x01-\x08\x0B\x0C\x0E-\x1F]", "", valor)
+    return valor.strip()
+
 
 try:
     from app.config_paths import BANCO_QUESTOES, BANCO_PLANOS, BANCO_RELACIONAMENTOS
@@ -19,7 +33,7 @@ BASE = Path(__file__).resolve().parent
 DATA = BASE / "data"
 PROVAS = DATA / "entrada" / "provas"
 PLANOS = DATA / "entrada" / "planos_aula"
-DB = DATA / "athena_question_bank.db"
+DB = BASE / "app" / "db" / "planos_aula.db"
 OUT_WORD = BASE / "outputs" / "word"
 OUT_REL = BASE / "outputs" / "relatorios"
 OUT_SIM = BASE / "outputs" / "simulados"
@@ -52,6 +66,13 @@ def registrar(tipo, caminho):
     con.commit()
     con.close()
 
+
+def contar_provas():
+    try:
+        return len([p for p in PROVAS.glob("*") if p.is_file()])
+    except Exception:
+        return 0
+
 def tabela_arquivos(tipo):
     con = sqlite3.connect(DB)
     df = pd.read_sql_query("SELECT * FROM arquivos WHERE tipo=? ORDER BY id DESC", con, params=(tipo,))
@@ -70,6 +91,156 @@ def ler_csv(path):
         return pd.DataFrame()
     return pd.read_csv(path, encoding="utf-8-sig").fillna("")
 
+
+def limpar_xml(valor):
+    texto = str(valor or "")
+    texto = texto.replace("\x00", "")
+    texto = re.sub(r"[\x01-\x08\x0B\x0C\x0E-\x1F]", " ", texto)
+    texto = re.sub(r"\s+", " ", texto).strip()
+    return texto
+
+
+def score_aula_questao(texto_aula, texto_questao):
+    a = limpar_xml(texto_aula).lower()
+    b = limpar_xml(texto_questao).lower()
+    if not a or not b:
+        return 0
+    ta = set(a.split())
+    tb = set(b.split())
+    jaccard = len(ta & tb) / max(len(ta | tb), 1)
+    seq = SequenceMatcher(None, a, b).ratio()
+    return round((0.8 * jaccard) + (0.2 * seq), 4)
+
+def carregar_aulas_cronograma():
+    con = sqlite3.connect(DB)
+    try:
+        df = pd.read_sql_query("""
+            SELECT id, plano_id, periodo, aula_numero, data_aula, tema, objetivos, arquivo_origem
+            FROM aulas_cronograma
+            ORDER BY data_aula, plano_id, CAST(aula_numero AS INTEGER)
+        """, con)
+        return df.fillna("")
+    except Exception:
+        return pd.DataFrame()
+    finally:
+        con.close()
+
+def selecionar_questoes_por_aula(aula, quotas):
+    con = sqlite3.connect(DB)
+    try:
+        df = pd.read_sql_query("""
+            SELECT id, grande_area, tema, enunciado,
+                   alternativa_a, alternativa_b, alternativa_c, alternativa_d, alternativa_e,
+                   gabarito, fonte, ano, prova, instituicao
+            FROM questoes
+            WHERE grande_area IS NOT NULL
+              AND TRIM(grande_area) <> ''
+              AND tema IS NOT NULL
+              AND TRIM(tema) <> ''
+              AND enunciado IS NOT NULL
+              AND TRIM(enunciado) <> ''
+        """, con)
+    finally:
+        con.close()
+
+    texto_aula = f"{aula.get('tema','')} {aula.get('objetivos','')}"
+    selecionadas = []
+
+    for area, qtd in quotas.items():
+        if qtd <= 0:
+            continue
+
+        sub = df[df["grande_area"].astype(str) == area].copy()
+        if sub.empty:
+            continue
+
+        sub["score"] = sub.apply(
+            lambda r: score_aula_questao(
+                texto_aula,
+                f"{r.get('tema','')} {r.get('enunciado','')} {r.get('alternativa_a','')} {r.get('alternativa_b','')} {r.get('alternativa_c','')} {r.get('alternativa_d','')} {r.get('alternativa_e','')}"
+            ),
+            axis=1
+        )
+
+        sub = sub.sort_values("score", ascending=False).head(int(qtd))
+        selecionadas.append(sub)
+
+    if not selecionadas:
+        return pd.DataFrame()
+
+    final = pd.concat(selecionadas, ignore_index=True)
+
+    final["area"] = final["grande_area"]
+    final["assunto"] = final["tema"]
+    final["competencia"] = ""
+
+    return final
+
+def limpar_campo_word(valor):
+    valor = str(valor or "").strip()
+
+    if valor.lower() in ["nan", "none", "null", ""]:
+        return ""
+
+    if valor.lower() in [
+        "assunto não identificado",
+        "assunto nao identificado",
+        "tema não identificado",
+        "tema nao identificado",
+        "não identificado",
+        "nao identificado"
+    ]:
+        return ""
+
+    return valor
+
+
+
+def gerar_docx_semana(questoes, titulo, periodo, semana_txt, conteudos_semana=None, avisos=None):
+    from io import BytesIO
+    from docx import Document
+
+    conteudos_semana = conteudos_semana or {}
+    avisos = avisos or []
+
+    doc = Document()
+    doc.add_heading(titulo, level=1)
+
+    doc.add_heading("Relatório da semana", level=2)
+    doc.add_paragraph(f"Período: {periodo}")
+    doc.add_paragraph(f"Semana considerada: {semana_txt}")
+
+    if avisos:
+        doc.add_heading("Observação", level=2)
+        for aviso in avisos:
+            doc.add_paragraph(aviso, style=None)
+
+    doc.add_heading("Questões selecionadas", level=2)
+
+    if not questoes:
+        doc.add_paragraph("Nenhuma questão foi selecionada para os critérios informados.")
+    else:
+        for i, q in enumerate(questoes, start=1):
+            doc.add_heading(f"Questão {i}", level=3)
+
+            area = limpar_campo_word(q.get("grande_area", ""))
+            assunto = limpar_campo_word(q.get("tema_indexado", "")) or limpar_campo_word(q.get("tema", ""))
+            competencia = limpar_campo_word(q.get("competencia", ""))
+
+            doc.add_paragraph(f"Área: {area} | Assunto: {assunto} | Competência: {competencia}")
+            doc.add_paragraph(limpar_campo_word(q.get("enunciado", "")))
+
+            for letra in ["a", "b", "c", "d", "e"]:
+                alt = limpar_campo_word(q.get(f"alternativa_{letra}", ""))
+                if alt:
+                    doc.add_paragraph(f"{letra.upper()}) {alt}")
+
+    bio = BytesIO()
+    doc.save(bio)
+    bio.seek(0)
+    return bio.getvalue()
+
+
 def gerar_docx(questoes, titulo):
     doc = Document()
     doc.add_heading("ATHENA QUESTION BANK", level=1)
@@ -78,10 +249,10 @@ def gerar_docx(questoes, titulo):
     for i, q in enumerate(questoes, 1):
         doc.add_heading(f"Questão {i}", level=2)
         doc.add_paragraph(f"Área: {q.get('area','')} | Assunto: {q.get('assunto','')} | Competência: {q.get('competencia','')}")
-        doc.add_paragraph(str(q.get("enunciado", "")))
+        doc.add_paragraph(limpar_xml(q.get("enunciado", "")))
         for letra, campo in [("A","alternativa_a"),("B","alternativa_b"),("C","alternativa_c"),("D","alternativa_d"),("E","alternativa_e")]:
             if q.get(campo):
-                doc.add_paragraph(f"{letra}) {q.get(campo)}")
+                doc.add_paragraph(limpar_xml_word(f"{letra}) {q.get(campo)}"))
         if q.get("gabarito"):
             doc.add_paragraph(f"Gabarito: {q.get('gabarito')}")
     bio = BytesIO()
@@ -90,6 +261,35 @@ def gerar_docx(questoes, titulo):
     return bio
 
 init_db()
+
+
+
+from datetime import datetime
+
+def formatar_data_br(data):
+    data = str(data or "").strip()
+
+    formatos = [
+        ("%Y-%m-%d", True),
+        ("%d/%m/%Y", True),
+        ("%d/%m/%y", True),
+        ("%d/%m", False),
+    ]
+
+    for fmt, tem_ano in formatos:
+        try:
+            d = datetime.strptime(data, fmt)
+
+            if tem_ano:
+                return d.strftime("%d/%m/%Y")
+
+            return d.strftime("%d/%m")
+
+        except:
+            pass
+
+    return data
+
 
 st.set_page_config(page_title="ATHENA Question Bank", page_icon="🧠", layout="wide")
 st.title("🧠 ATHENA Question Bank")
@@ -115,7 +315,7 @@ df_p = ler_csv(BANCO_PLANOS)
 df_r = ler_csv(BANCO_RELACIONAMENTOS)
 
 m1, m2, m3 = st.columns(3)
-m1.metric("Provas armazenadas", len(tabela_arquivos("prova")))
+m1.metric("Provas armazenadas", contar_provas())
 m2.metric("Planos armazenados", len(tabela_arquivos("plano")))
 m3.metric("Questões no banco", len(df_q))
 
@@ -201,38 +401,255 @@ with aba_curadoria:
     st.divider()
     st.caption("A correção automática altera apenas campos seguros: área, assunto e competência. Enunciado e alternativas não são modificados.")
 
-with aba1:
-    st.header("🎯 Question Selector")
-    if df_q.empty:
-        st.warning("Banco de questões não encontrado.")
+
+def parse_data_athena(data_txt):
+    from datetime import datetime
+    data_txt = str(data_txt or "").strip()
+
+    formatos = ["%d/%m/%Y", "%d/%m/%y", "%Y-%m-%d", "%d/%m"]
+
+    for fmt in formatos:
+        try:
+            d = datetime.strptime(data_txt, fmt)
+            if fmt == "%d/%m":
+                d = d.replace(year=datetime.now().year)
+            return d
+        except Exception:
+            pass
+
+    return None
+
+
+def semana_segunda_sexta(data_txt):
+    from datetime import timedelta
+    d = parse_data_athena(data_txt)
+
+    if d is None:
+        return None, None
+
+    segunda = d - timedelta(days=d.weekday())
+    sexta = segunda + timedelta(days=4)
+
+    return segunda, sexta
+
+
+def inferir_grande_area_por_arquivo(arquivo):
+    nome = str(arquivo or "").lower()
+
+    if "clínica médica" in nome or "clinica medica" in nome:
+        return "Clínica Médica"
+    if "pediatria" in nome:
+        return "Pediatria"
+    if "saúde coletiva" in nome or "saúde coletiva" in nome or "saude coletiva" in nome:
+        return "Saúde Coletiva"
+    if "ginecologia" in nome or "obstetrícia" in nome or "obstetricia" in nome:
+        return "Ginecologia e Obstetrícia"
+    if "cirurgia" in nome:
+        return "Cirurgia"
+
+    return "Área não identificada"
+
+
+def preparar_conteudos_semana_por_area(aulas_df, periodo, data_semana):
+    segunda, sexta = semana_segunda_sexta(data_semana)
+
+    if segunda is None:
+        return {}, None, None
+
+    df = aulas_df.copy()
+
+    df["data_dt"] = df["data_aula"].apply(parse_data_athena)
+    df["aula_numero_int"] = (
+        df["aula_numero"]
+        .astype(str)
+        .str.extract(r"(\d+)")
+        .fillna(0)
+        .astype(int)
+    )
+
+    if "periodo" in df.columns:
+        df = df[df["periodo"].fillna(0).astype(int) == int(periodo)]
+
+    df = df[
+        (df["data_dt"] >= segunda) &
+        (df["data_dt"] <= sexta)
+    ]
+
+    df = df[
+        ~df["tema"].astype(str).str.lower().str.contains("feriado", na=False) &
+        ~df["objetivos"].astype(str).str.lower().str.contains("feriado", na=False)
+    ]
+
+    if "arquivo_origem" in df.columns:
+        df["grande_area_semana"] = df["arquivo_origem"].apply(inferir_grande_area_por_arquivo)
     else:
-        filtrado = df_q.copy()
+        df["grande_area_semana"] = "Área não identificada"
 
-        areas = sorted(filtrado["area"].dropna().astype(str).unique()) if "area" in filtrado.columns else []
-        area = st.selectbox("Grande área", [""] + areas)
+    conteudos = {}
 
-        if area:
-            filtrado = filtrado[filtrado["area"].astype(str) == area]
+    for area, grupo in df.groupby("grande_area_semana"):
+        if area == "Área não identificada":
+            continue
 
-        assuntos = sorted(filtrado["assunto"].dropna().astype(str).unique()) if "assunto" in filtrado.columns else []
-        assunto = st.selectbox("Assunto", [""] + assuntos)
+        temas = " | ".join(grupo["tema"].dropna().astype(str).tolist())
+        objetivos = " | ".join(grupo["objetivos"].dropna().astype(str).tolist())
 
-        if assunto:
-            filtrado = filtrado[filtrado["assunto"].astype(str) == assunto]
+        conteudos[area] = {
+            "id": 0,
+            "plano_id": 0,
+            "periodo": int(periodo),
+            "aula_numero": "Semana",
+            "data_aula": f"{segunda.strftime('%d/%m/%Y')} a {sexta.strftime('%d/%m/%Y')}",
+            "tema": temas,
+            "objetivos": objetivos,
+            "aulas_semana": grupo[
+                ["aula_numero", "data_aula", "tema", "objetivos", "arquivo_origem"]
+            ].to_dict("records")
+        }
 
-        competencias = sorted(filtrado["competencia"].dropna().astype(str).unique()) if "competencia" in filtrado.columns else []
-        competencia = st.selectbox("Competência", [""] + competencias)
+    return conteudos, segunda, sexta
 
-        if competencia:
-            filtrado = filtrado[filtrado["competencia"].astype(str) == competencia]
 
-        qtd = st.number_input("Quantidade", min_value=1, max_value=max(1, len(filtrado)), value=min(5, max(1, len(filtrado))))
-        resultado = filtrado.head(int(qtd))
+with aba1:
+    st.header("🎯 Question Selector por Semana")
 
-        st.dataframe(resultado, use_container_width=True)
+    aulas_df = carregar_aulas_cronograma()
 
-        st.download_button("Baixar CSV", resultado.to_csv(index=False).encode("utf-8-sig"), "question_selector.csv", "text/csv")
-        st.download_button("Baixar Word", gerar_docx(resultado.to_dict("records"), "Question Selector"), "question_selector.docx")
+    if aulas_df.empty:
+        st.warning("Nenhuma aula encontrada. Importe/processe os planos de aula primeiro.")
+    else:
+        st.subheader("1. Informe o período e uma data da semana")
+
+        colp, cold = st.columns(2)
+
+        with colp:
+            periodo = st.number_input(
+                "Período",
+                min_value=1,
+                max_value=12,
+                value=1,
+                step=1,
+                help="Informe o período do curso de Medicina, de 1 a 12."
+            )
+
+        with cold:
+            data_semana = st.text_input(
+                "Data da aula/semana",
+                value="11/06",
+                help="Informe uma data da semana. Exemplo: 11/06 ou 11/06/2026."
+            )
+
+        conteudos_semana, segunda, sexta = preparar_conteudos_semana_por_area(
+            aulas_df,
+            periodo,
+            data_semana
+        )
+
+        if segunda is None:
+            st.warning("Data inválida. Use o formato DD/MM ou DD/MM/AAAA.")
+            st.stop()
+
+        st.info(
+            f"Semana considerada: {segunda.strftime('%d/%m/%Y')} "
+            f"a {sexta.strftime('%d/%m/%Y')}"
+        )
+
+        if not conteudos_semana:
+            st.warning("Nenhum conteúdo encontrado para esse período nessa semana.")
+            st.stop()
+
+        st.subheader("2. Conteúdos encontrados na semana")
+
+        for area, aula_area in conteudos_semana.items():
+            with st.expander(area, expanded=True):
+                st.write("**Temas da semana:**", aula_area.get("tema", ""))
+                st.write("**Objetivos da semana:**", aula_area.get("objetivos", ""))
+
+        st.subheader("3. Escolha o número de questões por grande área")
+
+        c1, c2, c3, c4, c5 = st.columns(5)
+
+        with c1:
+            n_clinica = st.number_input("Clínica Médica", min_value=0, max_value=50, value=0, key="qs_sem_clinica")
+        with c2:
+            n_cirurgia = st.number_input("Cirurgia", min_value=0, max_value=50, value=0, key="qs_sem_cirurgia")
+        with c3:
+            n_pediatria = st.number_input("Pediatria", min_value=0, max_value=50, value=0, key="qs_sem_pediatria")
+        with c4:
+            n_go = st.number_input("GO", min_value=0, max_value=50, value=0, key="qs_sem_go")
+        with c5:
+            n_sc = st.number_input("Saúde Coletiva", min_value=0, max_value=50, value=0, key="qs_sem_sc")
+
+        quotas = {
+            "Clínica Médica": int(n_clinica),
+            "Cirurgia": int(n_cirurgia),
+            "Pediatria": int(n_pediatria),
+            "Ginecologia e Obstetrícia": int(n_go),
+            "Saúde Coletiva": int(n_sc),
+        }
+
+        quotas = {k: v for k, v in quotas.items() if v > 0}
+
+        if st.button("Selecionar questões da semana", type="primary"):
+            if not quotas:
+                st.warning("Informe pelo menos uma grande área com número de questões maior que zero.")
+            else:
+                resultados = []
+                avisos_relatorio = []
+
+                for area, qtd in quotas.items():
+                    if area not in conteudos_semana:
+                        msg = f"{area}: não há conteúdo previsto nessa semana para o período selecionado."
+                        st.warning(msg)
+                        avisos_relatorio.append(msg)
+                        continue
+
+                    aula_area = conteudos_semana[area]
+                    parcial = selecionar_questoes_por_aula(aula_area, {area: qtd})
+
+                    if not parcial.empty:
+                        parcial["conteudo_semana_area"] = area
+                        resultados.append(parcial)
+                    else:
+                        msg = f"{area}: nenhuma questão compatível encontrada para o conteúdo previsto na semana."
+                        st.warning(msg)
+                        avisos_relatorio.append(msg)
+
+                if not resultados:
+                    st.warning("Nenhuma questão compatível encontrada para os critérios selecionados.")
+                else:
+                    resultado = pd.concat(resultados, ignore_index=True)
+
+                    st.success(f"{len(resultado)} questões selecionadas.")
+                    st.dataframe(resultado, use_container_width=True)
+
+                    nome_base = (
+                        f"P{int(periodo):02d}_SEMANA_"
+                        f"{segunda.strftime('%d_%m_%Y')}_question_selector"
+                    )
+
+                    st.download_button(
+                        "Baixar CSV",
+                        resultado.to_csv(index=False).encode("utf-8-sig"),
+                        f"{nome_base}.csv",
+                        "text/csv"
+                    )
+
+                    semana_txt = f"{segunda.strftime('%d/%m/%Y')} a {sexta.strftime('%d/%m/%Y')}"
+
+                    st.download_button(
+                        "Baixar Word",
+                        gerar_docx_semana(
+                            resultado.to_dict("records"),
+                            "Question Selector por Semana",
+                            periodo,
+                            semana_txt,
+                            conteudos_semana,
+                            avisos_relatorio
+                        ),
+                        f"{nome_base}.docx"
+                    )
+
 
 with aba2:
     st.header("📊 Exam Analytics")
@@ -284,3 +701,72 @@ with aba3:
 
 st.divider()
 st.caption("ATHENA Question Bank • Integrado ao Ecossistema ATHENA Scientific")
+
+# ============================================================
+# SPRINT 8 — QUESTION SELECTOR INTELIGENTE
+# ============================================================
+try:
+    from app.services.question_selector_inteligente import (
+        buscar_opcoes,
+        selecionar_questoes_inteligente,
+        exportar_word,
+        limpar,
+        texto_enunciado,
+    )
+    from pathlib import Path
+    from datetime import datetime
+
+    st.divider()
+    st.header("🧠 Question Selector Inteligente — Sprint 8")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        area_s8 = st.selectbox("Área", [""] + buscar_opcoes("area"))
+        especialidade_s8 = st.selectbox("Especialidade", [""] + buscar_opcoes("especialidade"))
+        tema_s8 = st.selectbox("Tema", [""] + buscar_opcoes("tema_indexado"))
+
+    with col2:
+        subtema_s8 = st.selectbox("Subtema", [""] + buscar_opcoes("subtema_indexado"))
+        competencia_s8 = st.selectbox("Competência ENAMED", [""] + buscar_opcoes("competencia_enamed"))
+        limite_s8 = st.number_input("Número de questões", min_value=1, max_value=100, value=10, step=1)
+
+    if st.button("Selecionar questões — Sprint 8"):
+        questoes_s8 = selecionar_questoes_inteligente(
+            area=area_s8 or None,
+            especialidade=especialidade_s8 or None,
+            tema=tema_s8 or None,
+            subtema=subtema_s8 or None,
+            competencia=competencia_s8 or None,
+            limite=limite_s8,
+        )
+
+        st.success(f"{len(questoes_s8)} questão(ões) selecionada(s).")
+
+        for i, q in enumerate(questoes_s8, 1):
+            with st.expander(f"Questão {i} — {limpar(q.get('tema_indexado'))}"):
+                st.markdown(f"**Área:** {limpar(q.get('area') or q.get('grande_area') or q.get('categoria'))}")
+                st.markdown(f"**Especialidade:** {limpar(q.get('especialidade'))}")
+                st.markdown(f"**Tema:** {limpar(q.get('tema_indexado') or q.get('assunto'))}")
+                st.markdown(f"**Subtema:** {limpar(q.get('subtema_indexado'))}")
+                st.write(texto_enunciado(q))
+
+        if questoes_s8:
+            outdir = Path("outputs/word")
+            outdir.mkdir(parents=True, exist_ok=True)
+
+            nome = f"question_selector_inteligente_sprint8_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
+            caminho = outdir / nome
+
+            exportar_word(questoes_s8, caminho)
+
+            with open(caminho, "rb") as f:
+                st.download_button(
+                    "📄 Baixar Word — Sprint 8",
+                    data=f,
+                    file_name=nome,
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                )
+
+except Exception as e:
+    st.warning(f"Question Selector Inteligente indisponível: {e}")
