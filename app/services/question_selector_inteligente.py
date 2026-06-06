@@ -2,8 +2,7 @@ import sqlite3
 import re
 
 DB = "app/db/planos_aula.db"
-
-FALLBACK = "Tema médico não classificado"
+FALLBACK = "Não classificado"
 
 def normalizar(txt):
     if not txt:
@@ -51,22 +50,28 @@ def selecionar_questoes_inteligente(
     for q in questoes:
         score = 0
 
-        if area and normalizar(area) in normalizar(q.get("area") or q.get("grande_area") or q.get("categoria")):
+        area_q = q.get("grande_area") or q.get("area") or ""
+        tema_q = q.get("tema_indexado") or q.get("assunto") or q.get("tema") or ""
+        subtema_q = q.get("subtema_indexado") or ""
+        esp_q = q.get("especialidade") or q.get("especialidade_indexada") or ""
+        comp_q = q.get("competencia_enamed") or q.get("competencia") or ""
+
+        if area and normalizar(area) in normalizar(area_q):
             score += 20
 
-        if especialidade and normalizar(especialidade) == normalizar(q.get("especialidade")):
+        if especialidade and normalizar(especialidade) == normalizar(esp_q):
             score += 30
 
         if tema and (
-            normalizar(tema) == normalizar(q.get("tema_indexado"))
-            or normalizar(tema) in normalizar(q.get("assunto"))
+            normalizar(tema) == normalizar(tema_q)
+            or normalizar(tema) in normalizar(q.get("enunciado"))
         ):
             score += 40
 
-        if subtema and normalizar(subtema) == normalizar(q.get("subtema_indexado")):
+        if subtema and normalizar(subtema) == normalizar(subtema_q):
             score += 35
 
-        if competencia and normalizar(competencia) == normalizar(q.get("competencia_enamed")):
+        if competencia and normalizar(competencia) == normalizar(comp_q):
             score += 25
 
         sem_filtros = not any([area, especialidade, tema, subtema, competencia])
@@ -94,16 +99,19 @@ def exportar_word(questoes, caminho):
 
     doc = Document()
     doc.add_heading("ATHENA Question Bank", level=0)
-    doc.add_heading("Question Selector Inteligente — Sprint 8", level=1)
+    doc.add_heading("Question Selector por Semana Inteligente — Sprint 9", level=1)
 
     for i, q in enumerate(questoes, 1):
         doc.add_heading(f"Questão {i}", level=2)
 
         campos = [
-            ("Área", q.get("area") or q.get("grande_area") or q.get("categoria")),
-            ("Especialidade", q.get("especialidade")),
-            ("Tema", q.get("tema_indexado") or q.get("assunto")),
+            ("Tema da Aula", q.get("tema_aula") or q.get("conteudo_semana_area")),
+            ("Área", q.get("grande_area") or q.get("area")),
+            ("Especialidade", q.get("especialidade") or q.get("especialidade_indexada")),
+            ("Tema Indexado", q.get("tema_indexado") or q.get("assunto") or q.get("tema")),
             ("Subtema", q.get("subtema_indexado")),
+            ("Competência ENAMED", q.get("competencia_enamed") or q.get("competencia")),
+            ("Habilidade ENAMED", q.get("habilidade_enamed") or q.get("habilidade")),
         ]
 
         for nome, valor in campos:
@@ -117,6 +125,12 @@ def exportar_word(questoes, caminho):
             valor = q.get(f"alternativa_{letra}")
             if valor:
                 doc.add_paragraph(f"{letra.upper()}) {valor}")
+
+        gab = q.get("gabarito")
+        if gab:
+            p = doc.add_paragraph()
+            p.add_run("Gabarito: ").bold = True
+            p.add_run(str(gab))
 
     doc.save(caminho)
     return caminho

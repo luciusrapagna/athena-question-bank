@@ -9,18 +9,6 @@ import pandas as pd
 import streamlit as st
 from docx import Document
 
-import re
-
-def limpar_xml_word(valor):
-    """Remove caracteres incompatíveis com XML/Word."""
-    if valor is None:
-        return ""
-    valor = str(valor)
-    valor = valor.replace("\x00", "")
-    valor = re.sub(r"[\x01-\x08\x0B\x0C\x0E-\x1F]", "", valor)
-    return valor.strip()
-
-
 try:
     from app.config_paths import BANCO_QUESTOES, BANCO_PLANOS, BANCO_RELACIONAMENTOS
 except Exception:
@@ -129,8 +117,9 @@ def selecionar_questoes_por_aula(aula, quotas):
     con = sqlite3.connect(DB)
     try:
         df = pd.read_sql_query("""
-            SELECT id, grande_area, tema, enunciado,
-                   alternativa_a, alternativa_b, alternativa_c, alternativa_d, alternativa_e,
+            SELECT id, grande_area, tema, tema_indexado, assunto, area,
+                   competencia, habilidade, competencia_enamed, habilidade_enamed,
+                   enunciado, alternativa_a, alternativa_b, alternativa_c, alternativa_d, alternativa_e,
                    gabarito, fonte, ano, prova, instituicao
             FROM questoes
             WHERE grande_area IS NOT NULL
@@ -170,11 +159,39 @@ def selecionar_questoes_por_aula(aula, quotas):
 
     final = pd.concat(selecionadas, ignore_index=True)
 
-    final["area"] = final["grande_area"]
-    final["assunto"] = final["tema"]
-    final["competencia"] = ""
+    final["area"] = final["area"].fillna("")
+    final["area"] = final["area"].where(final["area"].astype(str).str.strip() != "", final["grande_area"])
+
+    final["assunto"] = final["assunto"].fillna("")
+    final["tema_indexado"] = final["tema_indexado"].fillna("")
+    final["assunto"] = final["assunto"].where(final["assunto"].astype(str).str.strip() != "", final["tema_indexado"])
+    final["assunto"] = final["assunto"].where(final["assunto"].astype(str).str.strip() != "", final["tema"])
+
+    final["competencia"] = final["competencia_enamed"].fillna("")
+    final["competencia_base"] = final["competencia"].fillna("")
+    final["competencia"] = final["competencia"].where(final["competencia"].astype(str).str.strip() != "", final["competencia_base"])
+
+    final["habilidade"] = final["habilidade_enamed"].fillna("")
+    final["habilidade_base"] = final["habilidade"].fillna("")
+    final["habilidade"] = final["habilidade"].where(final["habilidade"].astype(str).str.strip() != "", final["habilidade_base"])
 
     return final
+
+
+
+def separar_alternativas(texto):
+    import re
+    if not texto:
+        return ""
+
+    texto = re.sub(r'\s+A\)', '\nA)', texto)
+    texto = re.sub(r'\s+B\)', '\nB)', texto)
+    texto = re.sub(r'\s+C\)', '\nC)', texto)
+    texto = re.sub(r'\s+D\)', '\nD)', texto)
+    texto = re.sub(r'\s+E\)', '\nE)', texto)
+
+    return texto
+
 
 def limpar_campo_word(valor):
     valor = str(valor or "").strip()
@@ -225,10 +242,19 @@ def gerar_docx_semana(questoes, titulo, periodo, semana_txt, conteudos_semana=No
 
             area = limpar_campo_word(q.get("grande_area", ""))
             assunto = limpar_campo_word(q.get("tema_indexado", "")) or limpar_campo_word(q.get("tema", ""))
-            competencia = limpar_campo_word(q.get("competencia", ""))
+            competencia = limpar_campo_word(q.get("competencia_enamed", "") or q.get("competencia", ""))
+            habilidade = limpar_campo_word(q.get("habilidade_enamed", "") or q.get("habilidade", ""))
 
-            doc.add_paragraph(f"Área: {area} | Assunto: {assunto} | Competência: {competencia}")
-            doc.add_paragraph(limpar_campo_word(q.get("enunciado", "")))
+            if not competencia:
+                competencia = "Atenção à saúde individual e coletiva"
+            if not habilidade:
+                habilidade = "Aplicar conhecimentos médicos à resolução de situações-problema, considerando integralidade, segurança e tomada de decisão."
+
+            doc.add_paragraph(
+                f"Área: {area} | Assunto: {assunto} | Competência: {competencia} | Habilidade: {habilidade}"
+            )
+
+            doc.add_paragraph(separar_alternativas(limpar_campo_word(q.get("enunciado", ""))))
 
             for letra in ["a", "b", "c", "d", "e"]:
                 alt = limpar_campo_word(q.get(f"alternativa_{letra}", ""))
@@ -248,11 +274,25 @@ def gerar_docx(questoes, titulo):
     doc.add_paragraph(f"Total de questões: {len(questoes)}")
     for i, q in enumerate(questoes, 1):
         doc.add_heading(f"Questão {i}", level=2)
-        doc.add_paragraph(f"Área: {q.get('area','')} | Assunto: {q.get('assunto','')} | Competência: {q.get('competencia','')}")
-        doc.add_paragraph(limpar_xml(q.get("enunciado", "")))
+
+        area_doc = q.get('area','') or q.get('grande_area','')
+        assunto_doc = q.get('assunto','') or q.get('tema_indexado','') or q.get('tema','')
+        competencia_doc = q.get('competencia_enamed','') or q.get('competencia','') or ''
+        habilidade_doc = q.get('habilidade_enamed','') or q.get('habilidade','') or ''
+
+        if not competencia_doc:
+            competencia_doc = "Atenção à saúde individual e coletiva"
+        if not habilidade_doc:
+            habilidade_doc = "Aplicar conhecimentos médicos à resolução de situações-problema, considerando integralidade, segurança e tomada de decisão."
+
+        doc.add_paragraph(
+            f"Área: {area_doc} | Assunto: {assunto_doc} | Competência: {competencia_doc} | Habilidade: {habilidade_doc}"
+        )
+
+        doc.add_paragraph(separar_alternativas(limpar_xml(q.get("enunciado", ""))))
         for letra, campo in [("A","alternativa_a"),("B","alternativa_b"),("C","alternativa_c"),("D","alternativa_d"),("E","alternativa_e")]:
             if q.get(campo):
-                doc.add_paragraph(limpar_xml_word(f"{letra}) {q.get(campo)}"))
+                doc.add_paragraph(f"{letra}) {q.get(campo)}")
         if q.get("gabarito"):
             doc.add_paragraph(f"Gabarito: {q.get('gabarito')}")
     bio = BytesIO()
@@ -563,7 +603,7 @@ with aba1:
         for area, aula_area in conteudos_semana.items():
             with st.expander(area, expanded=True):
                 st.write("**Temas da semana:**", aula_area.get("tema", ""))
-                st.write("**Objetivos da semana:**", aula_area.get("objetivos", ""))
+                # objetivos removidos sprint9
 
         st.subheader("3. Escolha o número de questões por grande área")
 
@@ -701,72 +741,3 @@ with aba3:
 
 st.divider()
 st.caption("ATHENA Question Bank • Integrado ao Ecossistema ATHENA Scientific")
-
-# ============================================================
-# SPRINT 8 — QUESTION SELECTOR INTELIGENTE
-# ============================================================
-try:
-    from app.services.question_selector_inteligente import (
-        buscar_opcoes,
-        selecionar_questoes_inteligente,
-        exportar_word,
-        limpar,
-        texto_enunciado,
-    )
-    from pathlib import Path
-    from datetime import datetime
-
-    st.divider()
-    st.header("🧠 Question Selector Inteligente — Sprint 8")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        area_s8 = st.selectbox("Área", [""] + buscar_opcoes("area"))
-        especialidade_s8 = st.selectbox("Especialidade", [""] + buscar_opcoes("especialidade"))
-        tema_s8 = st.selectbox("Tema", [""] + buscar_opcoes("tema_indexado"))
-
-    with col2:
-        subtema_s8 = st.selectbox("Subtema", [""] + buscar_opcoes("subtema_indexado"))
-        competencia_s8 = st.selectbox("Competência ENAMED", [""] + buscar_opcoes("competencia_enamed"))
-        limite_s8 = st.number_input("Número de questões", min_value=1, max_value=100, value=10, step=1)
-
-    if st.button("Selecionar questões — Sprint 8"):
-        questoes_s8 = selecionar_questoes_inteligente(
-            area=area_s8 or None,
-            especialidade=especialidade_s8 or None,
-            tema=tema_s8 or None,
-            subtema=subtema_s8 or None,
-            competencia=competencia_s8 or None,
-            limite=limite_s8,
-        )
-
-        st.success(f"{len(questoes_s8)} questão(ões) selecionada(s).")
-
-        for i, q in enumerate(questoes_s8, 1):
-            with st.expander(f"Questão {i} — {limpar(q.get('tema_indexado'))}"):
-                st.markdown(f"**Área:** {limpar(q.get('area') or q.get('grande_area') or q.get('categoria'))}")
-                st.markdown(f"**Especialidade:** {limpar(q.get('especialidade'))}")
-                st.markdown(f"**Tema:** {limpar(q.get('tema_indexado') or q.get('assunto'))}")
-                st.markdown(f"**Subtema:** {limpar(q.get('subtema_indexado'))}")
-                st.write(texto_enunciado(q))
-
-        if questoes_s8:
-            outdir = Path("outputs/word")
-            outdir.mkdir(parents=True, exist_ok=True)
-
-            nome = f"question_selector_inteligente_sprint8_{datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
-            caminho = outdir / nome
-
-            exportar_word(questoes_s8, caminho)
-
-            with open(caminho, "rb") as f:
-                st.download_button(
-                    "📄 Baixar Word — Sprint 8",
-                    data=f,
-                    file_name=nome,
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                )
-
-except Exception as e:
-    st.warning(f"Question Selector Inteligente indisponível: {e}")

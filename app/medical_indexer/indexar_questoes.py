@@ -1,13 +1,20 @@
 import sqlite3
 import re
-from pathlib import Path
 
 DB = "app/db/planos_aula.db"
-
 FALLBACK = "Tema médico não classificado"
 
-DICIONARIO_LOCAL = {
+HABILIDADE_PADRAO = "Interpretar dados clínicos, reconhecer hipóteses diagnósticas e selecionar condutas."
+
+DICIONARIO = {
     "Clínica Médica": {
+        "Reumatologia": {
+            "Lúpus eritematoso sistêmico": ["fator antinuclear", "fan", "poliartralgia", "hidroxicloroquina", "linfopenia", "lúpus"],
+        },
+        "Neurologia": {
+            "Doença de Parkinson": ["parkinson", "rigidez em roda dentada", "tremor de repouso", "bradicinesia"],
+            "Acidente vascular cerebral": ["avc", "acidente vascular cerebral", "hemiparesia", "afasia"],
+        },
         "Cardiologia": {
             "Hipertensão arterial": ["hipertensão", "pressão arterial", "anti-hipertensivo", "crise hipertensiva"],
             "Insuficiência cardíaca": ["dispneia", "edema", "fração de ejeção", "insuficiência cardíaca"],
@@ -43,7 +50,7 @@ DICIONARIO_LOCAL = {
     },
     "Ginecologia e Obstetrícia": {
         "Obstetrícia": {
-            "Pré-natal": ["pré-natal", "gestante", "idade gestacional", "parto"],
+            "Pré-natal": ["pré-natal", "gestante", "idade gestacional", "parto", "ganho de peso", "imc"],
             "Síndromes hipertensivas da gestação": ["pré-eclâmpsia", "eclâmpsia", "hipertensão gestacional"],
         },
         "Ginecologia": {
@@ -57,7 +64,7 @@ DICIONARIO_LOCAL = {
             "Vigilância em saúde": ["notificação", "vigilância epidemiológica", "surto"],
         },
         "Atenção Primária": {
-            "Estratégia Saúde da Família": ["atenção primária", "esf", "territorialização", "adscrição"],
+            "Estratégia Saúde da Família": ["atenção primária", "aps", "esf", "territorialização", "adscrição", "rede de atenção"],
             "SUS": ["sus", "universalidade", "equidade", "integralidade"],
         },
     },
@@ -72,139 +79,111 @@ COMPETENCIAS = {
 }
 
 def normalizar(txt):
-    if not txt:
-        return ""
-    return re.sub(r"\s+", " ", str(txt).lower()).strip()
+    return re.sub(r"\s+", " ", str(txt or "").lower()).strip()
 
-def classificar_local(texto):
+def texto_questao(row):
+    return " ".join(str(row.get(c) or "") for c in [
+        "grande_area", "area", "tema", "assunto", "tema_indexado",
+        "enunciado", "alternativa_a", "alternativa_b", "alternativa_c",
+        "alternativa_d", "alternativa_e"
+    ])
+
+def classificar(texto, area_original=""):
     texto_n = normalizar(texto)
     melhor = None
 
-    for area, especialidades in DICIONARIO_LOCAL.items():
+    for area, especialidades in DICIONARIO.items():
         for especialidade, temas in especialidades.items():
             for tema, palavras in temas.items():
                 pontos = sum(1 for p in palavras if p.lower() in texto_n)
-                if pontos > 0:
-                    score = min(0.95, 0.55 + pontos * 0.1)
-                    candidato = {
-                        "tema": tema,
-                        "subtema": tema,
-                        "especialidade": especialidade,
+                if pontos:
+                    bonus_area = 1 if area_original and area_original == area else 0
+                    score = pontos + bonus_area
+                    cand = {
                         "area": area,
+                        "especialidade": especialidade,
+                        "tema": tema,
                         "competencia": COMPETENCIAS.get(area, ""),
-                        "confianca": score,
+                        "habilidade": HABILIDADE_PADRAO,
+                        "score": score,
                     }
-                    if melhor is None or candidato["confianca"] > melhor["confianca"]:
-                        melhor = candidato
+                    if melhor is None or cand["score"] > melhor["score"]:
+                        melhor = cand
 
-    return melhor
+    if melhor:
+        return melhor
 
-def classificar_api_medica(texto):
-    """
-    Camada reservada para API médica já integrada.
-    Mantida segura: se a API falhar, o fluxo local permanece funcionando.
-    """
-    try:
-        from app.services.medical_api import classificar_texto_medico
-
-        r = classificar_texto_medico(texto)
-
-        if not r:
-            return None
-
+    area = area_original if area_original in COMPETENCIAS else ""
+    if area:
         return {
-            "tema": r.get("tema_principal") or r.get("tema") or FALLBACK,
-            "subtema": r.get("subtema") or r.get("tema_principal") or FALLBACK,
-            "especialidade": r.get("especialidade") or "",
-            "area": r.get("area") or "",
-            "competencia": r.get("competencia_enamed") or "",
-            "confianca": float(r.get("confianca", 0.75)),
+            "area": area,
+            "especialidade": area,
+            "tema": "Tema geral de " + area,
+            "competencia": COMPETENCIAS.get(area, ""),
+            "habilidade": HABILIDADE_PADRAO,
+            "score": 0.2,
         }
 
-    except Exception:
-        return None
-
-def decidir_classificacao(texto):
-    local = classificar_local(texto)
-
-    if local and local["confianca"] >= 0.75:
-        return local
-
-    api = classificar_api_medica(texto)
-
-    if api and api.get("tema") and api["tema"] != FALLBACK:
-        if local:
-            api["confianca"] = max(api.get("confianca", 0.75), local["confianca"])
-        return api
-
-    if local:
-        return local
-
     return {
-        "tema": FALLBACK,
-        "subtema": FALLBACK,
-        "especialidade": FALLBACK,
         "area": "",
+        "especialidade": "",
+        "tema": FALLBACK,
         "competencia": "",
-        "confianca": 0.1,
+        "habilidade": "",
+        "score": 0,
     }
-
-def texto_questao(row):
-    partes = [
-        row.get("enunciado"),
-        row.get("texto"),
-        row.get("alternativa_a"),
-        row.get("alternativa_b"),
-        row.get("alternativa_c"),
-        row.get("alternativa_d"),
-        row.get("alternativa_e"),
-        row.get("assunto"),
-    ]
-    return " ".join([str(p) for p in partes if p])
 
 def main():
     con = sqlite3.connect(DB)
     con.row_factory = sqlite3.Row
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM questoes")
-    questoes = cur.fetchall()
+    cur.execute("""
+        SELECT *
+        FROM questoes
+        WHERE competencia_enamed IS NULL
+           OR TRIM(competencia_enamed) = ''
+           OR habilidade_enamed IS NULL
+           OR TRIM(habilidade_enamed) = ''
+           OR tema_indexado IS NULL
+           OR TRIM(tema_indexado) = ''
+           OR tema_indexado = ?
+    """, (FALLBACK,))
 
+    questoes = cur.fetchall()
     total = 0
 
     for q in questoes:
         d = dict(q)
         texto = texto_questao(d)
-        c = decidir_classificacao(texto)
-
-        tema = c["tema"] or d.get("assunto") or c["subtema"] or c["especialidade"] or FALLBACK
-        if tema == "Assunto não identificado":
-            tema = FALLBACK
+        area_original = d.get("grande_area") or d.get("area") or ""
+        c = classificar(texto, area_original)
 
         cur.execute("""
             UPDATE questoes
-            SET tema_indexado = ?,
-                assunto = COALESCE(NULLIF(assunto, ''), ?),
-                subtema_indexado = ?,
-                especialidade = ?,
-                competencia_enamed = ?,
+            SET tema_indexado = COALESCE(NULLIF(?, ''), tema_indexado),
+                assunto = COALESCE(NULLIF(assunto, ''), NULLIF(?, '')),
+                especialidade = COALESCE(NULLIF(?, ''), especialidade),
+                subtema_indexado = COALESCE(NULLIF(?, ''), subtema_indexado),
+                competencia_enamed = COALESCE(NULLIF(?, ''), competencia_enamed),
+                habilidade_enamed = COALESCE(NULLIF(?, ''), habilidade_enamed),
                 confianca_indexacao = ?
             WHERE id = ?
         """, (
-            tema,
-            tema,
-            c["subtema"] or tema,
-            c["especialidade"] or FALLBACK,
-            c["competencia"] or "",
-            c["confianca"],
-            d["id"]
+            c["tema"],
+            c["tema"],
+            c["especialidade"],
+            c["tema"],
+            c["competencia"],
+            c["habilidade"],
+            c["score"],
+            d["id"],
         ))
-
         total += 1
 
     con.commit()
     con.close()
-    print(f"Indexação médica inteligente concluída: {total} questões processadas.")
+    print(f"Reindexação incremental concluída: {total} questões processadas.")
 
 if __name__ == "__main__":
     main()
