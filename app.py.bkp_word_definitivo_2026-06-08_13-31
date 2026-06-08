@@ -6,11 +6,8 @@ from io import BytesIO
 from pathlib import Path
 
 import pandas as pd
-from app.auditoria_enamed.balanceador import fator_area, calcular_balanceamento
-from app.auditoria_enamed.auditoria_assuntos import gerar_auditoria_assuntos
 import streamlit as st
 from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 try:
     from app.config_paths import BANCO_QUESTOES, BANCO_PLANOS, BANCO_RELACIONAMENTOS
@@ -154,10 +151,7 @@ def selecionar_questoes_por_aula(aula, quotas):
             axis=1
         )
 
-        sub["fator_balanceamento"] = sub["grande_area"].apply(fator_area)
-        sub["score_balanceado"] = sub["score"] * sub["fator_balanceamento"]
-
-        sub = sub.sort_values("score_balanceado", ascending=False).head(int(qtd))
+        sub = sub.sort_values("score", ascending=False).head(int(qtd))
         selecionadas.append(sub)
 
     if not selecionadas:
@@ -222,7 +216,6 @@ def limpar_campo_word(valor):
 def gerar_docx_semana(questoes, titulo, periodo, semana_txt, conteudos_semana=None, avisos=None):
     from io import BytesIO
     from docx import Document
-    from docx.enum.text import WD_ALIGN_PARAGRAPH
 
     conteudos_semana = conteudos_semana or {}
     avisos = avisos or []
@@ -274,202 +267,68 @@ def gerar_docx_semana(questoes, titulo, periodo, semana_txt, conteudos_semana=No
     return bio.getvalue()
 
 
-
-def corrigir_texto_word(texto):
-    texto = str(texto or "")
-
-    # Remove caracteres proibidos no XML/DOCX
-    texto = texto.replace("\x00", "")
-    texto = re.sub(r"[\x01-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", " ", texto)
-
-    # Remove caracteres Unicode problemáticos para XML
-    texto = "".join(
-        ch for ch in texto
-        if (
-            ch == "\t"
-            or ch == "\n"
-            or ch == "\r"
-            or ord(ch) >= 32
-        )
-    )
-
-    substituicoes = {
-        "YHORFLGDGH": "velocidade",
-        "D¿YHODGR": "afivelado",
-        "WRPRJUD¿D": "tomografia",
-        "Gp¿FLW": "déficit",
-        "ItVLFR": "físico",
-        "LQYHVWLJDomR": "investigação",
-        "SHULWRQHDO": "peritoneal",
-        "VDQJUDPHQWR": "sangramento",
-        "UHVSLUD": "respira",
-        "HVSRQWDQHDPHQWH": "espontaneamente",
-        "YHUEDLV": "verbais",
-        "QmR": "não",
-        "Ki": "há",
-        "UiV": "trás",
-        "WUiV": "trás",
-        "VHJXUDQoD": "segurança",
-        "DGRWDU": "adotar",
-        "PRGL¿FDU": "modificar",
-        "PpGLFRV": "médicos",
-    }
-
-    for errado, certo in substituicoes.items():
-        texto = texto.replace(errado, certo)
-
-    texto = re.sub(r"\s+", " ", texto).strip()
-    return texto
-
-
-def extrair_alternativas_do_enunciado(enunciado):
-    """
-    Extrai alternativas coladas no enunciado nos padrões:
-    A) texto B) texto...
-    A. texto B. texto...
-    A texto B texto...
-    """
-    texto = corrigir_texto_word(enunciado)
-
-    padrao = r"\s([A-E])[\)\.]?\s+"
-    partes = re.split(padrao, texto)
-
-    if len(partes) < 7:
-        return texto, {}
-
-    enun = partes[0].strip()
-    alternativas = {}
-
-    i = 1
-    while i < len(partes) - 1:
-        letra = partes[i].lower()
-        conteudo = partes[i + 1].strip()
-        if letra in ["a", "b", "c", "d", "e"] and conteudo:
-            alternativas[letra] = conteudo
-        i += 2
-
-    # Só aceita extração se encontrou pelo menos 3 alternativas
-    if len(alternativas) >= 3:
-        return enun, alternativas
-
-    return texto, {}
-
-
-def eh_discursiva(texto):
-    t = str(texto or "").lower()
-    gatilhos = [
-        "descreva",
-        "explique",
-        "justifique",
-        "disserte",
-        "valor:",
-        "pontos)",
-        "rascunho"
-    ]
-    return any(g in t for g in gatilhos)
-
-
-
-def questao_corrompida_word(texto):
-    texto = str(texto or "")
-    marcadores = [
-        "VHQ", "DGR", "FRP", "QR", "GH", "HVWi", "SRGHUi",
-        "LQWH", "VHU", "¿", "DYDOLD", "TXD", "GRV"
-    ]
-    achados = sum(1 for m in marcadores if m in texto)
-    return achados >= 5
-
-
-
-def preparar_questao_word(q):
-    q = dict(q)
-
-    enunciado = corrigir_texto_word(q.get("enunciado", ""))
-    enunciado_limpo, alternativas_extraidas = extrair_alternativas_do_enunciado(enunciado)
-
-    q["enunciado"] = enunciado_limpo
-
-    for letra in ["a", "b", "c", "d", "e"]:
-        campo = f"alternativa_{letra}"
-        valor_atual = corrigir_texto_word(q.get(campo, ""))
-
-        # Se alternativa está vazia, usa a extraída
-        if not valor_atual and letra in alternativas_extraidas:
-            q[campo] = alternativas_extraidas[letra]
-
-        # Se alternativa atual repete quase o enunciado, substitui pela extraída ou limpa
-        elif valor_atual and len(valor_atual) > 250 and letra in alternativas_extraidas:
-            q[campo] = alternativas_extraidas[letra]
-
-        else:
-            q[campo] = valor_atual
-
-    # Se for discursiva, não imprime alternativas
-    q["_discursiva"] = eh_discursiva(enunciado)
-
-    return q
-
-
 def gerar_docx(questoes, titulo):
     doc = Document()
+    doc.add_heading("ATHENA QUESTION BANK", level=1)
+    doc.add_heading(titulo, level=2)
+    doc.add_paragraph(f"Total de questões: {len(questoes)}")
+    for i, q in enumerate(questoes, 1):
+        doc.add_heading(f"Questão {i}", level=2)
 
-    h = doc.add_heading("ATHENA QUESTION BANK", level=1)
-    h.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        area_doc = q.get('area','') or q.get('grande_area','')
+        assunto_doc = q.get('assunto','') or q.get('tema_indexado','') or q.get('tema','')
+        competencia_doc = q.get('competencia_enamed','') or q.get('competencia','') or ''
+        habilidade_doc = q.get('habilidade_enamed','') or q.get('habilidade','') or ''
 
-    subt = doc.add_paragraph(titulo)
-    subt.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        if not competencia_doc:
+            competencia_doc = "Atenção à saúde individual e coletiva"
+        if not habilidade_doc:
+            habilidade_doc = "Aplicar conhecimentos médicos à resolução de situações-problema, considerando integralidade, segurança e tomada de decisão."
 
-    questoes_validas = []
-    for q in questoes:
-        q2 = preparar_questao_word(q)
-        if not questao_corrompida_word(q2.get("enunciado", "")):
-            questoes_validas.append(q2)
-
-    doc.add_paragraph(f"Total de questões: {len(questoes_validas)}")
-
-    for i, q in enumerate(questoes_validas, 1):
-        area_doc = limpar_campo_word(q.get('area','') or q.get('grande_area',''))
-        assunto_doc = limpar_campo_word(q.get('assunto','') or q.get('tema_indexado','') or q.get('tema',''))
-        competencia_doc = limpar_campo_word(q.get('competencia_enamed','') or q.get('competencia',''))
-        habilidade_doc = limpar_campo_word(q.get('habilidade_enamed','') or q.get('habilidade',''))
-        fonte_doc = limpar_campo_word(q.get("fonte", "") or q.get("prova", ""))
-        ano_doc = limpar_campo_word(q.get("ano", ""))
-        ano_doc = ano_doc.replace(".0", "")
-        prova_doc = limpar_campo_word(q.get("prova", ""))
-
-        tipo = "Discursiva" if q.get("_discursiva") else "Objetiva"
-
-        doc.add_heading(f"QUESTÃO {i:02d}", level=2)
-
-        metadados = (
-            f"Fonte: {fonte_doc or prova_doc} {ano_doc} | Tipo: {tipo} | "
-            f"Área: {area_doc} | Assunto: {assunto_doc} | "
-            f"Competência ENAMED: {competencia_doc} | "
-            f"Habilidade ENAMED: {habilidade_doc}"
+        doc.add_paragraph(
+            f"Área: {area_doc} | Assunto: {assunto_doc} | Competência: {competencia_doc} | Habilidade: {habilidade_doc}"
         )
 
-        doc.add_paragraph(corrigir_texto_word(metadados))
-        doc.add_paragraph(corrigir_texto_word(q.get("enunciado", "")))
-
-        if not q.get("_discursiva"):
-            for letra, campo in [
-                ("A", "alternativa_a"),
-                ("B", "alternativa_b"),
-                ("C", "alternativa_c"),
-                ("D", "alternativa_d"),
-                ("E", "alternativa_e"),
-            ]:
-                alt = limpar_campo_word(corrigir_texto_word(q.get(campo, "")))
-                if alt and not questao_corrompida_word(alt):
-                    doc.add_paragraph(f"{letra}) {alt}")
-
+        doc.add_paragraph(separar_alternativas(limpar_xml(q.get("enunciado", ""))))
+        for letra, campo in [("A","alternativa_a"),("B","alternativa_b"),("C","alternativa_c"),("D","alternativa_d"),("E","alternativa_e")]:
+            if q.get(campo):
+                doc.add_paragraph(f"{letra}) {q.get(campo)}")
         if q.get("gabarito"):
-            doc.add_paragraph(f"Gabarito: {limpar_campo_word(q.get('gabarito'))}")
-
+            doc.add_paragraph(f"Gabarito: {q.get('gabarito')}")
     bio = BytesIO()
     doc.save(bio)
     bio.seek(0)
-    return bio.getvalue()
+    return bio
+
+init_db()
+
+
+
+from datetime import datetime
+
+def formatar_data_br(data):
+    data = str(data or "").strip()
+
+    formatos = [
+        ("%Y-%m-%d", True),
+        ("%d/%m/%Y", True),
+        ("%d/%m/%y", True),
+        ("%d/%m", False),
+    ]
+
+    for fmt, tem_ano in formatos:
+        try:
+            d = datetime.strptime(data, fmt)
+
+            if tem_ano:
+                return d.strftime("%d/%m/%Y")
+
+            return d.strftime("%d/%m")
+
+        except:
+            pass
+
+    return data
 
 
 st.set_page_config(page_title="ATHENA Question Bank", page_icon="🧠", layout="wide")
@@ -926,76 +785,6 @@ with aba1:
 
 
 with aba2:
-    st.subheader("🧭 Auditoria ENAMED – Balanceamento do Banco")
-
-    try:
-        auditoria_enamed = calcular_balanceamento()
-        df_auditoria = pd.DataFrame([
-            {
-                "Área": area,
-                "Questões atuais": info["quantidade"],
-                "% Atual": info["percentual_atual"],
-                "% Ideal ENAMED": info["percentual_ideal"],
-                "Fator de balanceamento": info["fator_balanceamento"],
-                "Status": info["status"],
-            }
-            for area, info in auditoria_enamed.items()
-        ])
-
-        st.dataframe(df_auditoria, use_container_width=True)
-
-        excesso_cm = df_auditoria.loc[df_auditoria["Área"] == "Clínica Médica", "Status"].iloc[0]
-        st.info(
-            "O balanceamento automático já está ativo no Question Selector e no Simulado Generator. "
-            "Áreas deficitárias recebem maior prioridade de seleção; áreas em excesso recebem menor prioridade."
-        )
-
-        st.download_button(
-            "Baixar Auditoria ENAMED CSV",
-            df_auditoria.to_csv(index=False).encode("utf-8-sig"),
-            "auditoria_enamed_balanceamento.csv",
-            "text/csv"
-        )
-
-        st.divider()
-
-    except Exception as e:
-        st.warning(f"Não foi possível carregar a Auditoria ENAMED: {e}")
-
-    st.subheader("🔎 Auditoria ENAMED por Assunto")
-
-    try:
-        gerar_auditoria_assuntos()
-        df_assuntos = pd.read_csv("outputs/relatorios/auditoria_enamed_por_assunto.csv")
-
-        areas_auditoria = sorted(df_assuntos["area"].dropna().unique())
-        area_sel_auditoria = st.selectbox(
-            "Filtrar área da auditoria por assunto",
-            areas_auditoria,
-            key="auditoria_assunto_area"
-        )
-
-        df_area_assuntos = df_assuntos[df_assuntos["area"] == area_sel_auditoria].copy()
-        st.dataframe(df_area_assuntos, use_container_width=True)
-
-        st.download_button(
-            "Baixar Auditoria por Assunto CSV",
-            df_assuntos.to_csv(index=False).encode("utf-8-sig"),
-            "auditoria_enamed_por_assunto.csv",
-            "text/csv"
-        )
-
-        st.info(
-            "Assuntos críticos ou fracos indicam lacunas do banco. "
-            "Assuntos muito fortes indicam concentração excessiva."
-        )
-
-        st.divider()
-
-    except Exception as e:
-        st.warning(f"Não foi possível carregar a Auditoria ENAMED por Assunto: {e}")
-
-
     st.header("📊 Exam Analytics")
     st.success("Exam Analytics carregado diretamente do SQLite.")
 
@@ -1158,12 +947,8 @@ with aba3:
 
                         qtd = int(item["quantidade"])
 
-                        if not pool.empty:
-                            pool["fator_balanceamento"] = pool["area"].apply(fator_area)
-                            pool = pool.sort_values("fator_balanceamento", ascending=False)
-
                         if len(pool) >= qtd:
-                            amostra = pool.head(qtd)
+                            amostra = pool.sample(n=qtd, random_state=42)
                         else:
                             amostra = pool
 

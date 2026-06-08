@@ -1,0 +1,198 @@
+{
+  "Cirurgia": {
+    "competencia": "Avaliação, decisão e manejo de condições cirúrgicas",
+    "especialidades": {
+      "Coloproctologia": {
+        "Diverticulite aguda complicada": [
+          "diverticulite",
+          "sigmoide",
+          "quadrante inferior esquerdo",
+          "coleção",
+          "abscesso",
+          "drenagem percutânea",
+          "tomografia"
+        ]
+      },
+      "Cirurgia Geral": {
+        "Abdome agudo": [
+          "abdome agudo",
+          "apendicite",
+          "peritonite",
+          "obstrução intestinal"
+        ],
+        "Hérnias": [
+          "hérnia",
+          "inguinal",
+          "encarceramento",
+          "estrangulamento",
+          "obturatória"
+        ],
+        "Trauma": [
+          "trauma",
+          "politrauma",
+          "hemorragia",
+          "fratura",
+          "queimadura"
+        ]
+      },
+      "Cirurgia Bariátrica": {
+        "Obesidade e cirurgia bariátrica": [
+          "cirurgia bariátrica",
+          "imc",
+          "obesidade",
+          "gastroplastia"
+        ]
+      }
+    }
+  },
+  "Clínica Médica": {
+    "competencia": "Cuidado integral do adulto e raciocínio clínico",
+    "especialidades": {
+      "Cardiologia": {
+        "Hipertensão arterial": [
+          "hipertensão arterial",
+          "crise hipertensiva",
+          "emergência hipertensiva",
+          "urgência hipertensiva",
+          "anti-hipertensivo",
+          "hipertenso conhecido",
+          "história de hipertensão"
+        ],
+        "Insuficiência cardíaca": [
+          "insuficiência cardíaca",
+          "fração de ejeção",
+          "edema",
+          "dispneia"
+        ],
+        "Síndrome coronariana": [
+          "dor torácica",
+          "infarto",
+          "iam",
+          "angina",
+          "troponina"
+        ]
+      },
+      "Endocrinologia": {
+        "Diabetes mellitus": [
+          "diabetes",
+          "glicemia",
+          "insulina",
+          "cetoacidose",
+          "hipoglicemia"
+        ],
+        "Tireoide": [
+          "tsh",
+          "t4",
+          "hipotireoidismo",
+          "hipertireoidismo"
+        ]
+      },
+      "Infectologia": {
+        "Sepse": [
+          "sepse",
+          "choque séptico",
+          "lactato",
+          "antibiótico"
+        ],
+        "Infecção urinária": [
+          "infecção urinária",
+          "disúria",
+          "polaciúria",
+          "urocultura"
+        ]
+      }
+    }
+  },
+  "Pediatria": {
+    "competencia": "Atenção integral à saúde da criança e do adolescente",
+    "especialidades": {
+      "Pediatria Geral": {
+        "Invaginação intestinal": [
+          "invaginação intestinal",
+          "lactente",
+          "evacuações com sangue",
+          "massa palpável"
+        ],
+        "Crescimento e desenvolvimento": [
+          "crescimento",
+          "desenvolvimento neuropsicomotor",
+          "percentil"
+        ],
+        "Vacinação infantil": [
+          "vacina",
+          "calendário vacinal",
+          "imunização"
+        ]
+      }
+    }
+  },
+  "Ginecologia e Obstetrícia": {
+    "competencia": "Atenção integral à saúde da mulher, gestação e parto",
+    "especialidades": {
+      "Obstetrícia": {
+        "Pré-natal": [
+          "pré-natal",
+          "gestante",
+          "idade gestacional",
+          "parto"
+        ],
+        "Síndromes hipertensivas da gestação": [
+          "pré-eclâmpsia",
+          "eclâmpsia",
+          "hipertensão gestacional"
+        ],
+        "Descolamento prematuro de placenta": [
+          "placenta descolada",
+          "sangramento transvaginal",
+          "coagulopatia de consumo"
+        ]
+      },
+      "Ginecologia": {
+        "Endometriose": [
+          "endometriose",
+          "dor pélvica",
+          "dismenorreia"
+        ],
+        "Rastreamento do câncer de colo": [
+          "papanicolau",
+          "hpv",
+          "colo uterino",
+          "citologia"
+        ]
+      }
+    }
+  },
+  "Saúde Coletiva": {
+    "competencia": "Atenção primária, vigilância, SUS e saúde coletiva",
+    "especialidades": {
+      "Atenção Primária": {
+        "Estratégia Saúde da Família": [
+          "atenção primária",
+          "aps",
+          "esf",
+          "territorialização",
+          "adscrição"
+        ],
+        "SUS": [
+          "sus",
+          "universalidade",
+          "equidade",
+          "integralidade"
+        ]
+      },
+      "Epidemiologia": {
+        "Indicadores de saúde": [
+          "incidência",
+          "prevalência",
+          "mortalidade",
+          "letalidade"
+        ],
+        "Vigilância em saúde": [
+          "notificação",
+          "vigilância epidemiológica",
+          "surto"
+        ]
+      }
+    }
+  }
+}

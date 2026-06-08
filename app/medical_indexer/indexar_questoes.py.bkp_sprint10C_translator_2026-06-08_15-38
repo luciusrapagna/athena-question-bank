@@ -1,0 +1,124 @@
+import sqlite3
+import re
+import json
+from pathlib import Path
+
+DB = "app/db/planos_aula.db"
+DICIONARIO_PATH = Path("data/dicionarios/athena_medical_dictionary.json")
+HABILIDADE_PADRAO = "Interpretar dados clínicos, reconhecer hipóteses diagnósticas e selecionar condutas."
+
+def normalizar(txt):
+    return re.sub(r"\s+", " ", str(txt or "").lower()).strip()
+
+def carregar_dicionario():
+    with open(DICIONARIO_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def texto_questao(row):
+    campos = [
+        "grande_area", "area", "tema", "assunto", "tema_indexado",
+        "enunciado", "alternativa_a", "alternativa_b", "alternativa_c",
+        "alternativa_d", "alternativa_e"
+    ]
+    return " ".join(str(row.get(c) or "") for c in campos)
+
+def classificar(texto, area_original, dicionario):
+    texto_n = normalizar(texto)
+    melhor = None
+
+    for area, dados_area in dicionario.items():
+        competencia = dados_area.get("competencia", "")
+        for especialidade, temas in dados_area.get("especialidades", {}).items():
+            for tema, termos in temas.items():
+                pontos = 0
+                termos_encontrados = []
+
+                for termo in termos:
+                    termo_n = normalizar(termo)
+                    if termo_n and termo_n in texto_n:
+                        peso = 3 if len(termo_n.split()) >= 2 else 1
+                        pontos += peso
+                        termos_encontrados.append(termo)
+
+                if area_original == area:
+                    pontos += 1
+
+                if pontos > 0:
+                    candidato = {
+                        "area": area,
+                        "especialidade": especialidade,
+                        "tema": tema,
+                        "competencia": competencia,
+                        "habilidade": HABILIDADE_PADRAO,
+                        "score": pontos,
+                        "descritores": "; ".join(termos_encontrados)
+                    }
+
+                    if melhor is None or candidato["score"] > melhor["score"]:
+                        melhor = candidato
+
+    if melhor:
+        return melhor
+
+    if area_original in dicionario:
+        return {
+            "area": area_original,
+            "especialidade": area_original,
+            "tema": "Tema clínico geral",
+            "competencia": dicionario[area_original].get("competencia", ""),
+            "habilidade": HABILIDADE_PADRAO,
+            "score": 0.1,
+            "descritores": ""
+        }
+
+    return {
+        "area": "Clínica Médica",
+        "especialidade": "Clínica Médica Geral",
+        "tema": "Tema clínico geral",
+        "competencia": dicionario["Clínica Médica"].get("competencia", ""),
+        "habilidade": HABILIDADE_PADRAO,
+        "score": 0.05,
+        "descritores": ""
+    }
+
+def main():
+    dicionario = carregar_dicionario()
+
+    con = sqlite3.connect(DB)
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM questoes")
+    questoes = cur.fetchall()
+
+    for q in questoes:
+        d = dict(q)
+        area_original = d.get("grande_area") or d.get("area") or ""
+        c = classificar(texto_questao(d), area_original, dicionario)
+
+        cur.execute("""
+            UPDATE questoes
+            SET grande_area = ?,
+                area = ?,
+                assunto = ?,
+                tema_indexado = ?,
+                especialidade = ?,
+                subtema_indexado = ?,
+                competencia_enamed = ?,
+                habilidade_enamed = ?,
+                descritores_indexados = ?,
+                confianca_indexacao = ?
+            WHERE id = ?
+        """, (
+            c["area"], c["area"], c["tema"], c["tema"],
+            c["especialidade"], c["tema"],
+            c["competencia"], c["habilidade"],
+            c["descritores"], c["score"], d["id"]
+        ))
+
+    con.commit()
+    con.close()
+    print(f"Indexação ATHENA concluída: {len(questoes)} questões processadas.")
+
+if __name__ == "__main__":
+    main()

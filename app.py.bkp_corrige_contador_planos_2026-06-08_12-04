@@ -6,11 +6,8 @@ from io import BytesIO
 from pathlib import Path
 
 import pandas as pd
-from app.auditoria_enamed.balanceador import fator_area, calcular_balanceamento
-from app.auditoria_enamed.auditoria_assuntos import gerar_auditoria_assuntos
 import streamlit as st
 from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 try:
     from app.config_paths import BANCO_QUESTOES, BANCO_PLANOS, BANCO_RELACIONAMENTOS
@@ -154,10 +151,7 @@ def selecionar_questoes_por_aula(aula, quotas):
             axis=1
         )
 
-        sub["fator_balanceamento"] = sub["grande_area"].apply(fator_area)
-        sub["score_balanceado"] = sub["score"] * sub["fator_balanceamento"]
-
-        sub = sub.sort_values("score_balanceado", ascending=False).head(int(qtd))
+        sub = sub.sort_values("score", ascending=False).head(int(qtd))
         selecionadas.append(sub)
 
     if not selecionadas:
@@ -222,7 +216,6 @@ def limpar_campo_word(valor):
 def gerar_docx_semana(questoes, titulo, periodo, semana_txt, conteudos_semana=None, avisos=None):
     from io import BytesIO
     from docx import Document
-    from docx.enum.text import WD_ALIGN_PARAGRAPH
 
     conteudos_semana = conteudos_semana or {}
     avisos = avisos or []
@@ -274,202 +267,68 @@ def gerar_docx_semana(questoes, titulo, periodo, semana_txt, conteudos_semana=No
     return bio.getvalue()
 
 
-
-def corrigir_texto_word(texto):
-    texto = str(texto or "")
-
-    # Remove caracteres proibidos no XML/DOCX
-    texto = texto.replace("\x00", "")
-    texto = re.sub(r"[\x01-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", " ", texto)
-
-    # Remove caracteres Unicode problemáticos para XML
-    texto = "".join(
-        ch for ch in texto
-        if (
-            ch == "\t"
-            or ch == "\n"
-            or ch == "\r"
-            or ord(ch) >= 32
-        )
-    )
-
-    substituicoes = {
-        "YHORFLGDGH": "velocidade",
-        "D¿YHODGR": "afivelado",
-        "WRPRJUD¿D": "tomografia",
-        "Gp¿FLW": "déficit",
-        "ItVLFR": "físico",
-        "LQYHVWLJDomR": "investigação",
-        "SHULWRQHDO": "peritoneal",
-        "VDQJUDPHQWR": "sangramento",
-        "UHVSLUD": "respira",
-        "HVSRQWDQHDPHQWH": "espontaneamente",
-        "YHUEDLV": "verbais",
-        "QmR": "não",
-        "Ki": "há",
-        "UiV": "trás",
-        "WUiV": "trás",
-        "VHJXUDQoD": "segurança",
-        "DGRWDU": "adotar",
-        "PRGL¿FDU": "modificar",
-        "PpGLFRV": "médicos",
-    }
-
-    for errado, certo in substituicoes.items():
-        texto = texto.replace(errado, certo)
-
-    texto = re.sub(r"\s+", " ", texto).strip()
-    return texto
-
-
-def extrair_alternativas_do_enunciado(enunciado):
-    """
-    Extrai alternativas coladas no enunciado nos padrões:
-    A) texto B) texto...
-    A. texto B. texto...
-    A texto B texto...
-    """
-    texto = corrigir_texto_word(enunciado)
-
-    padrao = r"\s([A-E])[\)\.]?\s+"
-    partes = re.split(padrao, texto)
-
-    if len(partes) < 7:
-        return texto, {}
-
-    enun = partes[0].strip()
-    alternativas = {}
-
-    i = 1
-    while i < len(partes) - 1:
-        letra = partes[i].lower()
-        conteudo = partes[i + 1].strip()
-        if letra in ["a", "b", "c", "d", "e"] and conteudo:
-            alternativas[letra] = conteudo
-        i += 2
-
-    # Só aceita extração se encontrou pelo menos 3 alternativas
-    if len(alternativas) >= 3:
-        return enun, alternativas
-
-    return texto, {}
-
-
-def eh_discursiva(texto):
-    t = str(texto or "").lower()
-    gatilhos = [
-        "descreva",
-        "explique",
-        "justifique",
-        "disserte",
-        "valor:",
-        "pontos)",
-        "rascunho"
-    ]
-    return any(g in t for g in gatilhos)
-
-
-
-def questao_corrompida_word(texto):
-    texto = str(texto or "")
-    marcadores = [
-        "VHQ", "DGR", "FRP", "QR", "GH", "HVWi", "SRGHUi",
-        "LQWH", "VHU", "¿", "DYDOLD", "TXD", "GRV"
-    ]
-    achados = sum(1 for m in marcadores if m in texto)
-    return achados >= 5
-
-
-
-def preparar_questao_word(q):
-    q = dict(q)
-
-    enunciado = corrigir_texto_word(q.get("enunciado", ""))
-    enunciado_limpo, alternativas_extraidas = extrair_alternativas_do_enunciado(enunciado)
-
-    q["enunciado"] = enunciado_limpo
-
-    for letra in ["a", "b", "c", "d", "e"]:
-        campo = f"alternativa_{letra}"
-        valor_atual = corrigir_texto_word(q.get(campo, ""))
-
-        # Se alternativa está vazia, usa a extraída
-        if not valor_atual and letra in alternativas_extraidas:
-            q[campo] = alternativas_extraidas[letra]
-
-        # Se alternativa atual repete quase o enunciado, substitui pela extraída ou limpa
-        elif valor_atual and len(valor_atual) > 250 and letra in alternativas_extraidas:
-            q[campo] = alternativas_extraidas[letra]
-
-        else:
-            q[campo] = valor_atual
-
-    # Se for discursiva, não imprime alternativas
-    q["_discursiva"] = eh_discursiva(enunciado)
-
-    return q
-
-
 def gerar_docx(questoes, titulo):
     doc = Document()
+    doc.add_heading("ATHENA QUESTION BANK", level=1)
+    doc.add_heading(titulo, level=2)
+    doc.add_paragraph(f"Total de questões: {len(questoes)}")
+    for i, q in enumerate(questoes, 1):
+        doc.add_heading(f"Questão {i}", level=2)
 
-    h = doc.add_heading("ATHENA QUESTION BANK", level=1)
-    h.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        area_doc = q.get('area','') or q.get('grande_area','')
+        assunto_doc = q.get('assunto','') or q.get('tema_indexado','') or q.get('tema','')
+        competencia_doc = q.get('competencia_enamed','') or q.get('competencia','') or ''
+        habilidade_doc = q.get('habilidade_enamed','') or q.get('habilidade','') or ''
 
-    subt = doc.add_paragraph(titulo)
-    subt.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        if not competencia_doc:
+            competencia_doc = "Atenção à saúde individual e coletiva"
+        if not habilidade_doc:
+            habilidade_doc = "Aplicar conhecimentos médicos à resolução de situações-problema, considerando integralidade, segurança e tomada de decisão."
 
-    questoes_validas = []
-    for q in questoes:
-        q2 = preparar_questao_word(q)
-        if not questao_corrompida_word(q2.get("enunciado", "")):
-            questoes_validas.append(q2)
-
-    doc.add_paragraph(f"Total de questões: {len(questoes_validas)}")
-
-    for i, q in enumerate(questoes_validas, 1):
-        area_doc = limpar_campo_word(q.get('area','') or q.get('grande_area',''))
-        assunto_doc = limpar_campo_word(q.get('assunto','') or q.get('tema_indexado','') or q.get('tema',''))
-        competencia_doc = limpar_campo_word(q.get('competencia_enamed','') or q.get('competencia',''))
-        habilidade_doc = limpar_campo_word(q.get('habilidade_enamed','') or q.get('habilidade',''))
-        fonte_doc = limpar_campo_word(q.get("fonte", "") or q.get("prova", ""))
-        ano_doc = limpar_campo_word(q.get("ano", ""))
-        ano_doc = ano_doc.replace(".0", "")
-        prova_doc = limpar_campo_word(q.get("prova", ""))
-
-        tipo = "Discursiva" if q.get("_discursiva") else "Objetiva"
-
-        doc.add_heading(f"QUESTÃO {i:02d}", level=2)
-
-        metadados = (
-            f"Fonte: {fonte_doc or prova_doc} {ano_doc} | Tipo: {tipo} | "
-            f"Área: {area_doc} | Assunto: {assunto_doc} | "
-            f"Competência ENAMED: {competencia_doc} | "
-            f"Habilidade ENAMED: {habilidade_doc}"
+        doc.add_paragraph(
+            f"Área: {area_doc} | Assunto: {assunto_doc} | Competência: {competencia_doc} | Habilidade: {habilidade_doc}"
         )
 
-        doc.add_paragraph(corrigir_texto_word(metadados))
-        doc.add_paragraph(corrigir_texto_word(q.get("enunciado", "")))
-
-        if not q.get("_discursiva"):
-            for letra, campo in [
-                ("A", "alternativa_a"),
-                ("B", "alternativa_b"),
-                ("C", "alternativa_c"),
-                ("D", "alternativa_d"),
-                ("E", "alternativa_e"),
-            ]:
-                alt = limpar_campo_word(corrigir_texto_word(q.get(campo, "")))
-                if alt and not questao_corrompida_word(alt):
-                    doc.add_paragraph(f"{letra}) {alt}")
-
+        doc.add_paragraph(separar_alternativas(limpar_xml(q.get("enunciado", ""))))
+        for letra, campo in [("A","alternativa_a"),("B","alternativa_b"),("C","alternativa_c"),("D","alternativa_d"),("E","alternativa_e")]:
+            if q.get(campo):
+                doc.add_paragraph(f"{letra}) {q.get(campo)}")
         if q.get("gabarito"):
-            doc.add_paragraph(f"Gabarito: {limpar_campo_word(q.get('gabarito'))}")
-
+            doc.add_paragraph(f"Gabarito: {q.get('gabarito')}")
     bio = BytesIO()
     doc.save(bio)
     bio.seek(0)
-    return bio.getvalue()
+    return bio
+
+init_db()
+
+
+
+from datetime import datetime
+
+def formatar_data_br(data):
+    data = str(data or "").strip()
+
+    formatos = [
+        ("%Y-%m-%d", True),
+        ("%d/%m/%Y", True),
+        ("%d/%m/%y", True),
+        ("%d/%m", False),
+    ]
+
+    for fmt, tem_ano in formatos:
+        try:
+            d = datetime.strptime(data, fmt)
+
+            if tem_ano:
+                return d.strftime("%d/%m/%Y")
+
+            return d.strftime("%d/%m")
+
+        except:
+            pass
+
+    return data
 
 
 st.set_page_config(page_title="ATHENA Question Bank", page_icon="🧠", layout="wide")
@@ -491,113 +350,20 @@ with c2:
         salvar_upload(planos, PLANOS, "plano")
         st.success("Planos salvos no banco persistente.")
 
-con_dfq = sqlite3.connect(DB)
-try:
-    df_q = pd.read_sql_query("""
-        SELECT id, prova, ano, grande_area, area, assunto, tema_indexado,
-               competencia_enamed, habilidade_enamed,
-               enunciado, alternativa_a, alternativa_b, alternativa_c, alternativa_d, alternativa_e,
-               gabarito, fonte, instituicao
-        FROM questoes
-    """, con_dfq).fillna("")
-finally:
-    con_dfq.close()
-
-df_q["area"] = df_q["area"].where(
-    df_q["area"].astype(str).str.strip() != "",
-    df_q["grande_area"]
-)
-
-df_q["assunto"] = df_q["assunto"].where(
-    df_q["assunto"].astype(str).str.strip() != "",
-    df_q["tema_indexado"]
-)
-
-df_q["competencia"] = df_q["competencia_enamed"]
-df_q["habilidade"] = df_q["habilidade_enamed"]
-
+df_q = ler_csv(BANCO_QUESTOES)
 df_p = ler_csv(BANCO_PLANOS)
 df_r = ler_csv(BANCO_RELACIONAMENTOS)
 
 m1, m2, m3 = st.columns(3)
 m1.metric("Provas armazenadas", contar_provas())
-con_tmp = sqlite3.connect(DB)
-try:
-    planos_count = con_tmp.execute("SELECT COUNT(*) FROM planos_aula").fetchone()[0]
-finally:
-    con_tmp.close()
-m2.metric("Planos armazenados", planos_count)
+m2.metric("Planos armazenados", len(tabela_arquivos("plano")))
 m3.metric("Questões no banco", len(df_q))
 
 with st.expander("📦 Ver banco persistente de arquivos"):
     st.write("Provas")
     st.dataframe(tabela_arquivos("prova"), use_container_width=True)
     st.write("Planos de aula")
-    con_planos = sqlite3.connect(DB)
-    try:
-        df_planos_db = pd.read_sql_query("""
-            SELECT id, disciplina, modulo, periodo, aula, data_aula, arquivo_origem, criado_em
-            FROM planos_aula
-            ORDER BY id DESC
-        """, con_planos)
-    finally:
-        con_planos.close()
-    st.dataframe(df_planos_db, use_container_width=True)
-
-    st.markdown("### Remover planos de aula")
-
-    if not df_planos_db.empty:
-        df_remover = df_planos_db.copy()
-        df_remover.insert(0, "remover", False)
-
-        editado = st.data_editor(
-            df_remover,
-            use_container_width=True,
-            hide_index=True,
-            disabled=[c for c in df_remover.columns if c != "remover"],
-            column_config={
-                "remover": st.column_config.CheckboxColumn(
-                    "Remover",
-                    help="Marque os planos que deseja remover"
-                )
-            },
-            key="editor_remover_planos"
-        )
-
-        ids_remover = editado.loc[editado["remover"] == True, "id"].tolist()
-
-        st.caption(f"Planos selecionados para remoção: {len(ids_remover)}")
-
-        confirmar_remocao = st.checkbox(
-            "Confirmo que desejo remover os planos selecionados e suas aulas do cronograma"
-        )
-
-        if st.button("Remover planos marcados", type="secondary"):
-            if not ids_remover:
-                st.warning("Marque pelo menos um plano para remover.")
-            elif not confirmar_remocao:
-                st.warning("Marque a confirmação antes de remover.")
-            else:
-                con_del = sqlite3.connect(DB)
-                try:
-                    cur = con_del.cursor()
-                    for plano_id in ids_remover:
-                        plano_id = int(plano_id)
-                        cur.execute("DELETE FROM aulas_cronograma WHERE plano_id = ?", (plano_id,))
-                        cur.execute("DELETE FROM temas_plano WHERE plano_id = ?", (plano_id,))
-                        cur.execute("DELETE FROM compatibilidade_plano_questao WHERE plano_id = ?", (plano_id,))
-                        cur.execute("DELETE FROM planos_aula WHERE id = ?", (plano_id,))
-                    con_del.commit()
-                    st.success(f"{len(ids_remover)} plano(s) removido(s) com sucesso.")
-                    st.cache_data.clear()
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Erro ao remover planos: {e}")
-                finally:
-                    con_del.close()
-    else:
-        st.info("Não há planos de aula para remover.")
-        st.info("Não há planos de aula para remover.")
+    st.dataframe(tabela_arquivos("plano"), use_container_width=True)
 
 st.divider()
 
@@ -821,7 +587,7 @@ with aba1:
 
         if segunda is None:
             st.warning("Data inválida. Use o formato DD/MM ou DD/MM/AAAA.")
-            # st.stop removido para não bloquear abas posteriores
+            st.stop()
 
         st.info(
             f"Semana considerada: {segunda.strftime('%d/%m/%Y')} "
@@ -830,7 +596,7 @@ with aba1:
 
         if not conteudos_semana:
             st.warning("Nenhum conteúdo encontrado para esse período nessa semana.")
-            # st.stop removido para não bloquear abas posteriores
+            st.stop()
 
         st.subheader("2. Conteúdos encontrados na semana")
 
@@ -926,275 +692,52 @@ with aba1:
 
 
 with aba2:
-    st.subheader("🧭 Auditoria ENAMED – Balanceamento do Banco")
-
-    try:
-        auditoria_enamed = calcular_balanceamento()
-        df_auditoria = pd.DataFrame([
-            {
-                "Área": area,
-                "Questões atuais": info["quantidade"],
-                "% Atual": info["percentual_atual"],
-                "% Ideal ENAMED": info["percentual_ideal"],
-                "Fator de balanceamento": info["fator_balanceamento"],
-                "Status": info["status"],
-            }
-            for area, info in auditoria_enamed.items()
-        ])
-
-        st.dataframe(df_auditoria, use_container_width=True)
-
-        excesso_cm = df_auditoria.loc[df_auditoria["Área"] == "Clínica Médica", "Status"].iloc[0]
-        st.info(
-            "O balanceamento automático já está ativo no Question Selector e no Simulado Generator. "
-            "Áreas deficitárias recebem maior prioridade de seleção; áreas em excesso recebem menor prioridade."
-        )
-
-        st.download_button(
-            "Baixar Auditoria ENAMED CSV",
-            df_auditoria.to_csv(index=False).encode("utf-8-sig"),
-            "auditoria_enamed_balanceamento.csv",
-            "text/csv"
-        )
-
-        st.divider()
-
-    except Exception as e:
-        st.warning(f"Não foi possível carregar a Auditoria ENAMED: {e}")
-
-    st.subheader("🔎 Auditoria ENAMED por Assunto")
-
-    try:
-        gerar_auditoria_assuntos()
-        df_assuntos = pd.read_csv("outputs/relatorios/auditoria_enamed_por_assunto.csv")
-
-        areas_auditoria = sorted(df_assuntos["area"].dropna().unique())
-        area_sel_auditoria = st.selectbox(
-            "Filtrar área da auditoria por assunto",
-            areas_auditoria,
-            key="auditoria_assunto_area"
-        )
-
-        df_area_assuntos = df_assuntos[df_assuntos["area"] == area_sel_auditoria].copy()
-        st.dataframe(df_area_assuntos, use_container_width=True)
-
-        st.download_button(
-            "Baixar Auditoria por Assunto CSV",
-            df_assuntos.to_csv(index=False).encode("utf-8-sig"),
-            "auditoria_enamed_por_assunto.csv",
-            "text/csv"
-        )
-
-        st.info(
-            "Assuntos críticos ou fracos indicam lacunas do banco. "
-            "Assuntos muito fortes indicam concentração excessiva."
-        )
-
-        st.divider()
-
-    except Exception as e:
-        st.warning(f"Não foi possível carregar a Auditoria ENAMED por Assunto: {e}")
-
-
     st.header("📊 Exam Analytics")
-    st.success("Exam Analytics carregado diretamente do SQLite.")
+    if df_q.empty or "area" not in df_q.columns:
+        st.warning("Banco sem coluna de área.")
+    else:
+        total = len(df_q)
+        areas_df = df_q["area"].value_counts().reset_index()
+        areas_df.columns = ["grande_area", "n_questoes"]
+        areas_df["percentual_total"] = (areas_df["n_questoes"] / total * 100).round(2)
 
-    con = sqlite3.connect(DB)
-    try:
-        df_analytics = pd.read_sql_query("""
-            SELECT id, prova, ano, grande_area, area, assunto, tema_indexado
-            FROM questoes
-        """, con).fillna("")
-    finally:
-        con.close()
+        st.subheader("Percentual das grandes áreas")
+        st.dataframe(areas_df, use_container_width=True)
+        st.bar_chart(areas_df.set_index("grande_area")["percentual_total"])
 
-    st.metric("Questões no banco SQLite", len(df_analytics))
-
-    if not df_analytics.empty:
-        df_analytics["area_final"] = df_analytics["area"].where(
-            df_analytics["area"].astype(str).str.strip() != "",
-            df_analytics["grande_area"]
-        )
-
-        df_analytics["assunto_final"] = df_analytics["assunto"].where(
-            df_analytics["assunto"].astype(str).str.strip() != "",
-            df_analytics["tema_indexado"]
-        )
-
-        tipo = st.selectbox("Tipo de prova", ["TODAS", "ENADE", "ENAMED", "ENARE", "REVALIDA"])
-
-        df_analytics["ano_num"] = pd.to_numeric(df_analytics["ano"], errors="coerce")
-        anos = sorted(df_analytics["ano_num"].dropna().astype(int).unique().tolist())
-
-        anos_sel = st.multiselect("Ano(s)", anos, default=anos)
-
-        filtro = df_analytics.copy()
-        filtro["prova_txt"] = filtro["prova"].astype(str).str.upper()
-
-        if tipo != "TODAS":
-            filtro = filtro[filtro["prova_txt"].str.contains(tipo, na=False)]
-
-        if anos_sel:
-            filtro = filtro[filtro["ano_num"].astype("Int64").isin(anos_sel)]
-
-        st.metric("Questões filtradas", len(filtro))
-
-        if filtro.empty:
-            st.warning("Nenhuma questão encontrada para os filtros.")
-        else:
-            areas_df = filtro["area_final"].value_counts().reset_index()
-            areas_df.columns = ["grande_area", "n_questoes"]
-            areas_df["percentual_total"] = (areas_df["n_questoes"] / len(filtro) * 100).round(2)
-
-            st.subheader("Percentual por grande área")
-            st.dataframe(areas_df, use_container_width=True)
-
-            assuntos_df = (
-                filtro
-                .groupby("area_final")["assunto_final"]
-                .value_counts()
-                .reset_index(name="n_questoes")
-            )
-
-            assuntos_df["percentual_dentro_area"] = (
-                assuntos_df.groupby("area_final")["n_questoes"]
-                .transform(lambda x: (x / x.sum() * 100).round(2))
-            )
-
-            st.subheader("Assuntos por grande área")
+        if "assunto" in df_q.columns:
+            assuntos_df = df_q.groupby("area")["assunto"].value_counts().reset_index(name="n_questoes")
+            assuntos_df["percentual_dentro_area"] = assuntos_df.groupby("area")["n_questoes"].transform(lambda x: (x / x.sum() * 100).round(2))
+            st.subheader("Percentual dos assuntos por área")
             st.dataframe(assuntos_df, use_container_width=True)
 
-            st.download_button(
-                "Baixar análise CSV",
-                assuntos_df.to_csv(index=False).encode("utf-8-sig"),
-                "exam_analytics_por_prova.csv",
-                "text/csv"
-            )
-
+            blueprint = assuntos_df.merge(areas_df[["grande_area","percentual_total"]], left_on="area", right_on="grande_area", how="left")
+            st.subheader("Blueprint automático")
+            st.dataframe(blueprint, use_container_width=True)
 
 with aba3:
     st.header("📝 Simulado Generator")
-    st.info("Monte o simulado marcando grandes áreas, assuntos e número de questões por assunto.")
-
     if df_q.empty:
         st.warning("Banco de questões não encontrado.")
     else:
         sim = df_q.copy()
 
-        if "area" not in sim.columns:
-            st.warning("Banco sem coluna de grande área.")
-        elif "assunto" not in sim.columns:
-            st.warning("Banco sem coluna de assunto.")
-        else:
-            sim["area"] = sim["area"].fillna("").astype(str)
-            sim["assunto"] = sim["assunto"].fillna("").astype(str)
+        areas = sorted(sim["area"].dropna().astype(str).unique()) if "area" in sim.columns else []
+        areas_sel = st.multiselect("Grandes áreas", areas)
+        if areas_sel:
+            sim = sim[sim["area"].astype(str).isin(areas_sel)]
 
-            areas = sorted([a for a in sim["area"].unique() if a.strip() and a != "Não classificada"])
+        assuntos = sorted(sim["assunto"].dropna().astype(str).unique()) if "assunto" in sim.columns else []
+        assuntos_sel = st.multiselect("Assuntos", assuntos)
+        if assuntos_sel:
+            sim = sim[sim["assunto"].astype(str).isin(assuntos_sel)]
 
-            selecoes = []
+        qtd = st.number_input("Número de questões do simulado", min_value=1, max_value=max(1, len(sim)), value=min(10, max(1, len(sim))))
+        sim_final = sim.sample(n=int(qtd), random_state=42) if len(sim) >= int(qtd) else sim
 
-            st.subheader("Selecionar áreas e assuntos")
-
-            for area in areas:
-                df_area = sim[sim["area"] == area].copy()
-                total_area = len(df_area)
-
-                with st.expander(f"📚 {area} — {total_area} questões disponíveis", expanded=False):
-                    usar_area = st.checkbox(
-                        f"Usar {area}",
-                        key=f"usar_area_{area}"
-                    )
-
-                    if usar_area:
-                        assuntos = sorted([a for a in df_area["assunto"].unique() if a.strip()])
-
-                        for assunto in assuntos:
-                            df_assunto = df_area[df_area["assunto"] == assunto]
-                            disponiveis = len(df_assunto)
-
-                            col_a, col_b = st.columns([4, 1])
-
-                            with col_a:
-                                usar_assunto = st.checkbox(
-                                    f"{assunto} ({disponiveis} disponíveis)",
-                                    key=f"usar_assunto_{area}_{assunto}"
-                                )
-
-                            with col_b:
-                                qtd_assunto = st.number_input(
-                                    "Qtd",
-                                    min_value=0,
-                                    max_value=max(0, disponiveis),
-                                    value=0,
-                                    step=1,
-                                    key=f"qtd_{area}_{assunto}"
-                                )
-
-                            if usar_assunto and qtd_assunto > 0:
-                                selecoes.append({
-                                    "area": area,
-                                    "assunto": assunto,
-                                    "quantidade": int(qtd_assunto)
-                                })
-
-            st.divider()
-            st.subheader("Resumo da seleção")
-
-            if not selecoes:
-                st.info("Marque uma ou mais áreas/assuntos e informe a quantidade de questões.")
-            else:
-                df_selecoes = pd.DataFrame(selecoes)
-                st.dataframe(df_selecoes, use_container_width=True)
-                st.metric("Total de questões selecionadas", int(df_selecoes["quantidade"].sum()))
-
-                if st.button("Gerar simulado", type="primary"):
-                    partes = []
-
-                    for item in selecoes:
-                        pool = sim[
-                            (sim["area"] == item["area"]) &
-                            (sim["assunto"] == item["assunto"])
-                        ].copy()
-
-                        qtd = int(item["quantidade"])
-
-                        if not pool.empty:
-                            pool["fator_balanceamento"] = pool["area"].apply(fator_area)
-                            pool = pool.sort_values("fator_balanceamento", ascending=False)
-
-                        if len(pool) >= qtd:
-                            amostra = pool.head(qtd)
-                        else:
-                            amostra = pool
-
-                        partes.append(amostra)
-
-                    if partes:
-                        sim_final = pd.concat(partes, ignore_index=True)
-                    else:
-                        sim_final = pd.DataFrame()
-
-                    if sim_final.empty:
-                        st.warning("Nenhuma questão foi selecionada.")
-                    else:
-                        st.success(f"Simulado gerado com {len(sim_final)} questões.")
-                        st.dataframe(sim_final, use_container_width=True)
-
-                        st.download_button(
-                            "Exportar CSV",
-                            sim_final.to_csv(index=False).encode("utf-8-sig"),
-                            "simulado_personalizado.csv",
-                            "text/csv"
-                        )
-
-                        st.download_button(
-                            "Exportar Word",
-                            gerar_docx(sim_final.to_dict("records"), "Simulado Generator Personalizado"),
-                            "simulado_personalizado.docx"
-                        )
-
-
-st.divider()
+        st.dataframe(sim_final, use_container_width=True)
+        st.download_button("Exportar CSV", sim_final.to_csv(index=False).encode("utf-8-sig"), "simulado.csv", "text/csv")
+        st.download_button("Exportar Word", gerar_docx(sim_final.to_dict("records"), "Simulado Generator"), "simulado.docx")
 
 st.divider()
 st.caption("ATHENA Question Bank • Integrado ao Ecossistema ATHENA Scientific")
