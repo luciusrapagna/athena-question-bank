@@ -1,0 +1,378 @@
+{
+  "Cirurgia": {
+    "competencia": "Avaliação, decisão e manejo de condições cirúrgicas",
+    "especialidades": {
+      "Coloproctologia": {
+        "Diverticulite aguda complicada": [
+          "diverticulite",
+          "sigmoide",
+          "quadrante inferior esquerdo",
+          "coleção",
+          "abscesso",
+          "drenagem percutânea",
+          "tomografia"
+        ]
+      },
+      "Cirurgia Geral": {
+        "Abdome agudo": [
+          "abdome agudo",
+          "apendicite",
+          "peritonite",
+          "obstrução intestinal"
+        ],
+        "Hérnias": [
+          "hérnia",
+          "inguinal",
+          "encarceramento",
+          "estrangulamento",
+          "obturatória"
+        ],
+        "Trauma": [
+          "trauma",
+          "politrauma",
+          "hemorragia",
+          "fratura",
+          "queimadura"
+        ],
+        "Resposta metabólica ao trauma": [
+          "ferimento por projétil",
+          "fisiopatologia da dor",
+          "nociceptores",
+          "projétil"
+        ]
+      },
+      "Cirurgia Bariátrica": {
+        "Obesidade e cirurgia bariátrica": [
+          "cirurgia bariátrica",
+          "imc",
+          "obesidade",
+          "gastroplastia"
+        ]
+      },
+      "Anestesiologia": {
+        "Complicações da intubação": [
+          "estenose traqueal",
+          "fístula traqueoesofágica",
+          "granuloma",
+          "intubação ortotraqueal prolongada"
+        ]
+      }
+    }
+  },
+  "Clínica Médica": {
+    "competencia": "Cuidado integral do adulto e raciocínio clínico",
+    "especialidades": {
+      "Cardiologia": {
+        "Hipertensão arterial": [
+          "hipertensão arterial",
+          "crise hipertensiva",
+          "emergência hipertensiva",
+          "urgência hipertensiva",
+          "anti-hipertensivo",
+          "hipertenso conhecido",
+          "história de hipertensão"
+        ],
+        "Insuficiência cardíaca": [
+          "insuficiência cardíaca",
+          "fração de ejeção",
+          "edema",
+          "dispneia"
+        ],
+        "Síndrome coronariana": [
+          "dor torácica",
+          "infarto",
+          "iam",
+          "angina",
+          "troponina"
+        ]
+      },
+      "Endocrinologia": {
+        "Diabetes mellitus": [
+          "diabetes",
+          "glicemia",
+          "insulina",
+          "cetoacidose",
+          "hipoglicemia"
+        ],
+        "Tireoide": [
+          "tsh",
+          "t4",
+          "hipotireoidismo",
+          "hipertireoidismo"
+        ]
+      },
+      "Infectologia": {
+        "Sepse": [
+          "sepse",
+          "choque séptico",
+          "lactato",
+          "antibiótico"
+        ],
+        "Infecção urinária": [
+          "infecção urinária",
+          "disúria",
+          "polaciúria",
+          "urocultura"
+        ]
+      },
+      "Reumatologia": {
+        "Artrite reumatoide": [
+          "anti-ccp",
+          "artrite reumatoide",
+          "fator reumatoide",
+          "rigidez matinal"
+        ],
+        "Dermatomiosite": [
+          "dermatomiosite",
+          "elevar os braços",
+          "fraqueza proximal",
+          "heliotropo",
+          "manchas avermelhadas nas pálpebras",
+          "sinal de gottron"
+        ],
+        "Arterite temporal": [
+          "arterite de células gigantes",
+          "arterite temporal",
+          "biópsia temporal",
+          "perda visual"
+        ]
+      },
+      "Pneumologia": {
+        "Asma": [
+          "asma",
+          "broncodilatador",
+          "corticoide inalatório",
+          "sibilância"
+        ],
+        "TRALI": [
+          "injúria pulmonar aguda relacionada à transfusão",
+          "lesão pulmonar aguda relacionada à transfusão",
+          "trali"
+        ],
+        "Pneumonia": [
+          "creatinina",
+          "febre",
+          "pneumonia",
+          "radiografia de tórax",
+          "tosse produtiva",
+          "ureia"
+        ]
+      },
+      "Hematologia": {
+        "Hemoterapia e transfusão": [
+          "concentrado de hemácias",
+          "hemocomponentes",
+          "hemácias",
+          "plaquetas",
+          "transfusão"
+        ],
+        "Leucemia": [
+          "leucemia",
+          "quimioterápico",
+          "remissão",
+          "tratamento oncológico"
+        ],
+        "Anticoagulação": [
+          "anticoagulantes orais diretos",
+          "apixabana",
+          "dabigatrana",
+          "doac",
+          "edoxabana",
+          "enoxaparina",
+          "fator xa",
+          "rivaroxabana"
+        ]
+      },
+      "Toxicologia": {
+        "Intoxicação por opioides": [
+          "bradipneica",
+          "glasgow",
+          "heroína",
+          "naloxona",
+          "rebaixamento do nível de consciência"
+        ],
+        "Acidentes por animais peçonhentos": [
+          "abelhas",
+          "anafilaxia",
+          "picadas de abelhas",
+          "veneno"
+        ]
+      },
+      "Gastroenterologia": {
+        "Doença hepática crônica": [
+          "albumina",
+          "bilirrubinas",
+          "child-pugh",
+          "cirrose",
+          "encefalopatia hepática",
+          "hematêmese",
+          "icterícia",
+          "inr"
+        ]
+      },
+      "Neurologia": {
+        "Doença de Parkinson": [
+          "bradicinesia",
+          "parkinson",
+          "rigidez",
+          "tremor de repouso"
+        ]
+      },
+      "Psiquiatria": {
+        "Delirium tremens": [
+          "abstinência alcoólica",
+          "confusão mental aguda",
+          "delirium tremens",
+          "etilista"
+        ]
+      }
+    }
+  },
+  "Pediatria": {
+    "competencia": "Atenção integral à saúde da criança e do adolescente",
+    "especialidades": {
+      "Pediatria Geral": {
+        "Invaginação intestinal": [
+          "invaginação intestinal",
+          "lactente",
+          "evacuações com sangue",
+          "massa palpável"
+        ],
+        "Crescimento e desenvolvimento": [
+          "crescimento",
+          "desenvolvimento neuropsicomotor",
+          "percentil"
+        ],
+        "Vacinação infantil": [
+          "vacina",
+          "calendário vacinal",
+          "imunização"
+        ],
+        "Laringotraqueobronquite viral": [
+          "crupe",
+          "estridor inspiratório",
+          "laringotraqueobronquite",
+          "rouquidão",
+          "tosse ladrante"
+        ]
+      },
+      "Genética": {
+        "Síndromes cromossômicas": [
+          "cariótipo",
+          "klinefelter",
+          "síndrome",
+          "trissomia",
+          "turner"
+        ]
+      }
+    }
+  },
+  "Ginecologia e Obstetrícia": {
+    "competencia": "Atenção integral à saúde da mulher, gestação e parto",
+    "especialidades": {
+      "Obstetrícia": {
+        "Pré-natal": [
+          "pré-natal",
+          "gestante",
+          "idade gestacional",
+          "parto"
+        ],
+        "Síndromes hipertensivas da gestação": [
+          "pré-eclâmpsia",
+          "eclâmpsia",
+          "hipertensão gestacional"
+        ],
+        "Descolamento prematuro de placenta": [
+          "placenta descolada",
+          "sangramento transvaginal",
+          "coagulopatia de consumo"
+        ],
+        "Manobras de Leopold": [
+          "apresentação fetal",
+          "leopold-zweifel",
+          "manobras de leopold",
+          "palpação obstétrica"
+        ]
+      },
+      "Ginecologia": {
+        "Endometriose": [
+          "endometriose",
+          "dor pélvica",
+          "dismenorreia"
+        ],
+        "Rastreamento do câncer de colo": [
+          "papanicolau",
+          "hpv",
+          "colo uterino",
+          "citologia"
+        ]
+      }
+    }
+  },
+  "Saúde Coletiva": {
+    "competencia": "Atenção primária, vigilância, SUS e saúde coletiva",
+    "especialidades": {
+      "Atenção Primária": {
+        "Estratégia Saúde da Família": [
+          "atenção primária",
+          "aps",
+          "esf",
+          "territorialização",
+          "adscrição"
+        ],
+        "SUS": [
+          "sus",
+          "universalidade",
+          "equidade",
+          "integralidade"
+        ]
+      },
+      "Epidemiologia": {
+        "Indicadores de saúde": [
+          "incidência",
+          "prevalência",
+          "mortalidade",
+          "letalidade"
+        ],
+        "Vigilância em saúde": [
+          "notificação",
+          "vigilância epidemiológica",
+          "surto"
+        ],
+        "Medicina baseada em evidências": [
+          "pirâmide das evidências",
+          "prática em saúde baseada em evidências",
+          "qualidade da evidência",
+          "risco de vieses"
+        ],
+        "Acurácia diagnóstica": [
+          "acurácia",
+          "especificidade",
+          "padrão-ouro",
+          "sensibilidade",
+          "teste sorológico",
+          "valor preditivo"
+        ]
+      },
+      "Ética Médica": {
+        "Comunicação de más notícias": [
+          "comunicação de más notícias",
+          "comunicação terapêutica",
+          "más notícias"
+        ],
+        "Pesquisa clínica e consentimento": [
+          "assentimento",
+          "medicamento experimental",
+          "pesquisa clínica",
+          "riscos da pesquisa",
+          "termo de consentimento"
+        ],
+        "Publicidade médica": [
+          "conselho regional de medicina",
+          "publicidade médica",
+          "registro de qualificação de especialista"
+        ]
+      }
+    }
+  }
+}
