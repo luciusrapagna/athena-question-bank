@@ -1,0 +1,100 @@
+MAPA_ICD10 = {
+    "A": ("Infectologia", "Clínica Médica"),
+    "B": ("Infectologia", "Clínica Médica"),
+    "C": ("Oncologia", "Clínica Médica"),
+    "D": ("Hematologia", "Clínica Médica"),
+    "E": ("Endocrinologia", "Clínica Médica"),
+    "F": ("Psiquiatria", "Clínica Médica"),
+    "G": ("Neurologia", "Clínica Médica"),
+    "H": ("Oftalmologia/Otorrino", "Clínica Médica"),
+    "I": ("Cardiologia", "Clínica Médica"),
+    "J": ("Pneumologia", "Clínica Médica"),
+    "K": ("Gastroenterologia", "Clínica Médica"),
+    "L": ("Dermatologia", "Clínica Médica"),
+    "M": ("Reumatologia", "Clínica Médica"),
+    "N": ("Urologia", "Cirurgia"),
+    "O": ("Obstetrícia", "Ginecologia e Obstetrícia"),
+    "P": ("Neonatologia", "Pediatria"),
+    "Q": ("Pediatria", "Pediatria"),
+    "R": ("Clínica Médica Geral", "Clínica Médica"),
+    "S": ("Trauma", "Cirurgia"),
+    "T": ("Trauma", "Cirurgia"),
+    "V": ("Saúde Pública", "Saúde Coletiva"),
+    "W": ("Saúde Pública", "Saúde Coletiva"),
+    "X": ("Saúde Pública", "Saúde Coletiva"),
+    "Y": ("Saúde Pública", "Saúde Coletiva"),
+    "Z": ("Saúde Coletiva", "Saúde Coletiva")
+}
+
+COMPETENCIAS = {
+    "Clínica Médica": "Cuidado integral do adulto e raciocínio clínico",
+    "Cirurgia": "Avaliação, decisão e manejo de condições cirúrgicas",
+    "Pediatria": "Atenção integral à saúde da criança e do adolescente",
+    "Ginecologia e Obstetrícia": "Atenção integral à saúde da mulher, gestação e parto",
+    "Saúde Coletiva": "Atenção primária, vigilância, SUS e saúde coletiva"
+}
+
+HABILIDADE_PADRAO = (
+    "Interpretar dados clínicos, reconhecer hipóteses diagnósticas "
+    "e selecionar condutas."
+)
+
+def classificar_icd10(icd10):
+    if not icd10:
+        return None
+
+    letra = str(icd10).strip().upper()[0]
+
+    if letra not in MAPA_ICD10:
+        return None
+
+    especialidade, area = MAPA_ICD10[letra]
+
+    return {
+        "area": area,
+        "especialidade": especialidade,
+        "competencia": COMPETENCIAS.get(area, ""),
+        "habilidade": HABILIDADE_PADRAO
+    }
+
+MAPA_TERMOS = {
+    "pneumonia": ("Pneumologia", "Clínica Médica"),
+    "covid": ("Infectologia", "Clínica Médica"),
+    "coronavirus": ("Infectologia", "Clínica Médica"),
+    "viral": ("Infectologia", "Clínica Médica"),
+    "respiratory": ("Pneumologia", "Clínica Médica"),
+    "pancreatitis": ("Gastroenterologia", "Clínica Médica"),
+    "colitis": ("Gastroenterologia", "Clínica Médica"),
+    "hepatitis": ("Gastroenterologia", "Clínica Médica"),
+    "diabetes": ("Endocrinologia", "Clínica Médica"),
+    "thyroid": ("Endocrinologia", "Clínica Médica"),
+    "hypertension": ("Cardiologia", "Clínica Médica"),
+    "heart": ("Cardiologia", "Clínica Médica"),
+    "prostate": ("Urologia", "Cirurgia"),
+    "prostatitis": ("Urologia", "Cirurgia"),
+    "urethritis": ("Urologia", "Cirurgia"),
+    "anemia": ("Hematologia", "Clínica Médica"),
+    "thrombocytopenia": ("Hematologia", "Clínica Médica"),
+    "headache": ("Neurologia", "Clínica Médica"),
+    "migraine": ("Neurologia", "Clínica Médica"),
+    "stroke": ("Neurologia", "Clínica Médica"),
+    "depression": ("Psiquiatria", "Clínica Médica"),
+    "anxiety": ("Psiquiatria", "Clínica Médica"),
+}
+
+def classificar_por_nome(termo):
+    if not termo:
+        return None
+
+    termo = str(termo).lower()
+
+    for chave, (esp, area) in MAPA_TERMOS.items():
+        if chave in termo:
+            return {
+                "area": area,
+                "especialidade": esp,
+                "competencia": COMPETENCIAS.get(area, ""),
+                "habilidade": HABILIDADE_PADRAO
+            }
+
+    return None

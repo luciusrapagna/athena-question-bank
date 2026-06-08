@@ -1,0 +1,346 @@
+{
+  "atrial fibrillation": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "aortic": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "mitral": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "pericarditis": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "bronchitis": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "empyema": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "fibrosis": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "tuberculosis": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "nephritis": [
+    "Nefrologia",
+    "Clínica Médica"
+  ],
+  "nephropathy": [
+    "Nefrologia",
+    "Clínica Médica"
+  ],
+  "glomerulo": [
+    "Nefrologia",
+    "Clínica Médica"
+  ],
+  "kidney": [
+    "Nefrologia",
+    "Clínica Médica"
+  ],
+  "cirrhosis": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "hepatic": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "esophageal": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "ovarian": [
+    "Ginecologia e Obstetrícia",
+    "Ginecologia e Obstetrícia"
+  ],
+  "endometrial": [
+    "Ginecologia e Obstetrícia",
+    "Ginecologia e Obstetrícia"
+  ],
+  "endometriosis": [
+    "Ginecologia e Obstetrícia",
+    "Ginecologia e Obstetrícia"
+  ],
+  "neoplasm": [
+    "Oncologia",
+    "Clínica Médica"
+  ],
+  "cancer": [
+    "Oncologia",
+    "Clínica Médica"
+  ],
+  "lung": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "pulmonary": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "atelectasis": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "abscess": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "septal": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "ventricular": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "atrial": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "arteriosus": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "regurgitation": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "coronary": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "thrombosis": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "embolus": [
+    "Cardiologia",
+    "Clínica Médica"
+  ],
+  "hyponatremia": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "hypercalcemia": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "hyperkalemia": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "siadh": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "addison": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "cushing": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "torsion": [
+    "Cirurgia",
+    "Cirurgia"
+  ],
+  "testicular": [
+    "Urologia",
+    "Cirurgia"
+  ],
+  "bowel": [
+    "Cirurgia",
+    "Cirurgia"
+  ],
+  "ischaemia": [
+    "Cirurgia",
+    "Cirurgia"
+  ],
+  "spinal": [
+    "Ortopedia",
+    "Cirurgia"
+  ],
+  "thoracic": [
+    "Ortopedia",
+    "Cirurgia"
+  ],
+  "fracture": [
+    "Ortopedia",
+    "Cirurgia"
+  ],
+  "myasthenia": [
+    "Neurologia",
+    "Clínica Médica"
+  ],
+  "gravis": [
+    "Neurologia",
+    "Clínica Médica"
+  ],
+  "cebrovascular": [
+    "Neurologia",
+    "Clínica Médica"
+  ],
+  "cerebrovascular": [
+    "Neurologia",
+    "Clínica Médica"
+  ],
+  "pheochromocytoma": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "hypogonadism": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "metabolic": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "obesity": [
+    "Endocrinologia",
+    "Clínica Médica"
+  ],
+  "anti-gbm": [
+    "Nefrologia",
+    "Clínica Médica"
+  ],
+  "minimal change": [
+    "Nefrologia",
+    "Clínica Médica"
+  ],
+  "tubular necrosis": [
+    "Nefrologia",
+    "Clínica Médica"
+  ],
+  "glomerulonephritis": [
+    "Nefrologia",
+    "Clínica Médica"
+  ],
+  "barrett": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "esophagus": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "budd-chiari": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "intestinal parasites": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "ascariasis": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "enterobiasis": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "giardiasis": [
+    "Gastroenterologia",
+    "Clínica Médica"
+  ],
+  "varicocele": [
+    "Urologia",
+    "Cirurgia"
+  ],
+  "epididymal": [
+    "Urologia",
+    "Cirurgia"
+  ],
+  "spermatocele": [
+    "Urologia",
+    "Cirurgia"
+  ],
+  "aspiration": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "pneumonitis": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "pleuritis": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "lobar": [
+    "Pneumologia",
+    "Clínica Médica"
+  ],
+  "overdose": [
+    "Toxicologia",
+    "Clínica Médica"
+  ],
+  "anticholinergics": [
+    "Toxicologia",
+    "Clínica Médica"
+  ],
+  "ethanol": [
+    "Toxicologia",
+    "Clínica Médica"
+  ],
+  "clonidine": [
+    "Toxicologia",
+    "Clínica Médica"
+  ],
+  "pregnancy": [
+    "Obstetrícia",
+    "Ginecologia e Obstetrícia"
+  ],
+  "spontaneous abortion": [
+    "Obstetrícia",
+    "Ginecologia e Obstetrícia"
+  ],
+  "menstruation": [
+    "Ginecologia",
+    "Ginecologia e Obstetrícia"
+  ],
+  "ankylosing": [
+    "Reumatologia",
+    "Clínica Médica"
+  ],
+  "spondylitis": [
+    "Reumatologia",
+    "Clínica Médica"
+  ],
+  "seasonal": [
+    "Alergologia",
+    "Clínica Médica"
+  ],
+  "pollen": [
+    "Alergologia",
+    "Clínica Médica"
+  ],
+  "allergies": [
+    "Alergologia",
+    "Clínica Médica"
+  ],
+  "fever": [
+    "Infectologia",
+    "Clínica Médica"
+  ],
+  "unknown origin": [
+    "Infectologia",
+    "Clínica Médica"
+  ],
+  "carcinoid": [
+    "Oncologia",
+    "Clínica Médica"
+  ]
+}
