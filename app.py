@@ -1177,78 +1177,82 @@ with aba3:
                     if sim_final.empty:
                         st.warning("Nenhuma questão foi selecionada.")
                     else:
+                        st.session_state["simulado_generator_preview"] = sim_final.copy()
                         st.success(f"Simulado gerado com {len(sim_final)} questões.")
 
-                        modo_visualizacao = st.radio(
-                            "Modo de visualização",
-                            ["Tabela", "Pré-visualização das questões"],
-                            horizontal=True,
-                            key="modo_visualizacao_simulado"
-                        )
+                if "simulado_generator_preview" in st.session_state:
+                    sim_final = st.session_state["simulado_generator_preview"]
 
-                        if modo_visualizacao == "Tabela":
-                            st.dataframe(sim_final, use_container_width=True)
+                    modo_visualizacao = st.radio(
+                        "Modo de visualização",
+                        ["Tabela", "Pré-visualização das questões"],
+                        horizontal=True,
+                        key="modo_visualizacao_simulado"
+                    )
 
-                        else:
-                            st.markdown("### Pré-visualização das questões")
+                    if modo_visualizacao == "Tabela":
+                        st.dataframe(sim_final, use_container_width=True)
 
-                            for i, (_, q) in enumerate(sim_final.iterrows(), 1):
-                                area_prev = str(q.get("area", "") or q.get("grande_area", "")).strip()
-                                assunto_prev = str(q.get("assunto", "") or q.get("tema_indexado", "") or q.get("tema", "")).strip()
-                                prova_prev = str(q.get("prova", "") or q.get("fonte", "")).strip()
-                                ano_prev = str(q.get("ano", "")).replace(".0", "").strip()
+                    else:
+                        st.markdown("### Pré-visualização das questões")
 
-                                titulo_q = f"QUESTÃO {i:02d} — {area_prev} — {assunto_prev} — {prova_prev} {ano_prev}"
+                        for i, (_, q) in enumerate(sim_final.iterrows(), 1):
+                            area_prev = str(q.get("area", "") or q.get("grande_area", "")).strip()
+                            assunto_prev = str(q.get("assunto", "") or q.get("tema_indexado", "") or q.get("tema", "")).strip()
+                            prova_prev = str(q.get("prova", "") or q.get("fonte", "")).strip()
+                            ano_prev = str(q.get("ano", "")).replace(".0", "").strip()
 
-                                with st.expander(titulo_q, expanded=False):
-                                    st.markdown(f"**Área:** {area_prev}")
-                                    st.markdown(f"**Assunto:** {assunto_prev}")
-                                    st.markdown(f"**Prova/Ano:** {prova_prev} {ano_prev}")
+                            titulo_q = f"QUESTÃO {i:02d} — {area_prev} — {assunto_prev} — {prova_prev} {ano_prev}"
 
-                                    enunciado_prev = str(q.get("enunciado", "")).strip()
-                                    if enunciado_prev:
-                                        st.markdown("**Enunciado**")
-                                        st.write(enunciado_prev)
+                            with st.expander(titulo_q, expanded=False):
+                                st.markdown(f"**Área:** {area_prev}")
+                                st.markdown(f"**Assunto:** {assunto_prev}")
+                                st.markdown(f"**Prova/Ano:** {prova_prev} {ano_prev}")
 
-                                    st.markdown("**Alternativas**")
+                                enunciado_prev = str(q.get("enunciado", "")).strip()
+                                if enunciado_prev:
+                                    st.markdown("**Enunciado**")
+                                    st.write(enunciado_prev)
 
-                                    for letra, campo in [
-                                        ("A", "alternativa_a"),
-                                        ("B", "alternativa_b"),
-                                        ("C", "alternativa_c"),
-                                        ("D", "alternativa_d"),
-                                        ("E", "alternativa_e"),
-                                    ]:
-                                        alt_prev = str(q.get(campo, "")).strip()
-                                        if alt_prev and alt_prev.lower() != "nan":
-                                            st.markdown(f"**{letra})** {alt_prev}")
+                                st.markdown("**Alternativas**")
 
-                                    gabarito_prev = str(q.get("gabarito", "")).strip()
-                                    if gabarito_prev and gabarito_prev.lower() != "nan":
-                                        with st.expander("Ver gabarito"):
-                                            st.success(f"Gabarito: {gabarito_prev}")
+                                for letra, campo in [
+                                    ("A", "alternativa_a"),
+                                    ("B", "alternativa_b"),
+                                    ("C", "alternativa_c"),
+                                    ("D", "alternativa_d"),
+                                    ("E", "alternativa_e"),
+                                ]:
+                                    alt_prev = str(q.get(campo, "")).strip()
+                                    if alt_prev and alt_prev.lower() != "nan":
+                                        st.markdown(f"**{letra})** {alt_prev}")
 
-                                    competencia_prev = str(q.get("competencia_enamed", "") or q.get("competencia", "")).strip()
-                                    habilidade_prev = str(q.get("habilidade_enamed", "") or q.get("habilidade", "")).strip()
+                                gabarito_prev = str(q.get("gabarito", "")).strip()
+                                if gabarito_prev and gabarito_prev.lower() != "nan":
+                                    with st.expander("Ver gabarito"):
+                                        st.success(f"Gabarito: {gabarito_prev}")
 
-                                    if competencia_prev and competencia_prev.lower() != "nan":
-                                        st.info(f"Competência: {competencia_prev}")
+                                competencia_prev = str(q.get("competencia_enamed", "") or q.get("competencia", "")).strip()
+                                habilidade_prev = str(q.get("habilidade_enamed", "") or q.get("habilidade", "")).strip()
 
-                                    if habilidade_prev and habilidade_prev.lower() != "nan":
-                                        st.info(f"Habilidade: {habilidade_prev}")
+                                if competencia_prev and competencia_prev.lower() != "nan":
+                                    st.info(f"Competência: {competencia_prev}")
 
-                        st.download_button(
-                            "Exportar CSV",
-                            sim_final.to_csv(index=False).encode("utf-8-sig"),
-                            "simulado_personalizado.csv",
-                            "text/csv"
-                        )
+                                if habilidade_prev and habilidade_prev.lower() != "nan":
+                                    st.info(f"Habilidade: {habilidade_prev}")
 
-                        st.download_button(
-                            "Exportar Word",
-                            gerar_docx(sim_final.to_dict("records"), "Simulado Generator Personalizado"),
-                            "simulado_personalizado.docx"
-                        )
+                    st.download_button(
+                        "Exportar CSV",
+                        sim_final.to_csv(index=False).encode("utf-8-sig"),
+                        "simulado_personalizado.csv",
+                        "text/csv"
+                    )
+
+                    st.download_button(
+                        "Exportar Word",
+                        gerar_docx(sim_final.to_dict("records"), "Simulado Generator Personalizado"),
+                        "simulado_personalizado.docx"
+                    )
 
 
 st.divider()
